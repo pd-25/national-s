@@ -80,8 +80,8 @@
               <li><a href="{{route('web.home')}}">Home</a></li>
               <li><a href="pay-fee-online.html">Pay Fee Online</a></li>
               <li><a href="{{route('web.contact')}}">Contact Us</a></li>
-              <li><a href="privacy-policy.html">Privacy Policy</a></li>
-              <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+              <li><a href="{{route('web.privacyPolicy')}}">Privacy Policy</a></li>
+              <li><a href="{{route('web.termsConditions')}}">Terms & Conditions</a></li>
             </ul>
           </div>
           <div class="col-lg-5">

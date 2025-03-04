@@ -15,16 +15,29 @@
                 @if (request()->is('admin/all-news')||
                 request()->is('admin/contact-list')||
                 request()->is('admin/all-notice') ||
-                request()->is('admin/all-admission-notice')
-                
+                request()->is('admin/all-admission-notice') ||
+                request()->is('admin/all-campus-galary') ||
+                request()->is('admin/all-events')
                 )
                 class="nav-content"
                 @else
                 class="nav-content collapse" @endif>
+                <li class="{{ request()->is('admin/all-campus-galary') ? 'active' : '' }}" id="">
+                    <a href="{{route('campusgalary.create')}}" 
+                    class="{{ request()->is('admin/all-campus-galary') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Manage Galary Images</span>
+                    </a>
+                </li>
                 <li class="{{ request()->is('admin/all-news') ? 'active' : '' }}" id="">
                     <a href="{{route('news.create')}}" 
                     class="{{ request()->is('admin/all-news') ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>Manage News</span>
+                    </a>
+                </li>
+                <li class="{{ request()->is('admin/all-events') ? 'active' : '' }}" id="">
+                    <a href="{{route('events.create')}}" 
+                    class="{{ request()->is('admin/all-events') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Manage Events</span>
                     </a>
                 </li>
                 <li class="{{ request()->is('admin/all-notice') ? 'active' : '' }}" id="">

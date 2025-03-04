@@ -14,7 +14,7 @@
     
     <!-- Favicons -->
     <link rel="icon" type="image/png" href="">
-    <link rel="icon" type="image/png" href="assets/img/favicon-2.png">
+    <link rel="shortcut icon" type="image/png" href="{{asset('assets/website/images/favicon.png')}}">
 
     @include('admin.layout.header')
 

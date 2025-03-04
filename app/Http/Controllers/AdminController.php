@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin\Admin;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Hash;  
 
 class AdminController extends Controller
 {
@@ -16,9 +14,10 @@ class AdminController extends Controller
     public function index()
     {
         if(Auth::guard('admin')->check()){
-            return view('admin.dashboard');
+            return redirect()->route('admin.dashboard');
+        }else{
+            return view('admin.auth.login');
         }
-        return view('admin.auth.login');
     }
 
     /**
@@ -38,6 +37,7 @@ class AdminController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]);
+        
         $credentials = $request->only('email', 'password');
         if (Auth::guard('admin')->attempt($credentials)) {
             return redirect()->route('admin.dashboard')->withSuccess('You have Successfully loggedin');
@@ -48,7 +48,7 @@ class AdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Admin $admin)
     {
         //
     }
@@ -56,7 +56,7 @@ class AdminController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
+    public function edit(Admin $admin)
     {
         //
     }
@@ -64,7 +64,7 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, Admin $admin)
     {
         //
     }
@@ -72,11 +72,12 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    
     public function destroy()
     {
         //
     }
-
+    
     public function logout() 
     {
         Auth::guard('admin')->logout();

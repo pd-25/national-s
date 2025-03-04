@@ -47,4 +47,13 @@ class HomeController extends Controller
         return view('website.cocurricular');
     }
 
+    public function termsConditions()
+    {
+        return view('website.termsconditions');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('website.privacypolicy');
+    }
 }

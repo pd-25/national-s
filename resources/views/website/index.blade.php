@@ -253,121 +253,109 @@
         </div>
         <div class="tab-content col-lg-12" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-one" role="tabpanel" aria-labelledby="nav-one-tab">
-            <div class="row">
-                <div class="col-lg-6">
-                <div class="nws_left_box"> <img src="assets/website/images/news-pic.jpg" class="img-fluid border-radius-10">
-                    <h3>Lorem ipsum dolor sit amet</h3>
-                    <p class="b_date">06-09-2024</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at vestibulum nunc. Lorem ipsum dolor sit amet. </p>
-                    <a href="" class="rm-btn">Read More</a> </div>
-                </div>
-                <div class="col-lg-6 tab_img">
-                <div class="nws_right_box">
-                    <div class="media"> <img src="assets/website/images/news-pic1.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">Consectetur Adipiscing Elit</h5>
-                        <p class="b_date mb-2">18-10-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
+                <div class="row">
+                    <div class="col-lg-6">
+                    <div class="nws_left_box"> <img src="storage/news_images/{{Getnews()[0]->news_image}}" class="img-fluid border-radius-10">
+                        <h3>{{Getnews()[0]->news_title}}</h3>
+                        <p class="b_date">{{date('d-m-Y', strtotime(@Getnews()[0]->news_date))}}</p>
+                        <p>{!! Str::words(Getnews()[0]->news_desc, 20) !!} </p>
+                        <a href="{{route('web.edit', Getnews()[0]->news_slug)}}"  class="rm-btn">Read More</a> </div>
                     </div>
-                    </div>
-                    <div class="media"> <img src="assets/website/images/news-pic2.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">Consectetur Adipiscing Elit</h5>
-                        <p class="b_date mb-2">06-09-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
-                    </div>
-                    </div>
-                    <div class="media"> <img src="assets/website/images/news-pic3.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">Consectetur Adipiscing Elit</h5>
-                        <p class="b_date mb-2">06-09-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
-                    </div>
+                    <div class="col-lg-6 tab_img">
+                        <div class="nws_right_box">
+                            @if (!@empty(Getnews()))
+                                @foreach (Getnews()->take(3) as $item)
+                                    <div class="media"> 
+                                        <img src="storage/news_images/{{@$item->news_image}}" class="mr-4 border-radius-10" alt="...">
+                                        <div class="media-body align-self-center">
+                                            <h5 class="mt-0">{{@$item->news_title}}</h5>
+                                            <p class="b_date mb-2">{{date('d-m-Y', strtotime(@$item->news_date))}}</p>
+                                                {!! Str::words(@$item->news_desc, 8) !!}
+                                            <a href="{{route('web.edit', @$item->news_slug)}}" class="rm-btn-sm">Read More</a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
                 </div>
-                </div>
-            </div>
             </div>
             <div class="tab-pane fade" id="nav-two" role="tabpanel" aria-labelledby="nav-two-tab">
-            <div class="row">
-                <div class="col-lg-6">
-                <div class="nws_left_box"> <img src="assets/website/images/event-pic.jpg" class="img-fluid border-radius-10">
-                    <h3>Ganesh Chaturthi</h3>
-                    <p class="b_date">06-09-2024</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at vestibulum nunc. Lorem ipsum dolor sit amet. </p>
-                    <a href="" class="rm-btn">Read More</a> </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                    <div class="nws_left_box"> <img src="assets/website/images/event-pic.jpg" class="img-fluid border-radius-10">
+                        <h3>Ganesh Chaturthi</h3>
+                        <p class="b_date">06-09-2024</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at vestibulum nunc. Lorem ipsum dolor sit amet. </p>
+                        <a href="" class="rm-btn">Read More</a> </div>
+                    </div>
+                    <div class="col-lg-6 tab_img">
+                    <div class="nws_right_box">
+                        <div class="media"> <img src="assets/website/images/event-pic1.jpg" class="mr-4 border-radius-10" alt="...">
+                        <div class="media-body align-self-center">
+                            <h5 class="mt-0">Deepavali Events</h5>
+                            <p class="b_date mb-2">18-10-2024</p>
+                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
+                            <a href="" class="rm-btn-sm">Read More</a>
+                        </div>
+                        </div>
+                        <div class="media"> <img src="assets/website/images/event-pic2.jpg" class="mr-4 border-radius-10" alt="...">
+                        <div class="media-body align-self-center">
+                            <h5 class="mt-0">School Games & Sports</h5>
+                            <p class="b_date mb-2">06-09-2024</p>
+                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
+                            <a href="" class="rm-btn-sm">Read More</a>
+                        </div>
+                        </div>
+                        <div class="media"> <img src="assets/website/images/event-pic3.jpg" class="mr-4 border-radius-10" alt="...">
+                        <div class="media-body align-self-center">
+                            <h5 class="mt-0">76th Independence Day</h5>
+                            <p class="b_date mb-2">06-09-2024</p>
+                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
+                            <a href="" class="rm-btn-sm">Read More</a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-                <div class="col-lg-6 tab_img">
-                <div class="nws_right_box">
-                    <div class="media"> <img src="assets/website/images/event-pic1.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">Deepavali Events</h5>
-                        <p class="b_date mb-2">18-10-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
-                    </div>
-                    </div>
-                    <div class="media"> <img src="assets/website/images/event-pic2.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">School Games & Sports</h5>
-                        <p class="b_date mb-2">06-09-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
-                    </div>
-                    </div>
-                    <div class="media"> <img src="assets/website/images/event-pic3.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">76th Independence Day</h5>
-                        <p class="b_date mb-2">06-09-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
             </div>
             <div class="tab-pane fade" id="nav-three" role="tabpanel" aria-labelledby="nav-three-tab">
-            <div class="row">
-                <div class="col-lg-6">
-                <div class="nws_left_box"> <img src="assets/website/images/scholastic-pic.jpg" class="img-fluid border-radius-10">
-                    <h3>Cras Vestibulum Nunc</h3>
-                    <p class="b_date">06-09-2024</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at vestibulum nunc. Lorem ipsum dolor sit amet. </p>
-                    <a href="" class="rm-btn">Read More</a> </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                    <div class="nws_left_box"> 
+                        @if (Getnotice()[0]->image)
+                            <img src="{{@Getnotice()[0]->image}}" class="img-fluid border-radius-10" alt="...">
+                        @else
+                            <img src="assets/website/images/scholastic-pic.jpg" class="img-fluid border-radius-10" alt="...">
+                        @endif
+                        {{-- <h3>Cras Vestibulum Nunc</h3> --}}
+                        <p class="b_date">{{date('d-m-Y', strtotime(Getnotice()[0]->notice_date))}}</p>
+                        <p>{{ Str::words(Getnotice()[0]->notice_name, 20) }}</p>
+                        <a href="{{route('web.notice')}}" class="rm-btn">Read More</a> </div>
+                    </div>
+                    <div class="col-lg-6 tab_img">
+                        <div class="nws_right_box">
+                            @if (!@empty(Getnotice()))
+                                @foreach (Getnotice()->take(3) as $item)
+                                    <div class="media"> 
+                                        @if ($item->image)
+                                            <img src="{{@$item->image}}" class="mr-4 border-radius-10" alt="...">
+                                        @else
+                                            <img src="assets/website/images/scholastic-pic.jpg" class="mr-4 border-radius-10" alt="...">
+                                        @endif
+                                        <div class="media-body align-self-center">
+                                            {{-- <h5 class="mt-0">Cras Vestibulum Nunc</h5> --}}
+                                            <p class="b_date mb-2">{{date('d-m-Y', strtotime(@$item->notice_date))}}</p>
+                                            <p class="mb-0">  {{ Str::words(@$item->notice_name, 8) }} </p>
+                                            <a href="{{route('web.notice')}}" class="rm-btn-sm">Read More</a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                         @endif
+                        </div>
+                    </div>
+                    </div>
                 </div>
-                <div class="col-lg-6 tab_img">
-                <div class="nws_right_box">
-                    <div class="media"> <img src="assets/website/images/scholastic-pic1.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">Cras Vestibulum Nunc</h5>
-                        <p class="b_date mb-2">18-10-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
-                    </div>
-                    </div>
-                    <div class="media"> <img src="assets/website/images/scholastic-pic2.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">Cras Vestibulum Nunc</h5>
-                        <p class="b_date mb-2">06-09-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
-                    </div>
-                    </div>
-                    <div class="media"> <img src="assets/website/images/scholastic-pic3.jpg" class="mr-4 border-radius-10" alt="...">
-                    <div class="media-body align-self-center">
-                        <h5 class="mt-0">Consectetur Adipiscing Elit</h5>
-                        <p class="b_date mb-2">06-09-2024</p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                        <a href="" class="rm-btn-sm">Read More</a>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
             </div>
         </div>
         </div>
@@ -385,21 +373,13 @@
         <div class="col-lg-12">
             <div id="demo-pranab">
             <div id="owl-gallery" class="owl-carousel owl-theme">
-                <div class="item">
-                <div class="gallery-box"> <img src="assets/website/images/gal-pic1.jpg" class="img-fluid" alt="..."> </div>
-                </div>
-                <div class="item">
-                <div class="gallery-box"> <img src="assets/website/images/gal-pic2.jpg" class="img-fluid" alt="..."> </div>
-                </div>
-                <div class="item">
-                <div class="gallery-box"> <img src="assets/website/images/gal-pic3.jpg" class="img-fluid" alt="..."> </div>
-                </div>
-                <div class="item">
-                <div class="gallery-box"> <img src="assets/website/images/gal-pic4.jpg" class="img-fluid" alt="..."> </div>
-                </div>
-                <div class="item">
-                <div class="gallery-box"> <img src="assets/website/images/gal-pic5.jpg" class="img-fluid" alt="..."> </div>
-                </div>
+                @if (!@empty(GetCampusGalary()))
+                    @foreach (GetCampusGalary() as $item)
+                        <div class="item">
+                            <div class="gallery-box"><img src="{{@$item->image}}" class="img-fluid" alt="{{@$item->program_name}}"> </div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\AdmissionNoticeController;
+use App\Http\Controllers\EventsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,8 +40,9 @@ Route::controller(HomeController::class)->group(function() {
     Route::get('/school-uniform',  'schooluniform')->name('web.schooluniform');
     Route::get('/rules-regulations',  'rulesregulations')->name('web.rulesregulations');
     Route::get('/co-curricular',  'cocurricular')->name('web.cocurricular');
-   
-
+    Route::get('/terms-conditions',  'termsConditions')->name('web.termsConditions');
+    Route::get('/privacy-policy',  'privacyPolicy')->name('web.privacyPolicy');
+    
     
 });
 
@@ -60,4 +62,9 @@ Route::controller(NoticeController::class)->group(function() {
 
 Route::controller(AdmissionNoticeController::class)->group(function() {
     Route::get('/admission-notice',  'index')->name('web.admissionnotice');
+});
+
+Route::controller(EventsController::class)->group(function() {
+    Route::get('/events',  'index')->name('web.events');
+    Route::get('/events-details/{slug}',  'edit')->name('web.events.edit');
 });

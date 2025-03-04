@@ -50,10 +50,10 @@
                       <li class="nav-item"><a href="{{route('web.admissionnotice')}}" class="nav-link">Admission Notice</a></li>
                     </ul>
                   </li>
-                  <li class="nav-item dropdown {{Route::is('web.news') ? 'active' : '' }} {{Route::is('web.notice') ? 'active' : '' }} "><a class="nav-link dropdown-toggle" href="events.html">News & Events</a>
+                  <li class="nav-item dropdown {{Route::is('web.news') ? 'active' : '' }}  {{Route::is('web.events') ? 'active' : '' }} {{Route::is('web.notice') ? 'active' : '' }} "><a class="nav-link dropdown-toggle" href="events.html">News & Events</a>
                     <ul class="dropdown-menu">
                       <li class="nav-item"><a href="{{route('web.news')}}" class="nav-link">News</a></li>
-                      <li class="nav-item"><a href="events.html" class="nav-link">Events</a></li>
+                      <li class="nav-item"><a href="{{route('web.events')}}" class="nav-link">Events</a></li>
                       <li class="nav-item"><a href="{{route('web.notice')}}" class="nav-link">Notice</a></li>
                     </ul>
                   </li>

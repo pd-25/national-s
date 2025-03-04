@@ -1,11 +1,11 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>Add News</h1>
+    <h1>Add Events</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Manage News</li>
+            <li class="breadcrumb-item active">Manage Events</li>
         </ol>
     </nav>
 </div>
@@ -14,7 +14,7 @@
         <div class="card-body pt-4">
             <div class="text-end mb-4">
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                    Create News
+                    Create Events
                   </button>
             </div>
             <table class="small w-100 table table-striped" id="DataTables">
@@ -25,24 +25,23 @@
                         </th>
                         <th>Images</th>
                         <th>
-                            <b>News Title</b>
+                            <b>Events Title</b>
                         </th>
                         <th>
-                            <b>News Description</b>
+                            <b>Events Description</b>
                         </th>
-                        <th>News Date</th>
+                        <th>Events Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
-    @include('admin.news.add')
-    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    @include('admin.events.add')
     <script>
         var table = $('#DataTables').DataTable({
             "ajax": {
-                "url": "{{route('news.show')}}",
+                "url": "{{route('events.show')}}",
                 "type": "GET",
                 "datatype": "data.json",
                 "data": function(d) {
@@ -58,29 +57,29 @@
                     }
                 },
                 {
-                    "data": "news_image",
-                    "name": "news_image",
+                    "data": "event_image",
+                    "name": "event_image",
                     "autowidth": true,
                     render: function (data, type, row, meta) {
-                        return '<img src="/storage/news_images/'+data+'" style="height:80px" />';
+                        return '<img src="'+data+'" style="height:80px" />';
                     }
                 },
                 {
-                    "data": "news_title",
-                    "name": "news_title",
+                    "data": "event_name",
+                    "name": "event_name",
                     "autowidth": true
                 },
                 {
-                    "data": "news_desc",
-                    "name": "news_desc",
+                    "data": "event_desc",
+                    "name": "event_desc",
                     "autowidth": true,
                     render: function (data, type, row, meta) {
                         return data;
                     }
                 },
                 {
-                    "data": "news_date",
-                    "name": "news_date",
+                    "data": "event_date",
+                    "name": "event_date",
                     "autowidth": true,
                     "render": function(data, type, row) {
                         const date = new Date(data);
@@ -96,7 +95,7 @@
                     "data": "id",
                     "render": function(data, type, row) {
                         var rowData = JSON.stringify(row);
-                        return '<a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteNews(' + '`' + data + '`' + ')"><i class="bi bi-trash"></i></a>';
+                        return '<a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteEvents(' + '`' + data + '`' + ')"><i class="bi bi-trash"></i></a>';
                     }
                     // <a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="viewNews(' + '`' + encodeURIComponent(rowData) + '`' + ')"><i class="bi bi-pencil-square"></i> </a>
                 }
@@ -118,24 +117,8 @@
             "order": [[0, "desc"]]
         });
 
-        function viewNews(data) {
-            var news = JSON.parse(decodeURIComponent(data));
-            var formattedDate = formatDate(news.news_date);
-            $('#news_date').val(formattedDate);
-            $('#title').val(news.news_title);
-            $('#slug').val(news.news_slug);
 
-            console.log(JSON.stringify(news.news_desc))
-            CKEDITOR.replace('editor');
-            // CKEDITOR.instances['editor'].setData(news.news_desc);
-            CKEDITOR.on('instanceReady', function(event) {
-                event.editor.setData(JSON.stringify(news.news_desc));
-            });
-
-            $('#staticBackdrop').modal('show');
-        }
-
-        function deleteNews(data){
+        function deleteEvents(data){
             Notiflix.Confirm.Show(
                 "Delete Confirmation",
                 "Do you want to delete?",
@@ -143,7 +126,7 @@
                 "Cancel",
                 function() {
                     $.ajax({
-                    url: "{{ route('news.destroy')}}",
+                    url: "{{ route('events.destroy')}}",
                     method: 'POST',
                     data: {
                         "_token": "{{ csrf_token() }}",
