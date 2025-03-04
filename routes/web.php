@@ -7,17 +7,8 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\AdmissionNoticeController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\EventRegisterController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 // Route::get('/linkstorage', function () {
 //     Artisan::call('storage:link');
 //     return 'link create successfully !';
@@ -67,4 +58,8 @@ Route::controller(AdmissionNoticeController::class)->group(function() {
 Route::controller(EventsController::class)->group(function() {
     Route::get('/events',  'index')->name('web.events');
     Route::get('/events-details/{slug}',  'edit')->name('web.events.edit');
+});
+
+Route::controller(EventRegisterController::class)->group(function() {
+    Route::post('/store-events-register',  'store')->name('web.eventsregister');
 });

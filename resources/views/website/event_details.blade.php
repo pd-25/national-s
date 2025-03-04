@@ -27,7 +27,8 @@
        <div class="col-lg-6">
           <div class="news-form-box">
              <h2>Registration form- {{@$events->event_name}}</h2>
-                @include('website.component.event_register', [$events])
+               @include('website.layouts.message')
+               @include('website.component.event_register', [$events])
           </div>
        </div>
     </div>
