@@ -41,4 +41,9 @@ class Admin extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function teacherclassmapping()
+    {
+        return $this->hasMany(TeacherClassMapping::class, 'teacher_id');
+    }
 }

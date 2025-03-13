@@ -13,7 +13,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        if(Auth::guard('admin')->check()){
+        if(Auth::guard('admin')->check() && Auth::guard('admin')->user()->usertype == 1){
             return redirect()->route('admin.dashboard');
         }else{
             return view('admin.auth.login');
@@ -31,7 +31,7 @@ class AdminController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function loginProcess(Request $request)
     {
         $request->validate([
             'email' => 'required',
@@ -39,18 +39,26 @@ class AdminController extends Controller
         ]);
         
         $credentials = $request->only('email', 'password');
-        if (Auth::guard('admin')->attempt($credentials)) {
-            return redirect()->route('admin.dashboard')->withSuccess('You have Successfully loggedin');
+        $admin = Admin::where('email', $request->email)->first();
+        if($admin){
+            if (Auth::guard('admin')->attempt($credentials)) {
+                if($admin->usertype == 1){
+                    return redirect()->route('admin.dashboard')->withSuccess('You have Successfully loggedin');
+                }else{
+                    return redirect()->route('teacher.dashboard')->withSuccess('Class Teacher logged In');
+                }
+            }
         }
         return redirect()->route('admin.index')->withError('Oppes! You have entered invalid credentials');
     }
 
+
     /**
      * Display the specified resource.
      */
-    public function show(Admin $admin)
+    public function teacherDashboard()
     {
-        //
+        return view('admin.teacher_dashboard');
     }
 
     /**

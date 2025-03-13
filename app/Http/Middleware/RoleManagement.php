@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-class AdminAuthenticate
+class RoleManagement
 {
     /**
      * Handle an incoming request.
@@ -16,8 +16,8 @@ class AdminAuthenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::guard('admin')->check()) {
-            return redirect()->route('admin.index')->withError("Oppes! Your login has expired");
+        if (Auth::guard('admin')->user()->usertype != 1) {
+            return redirect()->route('teacher.dashboard')->withError("You do not have permission to access this menu");
         }
         return $next($request);
     }

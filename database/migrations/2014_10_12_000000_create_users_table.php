@@ -13,11 +13,43 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('admission_number')->unique();
+            $table->string('image')->nullable();
+            $table->string('student_name');
+            $table->date('date_of_birth');
+            $table->string('aadhar_no')->unique();
+            $table->string('nationality');
+            $table->string('religion');
+            $table->string('gender');
+            $table->string('caste');
+            $table->text('address');
+            $table->string('pin_code');
+            $table->string('mother_tongue');
+            $table->string('blood_group');
+            $table->string('stream')->nullable();
+            $table->string('combination_text')->nullable();
+            $table->text('school_name')->nullable();
+            $table->text('academic_session')->nullable();
+            $table->text('class')->nullable();
+            $table->text('second_language')->nullable();
+            $table->text('achievements')->nullable();
+            $table->text('previous_school_info')->nullable();
+            $table->string('parent_name');
+            $table->string('parent_relation');
+            $table->string('qualification');
+            $table->string('occupation');
+            $table->string('organization')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('mobile_no');
+            $table->string('parent_aadhar_number')->nullable();
+            $table->decimal('annual_income', 10, 2)->nullable();
+            $table->string('office_contact_number')->nullable();
+            $table->string('mention_relationship')->nullable();
+            $table->string('transport_facility')->nullable();
+            $table->string('route')->nullable();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->boolean('status')->default(1)->comment('1=approved, 0=pending');
             $table->timestamps();
         });
     }

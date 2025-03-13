@@ -20,7 +20,7 @@
 
 </head>
 
-<body class="{{request()->is('add-bill') ? 'toggle-sidebar' : '' }} {{request()->is('edit-bill/*') ? 'toggle-sidebar' : '' }} ">
+<body class="{{Route::is('student.studentList') ? 'toggle-sidebar' : '' }} ">
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
         <div class="d-flex align-items-center justify-content-between m-2">
@@ -61,6 +61,7 @@
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
     </footer><!-- End Footer -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     <!-- Vendor JS Files -->
     <script src="{{asset('assets/admin/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -69,16 +70,7 @@
     <!-- Template Main JS File -->
     <script src="{{asset('assets/admin/js/main.js')}}"></script>
     <!-- Pages Script -->
-    <script>
-        Notiflix.Notify.Init({});
-        Notiflix.Confirm.Init({});
-        Notiflix.Loading.Init({});
-
-        $(document).ready(function() {
-           
-        });
-    </script>
-    @yield('script')
+    @include('admin.layout.admin_script')
 </body>
 
 </html>
