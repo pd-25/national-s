@@ -52,9 +52,8 @@
                          _token: '{{ csrf_token() }}'
                     },
                     success: function(data) {
-                        console.log(data)
                         $.each(data, function(index, item) {
-                            $('#student_id_bind').append('<option value="' + item.student_details.id + '">' + item.student_details.student_name + '</option>');
+                            $('#student_id_bind').append('<option value="' + item.student_details.id + '">' + item.student_details.student_name + ' (' + item.student_details.admission_number + ') </option>');
                         });
                     },
                     error: function() {
@@ -66,19 +65,39 @@
 
         $('#class_id').change(function() {
             var classId = $(this).val();
-            var classId = $(this).val();
-            var classId = $(this).val();
 
             $('#section_id').empty();
             $('#section_id').append('<option value="">Select Section</option>');
 
             if (classId) {
                 $.ajax({
-                    url: 'get-arms-by-class-id/' + classId,
+                    url: '/admin/get-arms-by-class-id/' + classId,
                     type: 'GET',
                     success: function(data) {
                         $.each(data, function(index, item) {
                             $('#section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
+                        });
+                    },
+                    error: function() {
+                        console.error('Error fetching sections');
+                    }
+                });
+            }
+        });
+
+        $('#class_id_modal').change(function() {
+            var classId = $(this).val();
+
+            $('#section_id_modal').empty();
+            $('#section_id_modal').append('<option value="">Select Section</option>');
+
+            if (classId) {
+                $.ajax({
+                    url: '/admin/get-arms-by-class-id/' + classId,
+                    type: 'GET',
+                    success: function(data) {
+                        $.each(data, function(index, item) {
+                            $('#section_id_modal').append('<option value="' + item.id + '">' + item.section_name + '</option>');
                         });
                     },
                     error: function() {

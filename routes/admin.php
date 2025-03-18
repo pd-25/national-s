@@ -11,6 +11,7 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\DepositeController;
 
 
 Route::controller(AdminController::class)->group(function() {
@@ -50,12 +51,33 @@ Route::group(['prefix' => 'admin'], function () {
             Route::controller(StudentController::class)->group(function() {
                 Route::get('student-register', 'StudentRegister')->name('student.StudentRegister');
                 Route::post('store-student', 'storeStudentDetails')->name('student.storeStudentDetails');
+                Route::post('update-student', 'updateStudentDetails')->name('student.updateStudentDetails');
                 Route::get('all-students', 'studentList')->name('student.studentList');
                 Route::post('search-students', 'getStudentData')->name('student.getStudentData');
+                Route::get('students-edit/{id}', 'studentEdit')->name('student.studentEdit');
+                Route::get('students-view/{id}', 'studentView')->name('student.studentView');
+                Route::post('destroy-students', 'destroy')->name('student.destroy');
+                
                 Route::post('student-list-session-class-section', 'studentsListUsingSessionClassSection')->name('attendance.studentsListUsingSessionClassSection');
-            
                 Route::get('students-entrollment', 'studentsEntrollment')->name('student.studentsEntrollment');
-                Route::get('store-students-entrollment', 'studentsEntrollmentStore')->name('student.studentsEntrollmentStore');
+                Route::post('store-students-entrollment', 'studentsEntrollmentStore')->name('student.studentsEntrollmentStore');
+                Route::get('entrollment-history', 'entrollmentHistory')->name('student.entrollmentHistory');
+                Route::post('update-enrollemnt-students', 'updateEntrollmentHistory')->name('student.updateEntrollmentHistory');
+                Route::post('delete-enrollemnt-students', 'deleteEnrollmentHistory')->name('student.deleteEnrollmentHistory');
+                
+                Route::post('session-student-details', 'sessionWiseStudent')->name('student.sessionWiseStudent');
+            });
+
+            // Fee Deposite
+            Route::controller(DepositeController::class)->group(function() {
+                Route::get('add-deposite', 'index')->name('deposite.index');
+                Route::post('store-deposite', 'store')->name('deposite.store');
+                Route::get('all-deposite', 'create')->name('deposite.create');
+                Route::post('show-deposite', 'show')->name('deposite.show');
+                Route::get('edit-deposite/{payment_number}', 'edit')->name('deposite.edit');
+                Route::put('update-deposite/{deposite}/update', 'update')->name('deposite.update');
+                Route::get('view-download-deposite/{payment_number}', 'viewDownloadDeposite')->name('deposite.viewDownloadDeposite');
+                Route::post('destroy-deposite', 'destroy')->name('deposite.destroy');
             });
 
             // Attendance Management
@@ -131,7 +153,7 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('today-attendance-delete', 'destroy')->name('attendance.destroy');
             
             Route::get('view-student-attendance', 'viewStudentAttendance')->name('attendance.viewstudent');
-            Route::post('view-student-list', 'viewStudentList')->name('attendance.viewStudentList');
+            Route::post('view-student-attendance-list', 'viewStudentList')->name('attendance.viewStudentList');
         });
     });
 });

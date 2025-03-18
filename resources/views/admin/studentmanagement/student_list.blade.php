@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-4">
                         <label for="" class="form-label">Select Session </label>
-                        <select name="session_id" id="session_id" class="form-select form-select-sm">
+                        <select name="session_id" id="session_id" class="form-select">
                             @if (!@empty(GetSession('all_session')))
                                 @foreach (GetSession('all_session') as $index=>$item)
                                     <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-4">
                         <label for="" class="form-label">Select Class </label>
-                        <select name="class_id" id="class_id" class="form-select form-select-sm">
+                        <select name="class_id" id="class_id" class="form-select">
                             <option value="">Select Class</option>
                             @if (!@empty(GetClasses()))
                                 @foreach (GetClasses() as $index=>$item)
@@ -39,30 +39,29 @@
                     </div>
                     <div class="col-4">
                         <label class="form-label">Select Section </label>
-                        <select name="section_id" id="section_id" class="form-select form-select-sm">
+                        <select name="section_id" id="section_id" class="form-select">
                             <option value="">Select Section</option>
                         </select>
                     </div>
                     <div class="col-4">
                         <label for="admission_number" class="form-label">Admission Number</label>
-                        <input type="text" id="admission_number" class="form-control form-control-sm" name="admission_number">
+                        <input type="text" id="admission_number" class="form-control" name="admission_number">
                     </div>
                     <div class="col-4">
-                        <label for="first_name" class="form-label">First Name</label>
-                        <input type="text" id="first_name" class="form-control form-control-sm" name="first_name">
+                        <label for="student_name" class="form-label">Student Name</label>
+                        <input type="text" id="student_name" class="form-control" name="student_name">
                     </div>
                     <div class="col-4">
                         <label for="mobile_no" class="form-label">Mobile No</label>
-                        <input type="text" id="mobile_no" maxlength="10" class="form-control form-control-sm" name="mobile_no">
+                        <input type="text" id="mobile_no" maxlength="10" class="form-control" name="mobile_no">
                     </div>
                     <div class="col-4 mb-4">
                         <label for="email_address" class="form-label">Student E-Mail</label>
-                        <input type="text" id="email_address" class="form-control form-control-sm" name="email">
+                        <input type="text" id="email_address" class="form-control" name="email">
                     </div>
                     <div class="col-4 d-flex align-items-center">
-                            <a onclick="filterStudentDetails()" class="btn btn-primary btn-sm" style="margin-right: 10px;" ><i class="bi bi-filter-left"></i> Filter</a>
-                            <a href="javascript:void(0)" onclick="reload()" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-repeat"></i> Reset</a>
-                        {{-- </div> --}}
+                        <a onclick="filterStudentDetails()" class="btn btn-primary btn-sm" style="margin-right: 10px;" ><i class="bi bi-filter-left"></i> Filter</a>
+                        <a href="javascript:void(0)" onclick="reload()" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-repeat"></i> Reset</a>
                     </div>
                 </div>
             </form>
@@ -99,13 +98,13 @@
 </section>
 
 <script>
-
+    var table;
     function filterStudentDetails(){
         var session_id = $('#session_id').val();
         var class_id = $('#class_id').val();
         var section_id = $('#section_id').val();
         var admission_number = $('#admission_number').val();
-        var first_name = $('#first_name').val();
+        var student_name = $('#student_name').val();
         var mobile_no = $('#mobile_no').val();
         var email_address = $('#email_address').val();
 
@@ -118,17 +117,15 @@
                 class_id: class_id,
                 section_id: section_id,
                 admission_number: admission_number,
-                first_name: first_name,
+                student_name: student_name,
                 mobile_no: mobile_no,
                 email_address: email_address,
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                var table = $('#DataTables').DataTable();
+                table = $('#DataTables').DataTable();
                 table.clear().draw();
-
-                //console.log(response.data);
-
+                
                 $.each(response.data, function(index, student) {
                     table.row.add([
                         index + 1,
@@ -151,8 +148,8 @@
                             month: '2-digit',
                             day: '2-digit'
                         }),
-                        '<a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="viewStudent(\'' + encodeURIComponent(JSON.stringify(student)) + '\')"><i class="bi bi-pencil-square"></i> </a>' +
-                        '<a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteStudent(\'' + student.user_id + '\')"><i class="bi bi-trash"></i></a>'
+                        '<a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="EditStudent(\'' + student.student_details.id + '\')"><i class="bi bi-pencil-square"></i> </a><a class="btn btn-success btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="ViewStudent(\'' + student.student_details.id + '\')"><i class="bi bi-eye-fill"></i></a>' +
+                        '<a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteStudent(\'' + student.student_details.id + '\')"><i class="bi bi-trash"></i></a>'
                     ]).draw(false);
                 });
 
@@ -179,40 +176,42 @@
         $('#DataTables').DataTable();
     });
 
-    function viewStudent(data) {
-        var student = JSON.parse(decodeURIComponent(data));
-        console.log(student);
+    function ViewStudent(id){
+        window.location.href ="students-view/"+id;
     }
 
-    function deleteStudent(data){
-        console.log(data)
-        // Notiflix.Confirm.Show(
-        //     "Delete Confirmation",
-        //     "Do you want to delete?",
-        //     "Delete",
-        //     "Cancel",
-        //     function() {
-        //         $.ajax({
-        //         url: "{{ route('events.destroy')}}",
-        //         method: 'POST',
-        //         data: {
-        //             "_token": "{{ csrf_token() }}",
-        //             "id": data
-        //         },
-        //         dataType: 'JSON',
-        //         success:function(response)
-        //         {
-        //             if(response.warning){
-        //                 Notiflix.Notify.Warning(response.warning);
-        //                 table.ajax.reload(null, false);
-        //             }
-        //         },
-        //         error: function(xhr, status, error) {
-        //             table.ajax.reload(null, false);
-        //             Notiflix.Notify.Failure(response.warning);
-        //         }
-        //     });
-        // });
+    function EditStudent(id) {
+        window.location.href ="students-edit/"+id;
+    }
+
+    function deleteStudent(id){
+        Notiflix.Confirm.Show(
+            "Delete Confirmation",
+            "Do you want to delete?",
+            "Delete",
+            "Cancel",
+            function() {
+                $.ajax({
+                url: "{{ route('student.destroy')}}",
+                method: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": id
+                },
+                dataType: 'JSON',
+                success:function(response)
+                {
+                    if(response.warning){
+                        Notiflix.Notify.Warning(response.warning);
+                        table.ajax.reload(null, false);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    table.ajax.reload(null, false);
+                    Notiflix.Notify.Failure(response.warning);
+                }
+            });
+        });
     }
 </script>
 @endsection

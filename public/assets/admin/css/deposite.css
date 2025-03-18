@@ -1,0 +1,238 @@
+.bg-yellow {
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #000000;
+}
+h1 {
+    font-size: 39px;
+    color: #000000;
+    line-height: 40px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+h2 {
+    color: #000000;
+    font-size: 26px;
+    line-height: 26px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+h3 {
+    font-size: 20px;
+    color: #000000;
+}
+h4 {
+    font-size: 18px;
+    color: #000000;
+}
+p {
+    margin-bottom: 0;
+    line-height: 18px;
+    margin-top: 0;
+}
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.container {
+    max-width: 1240px;
+}
+
+.clear {
+    clear: both;
+}
+a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+a {
+    color: #1458a6;
+}
+ul {
+    margin-bottom: 0;
+    padding-left: 0;
+}
+*,
+::before,
+::after {
+    /* box-sizing: inherit; */
+    box-sizing: border-box;
+}
+section {
+    display: block;
+}
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    width: auto;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+.span-1,
+.span-2,
+.span-3,
+.span-4,
+.span-5,
+.span-6,
+.span-7,
+.span-8,
+.span-9,
+.span-10,
+.span-11,
+.span-12 {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 0;
+    padding-left: 0;
+}
+.span-1 {
+    -ms-flex: 0 0 8.333333%;
+    flex: 0 0 8.333333%;
+    max-width: 8.333333%;
+}
+.span-2 {
+    -ms-flex: 0 0 16.666667%;
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+}
+.span-3 {
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+.span-4 {
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+}
+.span-5 {
+    -ms-flex: 0 0 41.666667%;
+    flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+}
+.span-6 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+.span-7 {
+    -ms-flex: 0 0 58.333333%;
+    flex: 0 0 58.333333%;
+    max-width: 58.333333%;
+}
+.span-8 {
+    -ms-flex: 0 0 66.666667%;
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+}
+.span-9 {
+    -ms-flex: 0 0 75%;
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+.span-10 {
+    -ms-flex: 0 0 83.333333%;
+    flex: 0 0 83.333333%;
+    max-width: 83.333333%;
+}
+.span-11 {
+    -ms-flex: 0 0 91.666667%;
+    flex: 0 0 91.666667%;
+    max-width: 91.666667%;
+}
+.span-12 {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.bg-yellow {
+    background: #dff0ce;
+    padding: 15px;
+}
+.text-center {
+    text-align: center;
+}
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+.head-cap {
+    font-size: 20px;
+    font-style: italic;
+}
+.notxt {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 800;
+}
+.single-line {
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+}
+.full-line {
+    border-bottom: 3px #000000 dotted;
+    bottom: 0;
+    display: inline-block;
+    min-width: 1024px;
+    padding-left: 10px;
+    position: absolute;
+    width: 100%;
+    color: #000000;
+    font-weight: 400;
+    font-size: 16px;
+}
+.full-line2 {
+    border-bottom: 3px #000000 dotted;
+    /*bottom: 0;*/
+    bottom: 0px;
+    display: inline-block;
+    min-width: 1024px;
+    padding-left: 10px;
+    position: absolute;
+    width: 100%;
+    color: #000000;
+    font-size: 14px;
+    line-height: 16px;
+}
+.single-line,
+.three-line {
+    margin-bottom: 5px;
+    overflow: hidden;
+    position: relative;
+}
+.line3 {
+    border-bottom: 3px #000000 dotted;
+    display: inline-block;
+    padding-left: 10px;
+    width: 209px;
+}
+.mytable {
+    width: 100%;
+    margin-bottom: 0;
+    color: #212529;
+    border: 0 !important;
+    text-align: left;
+    border-radius: 20px;
+}
+.mytable tr {
+}
+.mytable th {
+    padding: 0;
+    font-weight: 400;
+}

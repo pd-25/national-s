@@ -98,8 +98,8 @@ class AttendanceController extends Controller
     {
         $request->validate([
             'student_id' => 'required',
-            'class_id' => 'required',
-            'section_id' => 'required',
+            // 'class_id' => 'required',
+            // 'section_id' => 'required',
             'typeData' => 'required|integer', 
             'single_date' => 'nullable|date',
             'from_date' => 'nullable|date',
@@ -109,10 +109,16 @@ class AttendanceController extends Controller
         $attendance = Attendance::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')
             ->where('user_id', $request->student_id)
             ->where('session_id', $session_id)
-            ->where('class_id', $request->class_id)
-            ->where('section_id', $request->section_id)
             ->orderBy('date_taken', 'desc');
 
+        if ($request->class_id) {
+            $attendance->where('class_id', $request->class_id);
+        }
+            
+        if ($request->section_id) {
+            $attendance->where('section_id', $request->section_id);
+        }
+            
         if ($request->typeData == 2 && $request->single_date) {
             $attendance->where('date_taken', $request->single_date);
         }
@@ -164,6 +170,7 @@ class AttendanceController extends Controller
             'section_id' => 'required',
             'dateAttendance' => 'date',
         ]);
+        
         $attendance = Attendance::with('teacherDetails','studentDetails','studentSession','studentClass',
         'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('date_taken', $request->dateAttendance)->get();
         return $attendance;

@@ -20,7 +20,7 @@
 
 </head>
 
-<body class="{{Route::is('student.studentList') ? 'toggle-sidebar' : '' }} ">
+<body>
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
         <div class="d-flex align-items-center justify-content-between m-2">
