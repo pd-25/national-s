@@ -16,9 +16,9 @@ class RoleManagement
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('admin')->user()->usertype != 1) {
-            return redirect()->route('teacher.dashboard')->withError("You do not have permission to access this menu");
-        }
+        // if (Auth::guard('admin')->user()->usertype != 1) {
+        //     return redirect()->route('teacher.dashboard')->withError("You do not have permission to access this menu");
+        // }
         return $next($request);
     }
 }

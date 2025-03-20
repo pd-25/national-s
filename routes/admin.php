@@ -83,6 +83,8 @@ Route::group(['prefix' => 'admin'], function () {
             // Attendance Management
 
             Route::controller(AttendanceController::class)->group(function() {
+                Route::get('take-class-attendance', 'takeClassAttendance')->name('attendance.takeClassAttendance');
+                
                 Route::get('class-attendance', 'classAttendance')->name('attendance.classAttendance');
                 Route::post('class-attendance-data', 'classAttendanceData')->name('attendance.classAttendanceData');
                 Route::get('student-attendance', 'studentAttendance')->name('attendance.studentAttendance');

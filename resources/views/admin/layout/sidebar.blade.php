@@ -14,11 +14,18 @@
                 </a>
                 <ul id="Attendance-management" data-bs-parent="#sidebar-nav"
                     @if (Route::is('attendance.classAttendance') ||
-                    Route::is('attendance.studentAttendance')
+                    Route::is('attendance.studentAttendance') ||
+                    Route::is('attendance.takeClassAttendance')
                     )
                     class="nav-content"
                     @else
                     class="nav-content collapse" @endif>
+                    <li class="{{ Route::is('attendance.takeClassAttendance') ? 'active' : '' }}" id="">
+                        <a href="{{route('attendance.takeClassAttendance')}}" 
+                        class="{{ Route::is('attendance.takeClassAttendance') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Take Class Attendance</span>
+                        </a>
+                    </li>
                     <li class="{{ Route::is('attendance.classAttendance') ? 'active' : '' }}" id="">
                         <a href="{{route('attendance.classAttendance')}}" 
                         class="{{ Route::is('attendance.classAttendance') ? 'active' : '' }}">
@@ -177,6 +184,75 @@
                     </li>
                 </ul>
             </li>
+        @elseif(Auth::guard('admin')->user()->usertype == 2)
+            <li class="nav-item">
+                <a href="#" class="nav-link collapsed" data-bs-target="#Student-management" data-bs-toggle="collapse">
+                    <i class="bi bi-person-bounding-box"></i><span>Student Management</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="Student-management" data-bs-parent="#sidebar-nav"
+                    @if (Route::is('student.StudentRegister') ||
+                    Route::is('student.studentList') ||
+                    Route::is('student.studentsEntrollment') ||
+                    Route::is('student.studentEdit') ||
+                    Route::is('student.studentView') ||
+                    Route::is('student.entrollmentHistory')
+                    )
+                    class="nav-content"
+                    @else
+                    class="nav-content collapse" @endif>
+                    <li class="{{ Route::is('student.StudentRegister') ? 'active' : '' }}" id="">
+                        <a href="{{route('student.StudentRegister')}}" 
+                        class="{{ Route::is('student.StudentRegister') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Student Register</span>
+                        </a>
+                    </li>
+                    <li class="{{ Route::is('student.studentList') ? 'active' : '' }} {{ Route::is('student.studentEdit') ? 'active' : '' }} {{ Route::is('student.studentView') ? 'active' : '' }} " id="">
+                        <a href="{{route('student.studentList')}}" 
+                        class="{{ Route::is('student.studentList') ? 'active' : '' }} {{ Route::is('student.studentEdit') ? 'active' : '' }} {{ Route::is('student.studentView') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Student List</span>
+                        </a>
+                    </li>
+                    <li class="{{ Route::is('student.studentsEntrollment') ? 'active' : '' }}" id="">
+                        <a href="{{route('student.studentsEntrollment')}}" 
+                        class="{{ Route::is('student.studentsEntrollment') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Student Enrollment</span>
+                        </a>
+                    </li>
+                    <li class="{{ Route::is('student.entrollmentHistory') ? 'active' : '' }}" id="">
+                        <a href="{{route('student.entrollmentHistory')}}" 
+                        class="{{ Route::is('student.entrollmentHistory') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Enrollment History</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link collapsed" data-bs-target="#FreesDeposit-management" data-bs-toggle="collapse">
+                    <i class="bi bi-wallet2"></i><span>Fee Deposite</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="FreesDeposit-management" data-bs-parent="#sidebar-nav"
+                    @if (Route::is('deposite.index') ||
+                    Route::is('deposite.create') ||
+                    Route::is('deposite.viewDownloadDeposite') || 
+                    Route::is('deposite.edit')
+                    )
+                    class="nav-content"
+                    @else
+                    class="nav-content collapse" @endif>
+                    <li class="{{ Route::is('deposite.index') ? 'active' : '' }}" id="">
+                        <a href="{{route('deposite.index')}}" 
+                        class="{{ Route::is('deposite.index') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Add Deposite</span>
+                        </a>
+                    </li>
+                    <li class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }}" id="">
+                        <a href="{{route('deposite.create')}}" 
+                        class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }} {{ Route::is('deposite.edit') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>All Deposite</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         @else
             <li class="nav-item {{Route::is('teacher.dashboard') ? 'active' : '' }}">
                 <a class="nav-link {{ Route::is('teacher.dashboard') ? 'active' : 'collapsed' }}" href="{{route('teacher.dashboard')}}">
@@ -222,7 +298,6 @@
                     </li>
                 </ul>
             </li>
-            
         @endif
     </ul>
 </aside>

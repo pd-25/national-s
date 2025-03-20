@@ -42,7 +42,7 @@ class AdminController extends Controller
         $admin = Admin::where('email', $request->email)->first();
         if($admin){
             if (Auth::guard('admin')->attempt($credentials)) {
-                if($admin->usertype == 1){
+                if($admin->usertype == 1 || $admin->usertype == 2){
                     return redirect()->route('admin.dashboard')->withSuccess('You have Successfully loggedin');
                 }else{
                     return redirect()->route('teacher.dashboard')->withSuccess('Class Teacher logged In');

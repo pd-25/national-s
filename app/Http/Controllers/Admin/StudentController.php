@@ -182,11 +182,19 @@ class StudentController extends Controller
 
     public function studentsInClass(Request $request)
     {
-        $session_id = GetSession('active_session')[0]->id;
-        $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
-        $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
-        $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
+        if($request->session_id && $request->class_id && $request->section_id){
+            $session_id = $request->session_id;
+            $teacher_class_assigned = $request->class_id;
+            $teacher_section_assigned = $request->section_id;
+        }else{
+            $session_id = GetSession('active_session')[0]->id;
+            $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
+            $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
+            $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
+        }
+        
         $query = StudentClassMapping::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')->where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->get();
+        
         return ["data"=>$query];
     }
 

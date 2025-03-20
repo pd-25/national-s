@@ -12,12 +12,58 @@
 <section class="section">
     <div class="card border-0">
         <div class="card-body pt-4">
-            @php
+            <div class="row my-3">
+                <div class="col-4 mb-2">
+                    <label for="" class="form-label">Select Session<span class="text-danger">*</span></label>
+                    <select name="session_id" id="session_id" class="form-select">
+                        @if (!@empty(GetSession('all_session')))
+                            @foreach (GetSession('all_session') as $index=>$item)
+                                <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+                <div class="col-4 mb-2">
+                    <label for="" class="form-label">Select class<span class="text-danger">*</span></label>
+                    <select name="class_id" id="class_id" class="form-select">
+                        <option value="">Select Class</option>
+                        @if (!@empty(GetClasses()))
+                            @foreach (GetClasses() as $index=>$item)
+                                <option value="{{@$item->id}}">{{@$item->class_name}}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @if ($errors->has('class_id'))
+                        <span class="text-danger">{{ $errors->first('class_id') }}</span>
+                    @endif
+                </div>
+                <div class="col-4 mb-2">
+                    <label for="" class="form-label">Select Section <span class="text-danger">*</span></label>
+                    <select name="section_id" id="section_id" class="form-select">
+                        <option value="">Select Section</option>
+                    </select>
+                    @if ($errors->has('section_id'))
+                        <span class="text-danger">{{ $errors->first('section_id') }}</span>
+                    @endif
+                </div>
+                <div class="col-4 mb-2">
+                    <label for="" class="form-label">Select Date <span class="text-danger">*</span></label>
+                    <input class="form-control" type="date" id="dateAttendance" value="{{date('Y-m-d')}}" name="dateAttendance">
+                </div>
+                <div class="col-12 text-end">
+                    <button onclick="fetchStudents()" type="submit" class="btn btn-primary me-2">Take Attendance</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card border-0">
+        <div class="card-body pt-4">
+            {{-- @php
                 $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
                 $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
                 $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
-            @endphp
-            <h4 class="mb-4">  All Student in ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Class</h4>
+            @endphp --}}
+            {{-- <h4 class="mb-4">  All Student in ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Class</h4> --}}
             <hr>
             <div class="table-responsive">
                 <table class="w-100 table table-striped" id="DataTables">
@@ -43,15 +89,22 @@
 </section>
 <script>
     $(document).ready(function() {
-        function fetchStudents() {
+    });
+
+    function fetchStudents() {
+        var session_id =$("#session_id").val();
+        var class_id =$("#class_id").val();
+        var section_id =$("#section_id").val();
+        var dateAttendance =$("#dateAttendance").val();
+        if(session_id && class_id && section_id && dateAttendance){
             $.ajax({
                 url: "{{ route('student.studentsInClass') }}",
                 type: "POST",
                 dataType: "json",
                 data: {
-                    session_id: null,
-                    class_id:null,
-                    section_id:null,
+                    session_id: session_id,
+                    class_id:class_id,
+                    section_id:section_id,
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
@@ -103,14 +156,25 @@
                     $('#results').append('<p>An error occurred while fetching students.</p>');
                 }
             });
+        }else{
+            Notiflix.Notify.Failure("Please select all field");
         }
-        fetchStudents();
-    });
+    }
 
     function checkAttendance() {
+        var session_id =$("#session_id").val();
+        var class_id =$("#class_id").val();
+        var section_id =$("#section_id").val();
+        var dateAttendance =$("#dateAttendance").val();
         $.ajax({
             url: "{{ route('attendance.create') }}",
-            type: "GEt",
+            type: "GET",
+            data:{
+                session_id:session_id,
+                class_id:class_id,
+                section_id:section_id,
+                dateAttendance:dateAttendance,
+            },
             dataType: "json",
             success: function(response) {
                 $.each(response, function(index, item) {
@@ -131,9 +195,10 @@
     }
 
     function getAttendance(student, status, late) {
-        var classDetails = {!! json_encode($teacher_details->teacherclassmapping[0]) !!};
-        class_id = classDetails.class_id
-        section_id = classDetails.section_id
+        var session_id =$("#session_id").val();
+        var class_id =$("#class_id").val();
+        var section_id =$("#section_id").val();
+        var dateAttendance =$("#dateAttendance").val();
         $.ajax({
         url: "{{ route('attendance.store') }}",
         type: "POST",
@@ -142,8 +207,10 @@
             user_id: student.student_details.id,
             status: status,
             late:late,
+            session_id:session_id,
             class_id:class_id,
             section_id:section_id,
+            dateAttendance:dateAttendance,
             _token: '{{ csrf_token() }}'
         },
         success: function(response) {

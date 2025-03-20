@@ -18,13 +18,23 @@ class AttendanceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $session_id = GetSession('active_session')[0]->id;
-        $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
-        $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
-        $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
-        $attendance = Attendance::where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->where('date_taken', date('Y-m-d'))->get();
+        if($request->session_id && $request->class_id && $request->section_id && $request->dateAttendance){
+            $session_id = $request->session_id;
+            $teacher_class_assigned = $request->class_id;
+            $teacher_section_assigned = $request->section_id;
+            $date = date('Y-m-d', strtotime($request->dateAttendance));
+        }else{
+            $session_id = GetSession('active_session')[0]->id;
+            $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
+            $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
+            $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
+            $date = date('Y-m-d');
+        }
+        
+        $attendance = Attendance::where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->where('date_taken', $date)->get();
+        
         return  $attendance;
     }
 
@@ -49,16 +59,25 @@ class AttendanceController extends Controller
         }
     
         $attendance = new Attendance;
+        if($request->session_id && $request->dateAttendance){
+            $session_id = $request->session_id;
+            $date_taken =  date('Y-m-d', strtotime($request->dateAttendance));
+        }else{
+            $session_id = GetSession('active_session')[0]->id;
+            $date_taken = date('Y-m-d');
+        }
+        
         $attendance->teacher_id = auth()->guard('admin')->user()->id;
         $attendance->user_id = $request->user_id;
-        $attendance->session_id = GetSession('active_session')[0]->id;
+        $attendance->session_id = $session_id;
         $attendance->class_id = $request->class_id;
         $attendance->section_id = $request->section_id;
-        $attendance->date_taken = date('Y-m-d');
+        $attendance->date_taken = $date_taken;
         $attendance->time_taken = date('H:i');
         $attendance->late = $request->late;
         $attendance->status = $request->status;
         $attendance->save();
+        
         if ($attendance->status == 1 && $attendance->late == 0) {
             $returnValue = ['success' => 'Attendance recorded successfully.'];
         } elseif ($attendance->status == 0 && $attendance->late == 0) {
@@ -79,8 +98,9 @@ class AttendanceController extends Controller
 
     public function getTodayAttendanceData(Request $request)
     {
+        // ->where('teacher_id', auth()->guard('admin')->user()->id)
         $attendance = Attendance::with('studentDetails','studentSession','studentClass',
-        'studentSection')->where('teacher_id', auth()->guard('admin')->user()->id)->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('date_taken', $request->dateAttendance)->get();
+        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('date_taken', $request->dateAttendance)->get();
         return ['today' => $attendance];
     }
 
@@ -179,5 +199,10 @@ class AttendanceController extends Controller
     public function studentAttendance(Request $request)
     {
         return view('admin.manageattendance.studentattendance');
+    }
+
+    public function takeClassAttendance()
+    {
+        return view('admin.manageattendance.attendance');
     }
 }
