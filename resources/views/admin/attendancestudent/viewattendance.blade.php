@@ -18,7 +18,7 @@
     <div class="card border-0">
         <div class="card-body pt-4">
             <div class="row my-3">
-                <div class="col-4">
+                <div class="col-md-4 col-sm-12 mb-2">
                     <select name="session_id" id="session_id" class="form-select">
                         @if (!@empty(GetSession('all_session')))
                             @foreach (GetSession('all_session') as $index=>$item)
@@ -27,12 +27,12 @@
                         @endif
                     </select>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4 col-sm-12 mb-2">
                     <div id="dateWiseAttendance">
                         <input class="form-control" type="date" id="dateAttendance" value="{{date('Y-m-d')}}" name="dateAttendance">
                     </div>
                 </div>
-                <div class="col-4 text-end">
+                <div class="col-md-4 col-sm-12 text-end mb-2">
                     <button onclick="viewAttendance()" type="submit" class="btn btn-primary me-2">View Attendance</button>
                 </div>
             </div>
@@ -45,8 +45,8 @@
                     <thead>
                         <tr>
                             <th>SL NO </th>
-                            <th>Student Name</th>
                             <th>Admission Number</th>
+                            <th>Student Name</th>
                             <th class="text-center">Time</th>
                             <th class="text-center">Check</th>
                             <th class="text-center">Late</th>
@@ -63,7 +63,14 @@
 </section>
 <script>
     $(document).ready(function() {
-        $('#DataTables').DataTable();
+        $('#DataTables').DataTable({
+            bLengthChange: true,
+            "lengthMenu": [[10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"]],
+            "iDisplayLength": 50,
+            bInfo: false,
+            responsive: true,
+            "bAutoWidth": false
+        });
     });
     function viewAttendance(){
         var dateAttendance = $('#dateAttendance').val();
@@ -86,10 +93,11 @@
                 var table = $('#DataTables').DataTable({
                     destroy: true,
                     data: response.today || [], 
+                    iDisplayLength: 50,
                     columns: [
                         { data: null, render: function(data, type, row, meta) { return meta.row + 1; } },
-                        { data: 'student_details.student_name' },
                         { data: 'student_details.admission_number' },
+                        { data: 'student_details.student_name' },
                         { data: 'time_taken', className: 'text-center' },
                         { 
                             data: null,

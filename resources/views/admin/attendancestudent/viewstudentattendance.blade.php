@@ -84,7 +84,14 @@
     $(document).ready(function() {
         $("#showSelectDate").hide();
         $(".showFromToDate").hide();
-        $('#DataTables').DataTable();
+        $('#DataTables').DataTable({
+            bLengthChange: true,
+            "lengthMenu": [[10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"]],
+            "iDisplayLength": 50,
+            bInfo: false,
+            responsive: true,
+            "bAutoWidth": false
+        });
     });
     function getType(){
        var typeData =  $("#type").val();
@@ -139,6 +146,7 @@
                 var table = $('#DataTables').DataTable({
                     destroy: true,
                     data: response || [], 
+                    iDisplayLength: 50,
                     columns: [
                         { data: null, render: function(data, type, row, meta) { return meta.row + 1; } },
                         { data: 'student_details.student_name' },

@@ -88,9 +88,9 @@
                     @endif
                 </tbody>
             </table>
-            <div class="justify-content-end mt-4">
+            {{-- <div class="justify-content-end mt-4">
                 {{@GetClassesArms()->appends(request()->input())->links()}}
-            </div>
+            </div> --}}
         </div>
     </div>
 </section>

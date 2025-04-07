@@ -42,58 +42,56 @@
     </div>
 </section>
 <script>
-    // student.studentsInClass
-    $.ajax({
-        url: "{{ route('student.studentsInClass') }}",
-        type: "POST",
-        dataType: "json",
-        data: {
-            _token: '{{ csrf_token() }}'
-        },
-        success: function(response) {
-            var table = $('#DataTables').DataTable();
-            table.clear().draw();
-
-            $.each(response.data, function(index, student) {
-                table.row.add([
-                    index + 1,
-                    "<img src="+student.student_details.image+" class='img_fluid' style='height:80px;' />",
-                    student.student_details.admission_number,
-                    student.student_details.student_name,
-                    new Date(student.student_details.date_of_birth).toLocaleDateString('en-UK', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                    }),
-                    student.student_session.sessions_name,
-                    student.student_class.class_name,
-                    student.student_section.section_name,
-                    student.student_details.gender,
-                    student.student_details.email,
-                    student.student_details.mobile_no
-                ]).draw(false);
-            });
-
-            table.destroy();
-            $('#DataTables').DataTable({
-                "responsive": true,
-                "autoWidth": false,
-                "lengthChange": false,
-                "ordering": true,
-                "paging": true,
-                "searching": true,
-                "destroy": true
-            });
-
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            $('#results').append('<p>An error occurred while searching for students.</p>');
-        }
-    });
-
+    var table;
     $(document).ready(function() {
-        $('#DataTables').DataTable();
+        table = $('#DataTables').DataTable({
+            bLengthChange: true,
+            "lengthMenu": [[10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"]],
+            "iDisplayLength": 50,
+            bInfo: false,
+            responsive: true,
+            "bAutoWidth": false
+        });
+        studentInClass();
     });
+    // student.studentsInClass
+    function studentInClass(){
+        $.ajax({
+            url: "{{ route('student.studentsInClass') }}",
+            type: "POST",
+            dataType: "json",
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                table.clear();
+                $.each(response.data, function(index, student) {
+                    table.row.add([
+                        index + 1,
+                        "<img src="+student.student_details.image+" class='img_fluid' style='height:80px;' />",
+                        student.student_details.admission_number,
+                        student.student_details.student_name,
+                        new Date(student.student_details.date_of_birth).toLocaleDateString('en-UK', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        }),
+                        student.student_session.sessions_name,
+                        student.student_class.class_name,
+                        student.student_section.section_name,
+                        student.student_details.gender,
+                        student.student_details.email,
+                        student.student_details.mobile_no
+                    ])
+                });
+    
+                table.draw();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                $('#results').append('<p>An error occurred while searching for students.</p>');
+            }
+        });
+    }
 </script>
 @endsection

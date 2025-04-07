@@ -114,14 +114,21 @@
 <script>
     var table;
     $(document).ready(function() {
-        $('#DataTables').DataTable();
+        table = $('#DataTables').DataTable({
+            bLengthChange: true,
+            "lengthMenu": [[10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"]],
+            "iDisplayLength": 50,
+            bInfo: false,
+            responsive: true,
+            "bAutoWidth": false
+        });
     });
+
     function filterDepositeDetails(){
         var payment_number = $('#payment_number').val();
         var session_id = $('#session_id').val();
         var class_id = $('#class_id').val();
         var section_id = $('#section_id').val();
-        
         var user_id = $('#student_id_bind').val();
         var month = $('#month').val();
         var year = $('#year').val();
@@ -141,8 +148,9 @@
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                table = $('#DataTables').DataTable();
-                table.clear().draw();
+                // table = $('#DataTables').DataTable();
+                // table.clear().draw();
+                table.clear();
                 $.each(response, function(index, deposite) {
                     table.row.add([
                         index + 1,
@@ -162,20 +170,10 @@
                         }),
                         '<a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="EditDeposite(\'' + deposite.payment_number + '\')"><i class="bi bi-pencil-square"></i> </a> <a class="btn btn-success btn-sm rounded-pill" href="javascript:void(0)" onclick="ViewDeposite(\'' + deposite.payment_number + '\')"><i class="bi bi-eye-fill"></i></a>' + 
                         '<a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteDeposite(\'' + deposite.id + '\')"><i class="bi bi-trash"></i></a>'
-                    ]).draw(false);
+                    ])
                 });
 
-                table.destroy();
-                $('#DataTables').DataTable({
-                    "responsive": true,
-                    "autoWidth": false,
-                    "lengthChange": false,
-                    "ordering": true,
-                    "paging": true,
-                    "searching": true,
-                    "destroy": true
-                });
-
+                table.draw();
             },
             error: function(xhr, status, error) {
                 console.error(xhr.responseText);

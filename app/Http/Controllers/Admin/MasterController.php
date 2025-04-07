@@ -100,7 +100,6 @@ class MasterController extends Controller
                 'section_id' => 'required|numeric'
             ]);
         }
-        
         $teacherClassMapping = TeacherClassMapping::where('class_id', $request->class_id)->where('section_id', $request->section_id)->first();
         if($teacherClassMapping != null){
             $teacherName  = GetTeacher($teacherClassMapping->teacher_id);
@@ -112,10 +111,15 @@ class MasterController extends Controller
         $teacher = storeAdminAndTeacher($data);
         if($request->admin_id){
             $teacherClassMapping = TeacherClassMapping::where('teacher_id', $request->admin_id)->first();
+            if($teacherClassMapping == null){
+                $teacherClassMapping = new TeacherClassMapping;
+                $teacherClassMapping->teacher_id = $request->admin_id;    
+            }
         }else{
             $teacherClassMapping = new TeacherClassMapping;
             $teacherClassMapping->teacher_id = $teacher;
         }
+
         $teacherClassMapping->class_id = $request->class_id;
         $teacherClassMapping->section_id = $request->section_id;
         $teacherClassMapping->save();
