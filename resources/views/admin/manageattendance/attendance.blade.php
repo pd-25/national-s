@@ -70,8 +70,8 @@
                     <thead>
                         <tr>
                             <th>SL NO</th>
-                            <th>Student Name</th>
                             <th>Admission Number</th>
+                            <th>Student Name</th>
                             <th>Session</th>
                             <th>Class</th>
                             <th>Section</th>

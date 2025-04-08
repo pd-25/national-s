@@ -51,7 +51,7 @@ class AttendanceController extends Controller
             'status' => 'required|boolean'
         ]);
 
-        $attendance = Attendance::where('user_id',  $request->user_id)->where('date_taken', date('Y-m-d'))->count();
+        $attendance = Attendance::where('user_id',  $request->user_id)->whereDate('date_taken', date('Y-m-d'))->count();
         if($attendance > 0){
             return response()->json([
                 'error' => 'Attendance already taken'
@@ -100,7 +100,7 @@ class AttendanceController extends Controller
     {
         // ->where('teacher_id', auth()->guard('admin')->user()->id)
         $attendance = Attendance::with('studentDetails','studentSession','studentClass',
-        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('date_taken', $request->dateAttendance)->get();
+        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->whereDate('date_taken', $request->dateAttendance)->get();
         return ['today' => $attendance];
     }
 
@@ -140,7 +140,7 @@ class AttendanceController extends Controller
         }
             
         if ($request->typeData == 2 && $request->single_date) {
-            $attendance->where('date_taken', $request->single_date);
+            $attendance->whereDate('date_taken', $request->single_date);
         }
 
         if ($request->typeData == 3 && $request->from_date && $request->to_date) {
@@ -192,7 +192,7 @@ class AttendanceController extends Controller
         ]);
         
         $attendance = Attendance::with('teacherDetails','studentDetails','studentSession','studentClass',
-        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('date_taken', $request->dateAttendance)->get();
+        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->whereDate('date_taken', $request->dateAttendance)->get();
         return $attendance;
     }
 

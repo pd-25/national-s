@@ -51,7 +51,7 @@
                     <input class="form-control" type="date" id="dateAttendance" value="{{date('Y-m-d')}}" name="dateAttendance">
                 </div>
                 <div class="col-12 text-end">
-                    <button onclick="viewAttendance()" type="submit" class="btn btn-primary me-2">View Attendance</button>
+                    <button onclick="viewAttendance()" type="submit" class="btn btn-success me-2 text-uppercase">View Attendance</button>
                 </div>
             </div>
         </div>
@@ -64,10 +64,10 @@
                         <tr>
                             <th>SL NO </th>
                             <th>Teacher</th>
-                            <th>Student Name</th>
                             <th>Admission Number</th>
+                            <th>Student Name</th>
                             <th class="text-center">Time</th>
-                            <th class="text-center">Check</th>
+                            <th class="text-center">Present/Absent</th>
                             <th class="text-center">Late</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -116,8 +116,8 @@
                         columns: [
                             { data: null, render: function(data, type, row, meta) { return meta.row + 1; } },
                             { data: 'teacher_details.name' },
-                            { data: 'student_details.student_name' },
                             { data: 'student_details.admission_number' },
+                            { data: 'student_details.student_name' },
                             { data: 'time_taken', className: 'text-center' },
                             { 
                                 data: null,
