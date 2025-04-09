@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
@@ -89,6 +90,9 @@ class AdminController extends Controller
     public function logout() 
     {
         Auth::guard('admin')->logout();
+        Session::forget('session_session_id');
+        Session::forget('session_class_id');
+        Session::forget('session_section_id');
         return Redirect()->route('admin.index')->with('info', 'Successfully Logged Out');
     }
 }

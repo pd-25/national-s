@@ -205,6 +205,10 @@ class StudentController extends Controller
         ->where('class_id', $request->class_id)
         ->where('section_id', $request->section_id);
         
+        $request->session()->put('session_session_id', $request->class_id);
+        $request->session()->put('session_class_id', $request->class_id);
+        $request->session()->put('session_section_id', $request->section_id);
+
         if ($request->history == 0) {
             $query->where('status', 1);
         }

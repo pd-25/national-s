@@ -175,7 +175,10 @@ function GetSession($session_manage=null)
         $session = Session::orderBy('section_valid_from', 'desc')->get();
     } else if($session_manage == "active_session"){
         $session = Session::where('status', 1)->orderBy('section_valid_from', 'desc')->get();
-    }else{
+    } else if($session_manage == "deactive_session"){
+        $session = Session::where('status', 0)->orderBy('section_valid_from', 'desc')->get();
+    }
+    else{
         $session = Session::orderBy('section_valid_from', 'desc')->get();
     }
     return $session;

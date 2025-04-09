@@ -68,15 +68,21 @@
 
             $('#section_id').empty();
             $('#section_id').append('<option value="">Select Section</option>');
-
             if (classId) {
                 $.ajax({
                     url: '/admin/get-arms-by-class-id/' + classId,
                     type: 'GET',
                     success: function(data) {
-                        $.each(data, function(index, item) {
-                            $('#section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
-                        });
+                        if(data.length == 1){
+                            $.each(data, function(index, item) {
+                                $('#section_id').append('<option value="' + item.id + '" ' + (item.id == data[0].id ? 'selected' : '') + '>' + item.section_name + '</option>');
+                            });
+                            getAllStudent();
+                        }else{
+                            $.each(data, function(index, item) {
+                                $('#section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
+                            });
+                        }
                     },
                     error: function() {
                         console.error('Error fetching sections');
@@ -87,10 +93,8 @@
 
         $('#class_id_modal').change(function() {
             var classId = $(this).val();
-
             $('#section_id_modal').empty();
             $('#section_id_modal').append('<option value="">Select Section</option>');
-
             if (classId) {
                 $.ajax({
                     url: '/admin/get-arms-by-class-id/' + classId,
@@ -99,6 +103,36 @@
                         $.each(data, function(index, item) {
                             $('#section_id_modal').append('<option value="' + item.id + '">' + item.section_name + '</option>');
                         });
+                    },
+                    error: function() {
+                        console.error('Error fetching sections');
+                    }
+                });
+            }
+        });
+
+        $('#modal_previous_class_id').change(function() {
+            var classId = $(this).val();
+            $('#modal_previous_section_id').empty();
+            $('#modal_previous_section_id').append('<option value="">Select Section</option>');
+            if (classId) {
+                $.ajax({
+                    url: '/admin/get-arms-by-class-id/' + classId,
+                    type: 'GET',
+                    success: function(data) {
+                        $.each(data, function(index, item) {
+                            $('#modal_previous_section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
+                        });
+                        // if(data.length == 1){
+                        //     $.each(data, function(index, item) {
+                        //         $('#modal_previous_section_id').append('<option value="' + item.id + '" ' + (item.id == data[0].id ? 'selected' : '') + '>' + item.section_name + '</option>');
+                        //     });
+                        //     getAllStudent();
+                        // }else{
+                        //     $.each(data, function(index, item) {
+                        //         $('#modal_previous_section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
+                        //     });
+                        // }
                     },
                     error: function() {
                         console.error('Error fetching sections');

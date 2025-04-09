@@ -51,7 +51,7 @@
                     <input class="form-control" type="date" id="dateAttendance" value="{{date('Y-m-d')}}" name="dateAttendance">
                 </div>
                 <div class="col-12 text-end">
-                    <button onclick="viewAttendance()" type="submit" class="btn btn-success me-2 text-uppercase">View Attendance</button>
+                    <button onclick="viewAttendance()" type="submit" class="btn btn-primary me-2">View Attendance</button>
                 </div>
             </div>
         </div>

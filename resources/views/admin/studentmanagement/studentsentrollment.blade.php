@@ -5,37 +5,51 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Students Enrollment</li>
+            <li class="breadcrumb-item active">Enrollment New Session</li>
         </ol>
     </nav>
 </div>
 <section>
+    @php
+        $session_session_id = 0;
+        $session_class_id = 0;
+        $session_section_id = 0;
+        if (Session::has('session_session_id')) {
+            $session_session_id = Session::get('session_session_id');
+        }
+        if (Session::has('session_class_id')) {
+            $session_class_id = Session::get('session_class_id');
+        }
+        if (Session::has('session_section_id')) {
+            $session_section_id = Session::get('session_section_id');
+        }
+    @endphp
     <div class="card border-0">
         <div class="card-body pt-4">
             <div class="row my-3">
                 <div class="col-4 mb-2">
-                    <label for="" class="form-label">Select Session<span class="text-danger">*</span></label>
+                    <label for="" class="form-label">Select Previous Session<span class="text-danger">*</span></label>
                     <select name="session_id" id="session_id" class="form-select">
-                        @if (!@empty(GetSession('all_session')))
-                            @foreach (GetSession('all_session') as $index=>$item)
-                                <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
+                        @if (!@empty(GetSession('deactive_session')))
+                            @foreach (GetSession('deactive_session') as $index=>$item)
+                                <option value="{{@$item->id}}" {{@$session_session_id == $item->id ? 'selected' : '' }}>{{@$item->sessions_name}}</option>
                             @endforeach
                         @endif
                     </select>
                 </div>
                 <div class="col-4 mb-2">
-                    <label for="" class="form-label">Select class<span class="text-danger">*</span></label>
+                    <label for="" class="form-label">Select Previous class<span class="text-danger">*</span></label>
                     <select name="class_id" id="class_id" class="form-select">
                         <option value="">--Select Class--</option>
                         @if (!@empty(GetClasses()))
                             @foreach (GetClasses() as $index=>$item)
-                                <option value="{{@$item->id}}">{{@$item->class_name}}</option>
+                                <option value="{{@$item->id}}" {{@$session_class_id == $item->id ? 'selected' : '' }}>{{@$item->class_name}}</option>
                             @endforeach
                         @endif
                     </select>
                 </div>
                 <div class="col-4 mb-2">
-                    <label for="" class="form-label">Select Section <span class="text-danger">*</span></label>
+                    <label for="" class="form-label">Select Previous Section <span class="text-danger">*</span></label>
                     <select name="section_id" id="section_id" class="form-select" onchange="getAllStudent()">
                         <option value="">--Select Section--</option>
                     </select>
@@ -45,37 +59,30 @@
     </div>
     <div class="card border-0">
         <div class="card-body pt-4">
-            {{-- <div class="row">
-                <div class="col-12 text-end">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio1" value="all">
-                        <label class="form-check-label" for="inlineRadio1">Enrolled all</label>
-                    </div>
-                </div>
-            </div> --}}
+            <h5 class="card-text fw-bold mb-3">Promoted students for the new session.</h5>
+            <hr>
             <div class="table-responsive">
-                <table class="w-100 table table-striped overflow-sc" id="DataTables">
+                <table class="w-100 table table-striped table-sm overflow-sc" id="DataTables">
                     <thead>
-                        <tr>
+                        <tr class="table-primary">
                             <th>SL NO </th>
                             <th>Student Name</th>
                             <th>Admission Number</th>
-                            <th class="text-center">Action</th>
+                            <th class="text-center">Select Student for Promotion</th>
                         </tr>
                     </thead>
                     <tbody id="studentTableBody">
+                        <tr class="table-secondary text-center" id="ShowHideNoStudent">
+                            <td colspan="4" >No Student's Found</td></tr>
                     </tbody>
                 </table>
-            </div>
-            <div class="my-3">
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Promoted to Next session</button>
             </div>
         </div>
     </div>
 
     <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="staticBackdropLabel">Promoted Next Session</h1>
@@ -83,18 +90,56 @@
         </div>
         <div class="modal-body">
             <form action="" method="post">
-                <div class="row">
-                    <div class="col-12 mb-2">
-                        <label for="" class="form-label">Select Session<span class="text-danger">*</span></label>
-                        <select name="session_id" id="session_id_modal" class="form-select">
-                            @if (!@empty(GetSession('all_session')))
-                                @foreach (GetSession('all_session') as $index=>$item)
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <h6 class="fw-bold mb-0">Privious Session Details</h6>
+                        <hr>
+                    </div>
+                    <div class="col-4">
+                        <label for="" class="form-label">Previous Session<span class="text-danger">*</span></label>
+                        <select name="session_id" id="modal_previous_session_id" class="form-select" disabled>
+                            @if (!@empty(GetSession('deactive_session')))
+                                @foreach (GetSession('deactive_session') as $index=>$item)
                                     <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
-                    <div class="col-12 mb-2">
+                    <div class="col-4">
+                        <label for="" class="form-label">Previous class<span class="text-danger">*</span></label>
+                        <select name="class_id" id="modal_previous_class_id" class="form-select" disabled>
+                            <option value="">--Select Class--</option>
+                            @if (!@empty(GetClasses()))
+                                @foreach (GetClasses() as $index=>$item)
+                                    <option value="{{@$item->id}}">{{@$item->class_name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="" class="form-label">Previous Section <span class="text-danger">*</span></label>
+                        <select name="section_id" id="modal_previous_section_id" class="form-select section_id" disabled>
+                            <option value="">--Select Section--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="fw-bold mb-0">Current Session Details</h6>
+                        <hr>
+                    </div>
+                    <div class="col-12"></div>
+                    <div class="col-4">
+                        <label for="" class="form-label">Select Session<span class="text-danger">*</span></label>
+                        <select name="session_id" id="session_id_modal" class="form-select">
+                            @if (!@empty(GetSession('active_session')))
+                                @foreach (GetSession('active_session') as $index=>$item)
+                                    <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                    <div class="col-4">
                         <label for="" class="form-label">Select class<span class="text-danger">*</span></label>
                         <select name="class_id" id="class_id_modal" class="form-select">
                             <option value="">--Select Class--</option>
@@ -105,26 +150,53 @@
                             @endif
                         </select>
                     </div>
-                    <div class="col-12 mb-4">
+                    <div class="col-4">
                         <label for="" class="form-label">Select Section <span class="text-danger">*</span></label>
                         <select name="section_id" id="section_id_modal" class="form-select">
                             <option value="">--Select Section--</option>
                         </select>
                     </div>
-                    <div class="col-12 mb-2">
+                    
+                    <div class="col-12 mt-3">
                         <button type="reset" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <a href="javascript:void(0)" onclick="enrolledStudent()" class="btn btn-primary btn-sm">Enrolled</a>
+                        <a href="javascript:void(0)" onclick="enrolledStudent()" class="btn btn-success btn-sm">Promoted</a>
                     </div>
                 </div>
             </form>
         </div>
       </div>
     </div>
-  </div>
+</div>
 
    </section>
+
+
 <script>
-     function getAllStudent() {
+    $(document).ready(function(){
+        $('#ShowHideNoStudent').show();
+        $('#class_id').trigger('change');
+    });
+
+    $(window).on('load', function() {
+        var session_id = $('#session_id').val();
+        var class_id = $('#class_id').val();
+        if (class_id) {
+            setTimeout(function() {
+                $('#section_id').val("{{ session('session_section_id') }}");
+                var section_id = $('#section_id').val();
+                $('#modal_previous_session_id').val(session_id);
+                $('#modal_previous_class_id').val(class_id);
+                $('#modal_previous_class_id').trigger('change');
+                setTimeout(function() {
+                    $('#modal_previous_section_id').val(section_id);
+                }, 1500);
+                getAllStudent();
+            }, 1500);
+        }
+    });
+
+    function getAllStudent() {
+        $('#ShowHideNoStudent').hide();
         var session_id = $('#session_id').val();
         var class_id = $('#class_id').val();
         var section_id = $('#section_id').val();
@@ -150,7 +222,9 @@
                                         <td>${item.student_details.student_name}</td>
                                         <td>${item.student_details.admission_number}</td>
                                         <td class="text-center">
-                                            <input class="form-check-input" type="checkbox" value="1" id="${item.student_details.id}_enroled" onclick="openModalEnrollStudent(${item.student_details.id}, this)">
+                                            <input class="form-check-input" type="radio" id="${item.student_details.id}_enroled" 
+                                                data-student='${JSON.stringify(item.student_details).replace(/'/g, "&apos;").replace(/"/g, "&quot;")}' 
+                                                onclick="openModalEnrollStudent(this)">
                                         </td>
                                     </tr>
                                 `);
@@ -166,17 +240,37 @@
         }
     };
 
-    var userIds =[];
-    function openModalEnrollStudent(user_id, event){
-        if(event.checked){
-            if (!userIds.includes(user_id)) {
-                userIds.push(user_id);
-            }
-        }else{
-            userIds = userIds.filter(function(id) {
-                return id !== user_id;
-            });
+    // var userIds =[];
+    function openModalEnrollStudent(radioElement){
+        var studentDetailsString = radioElement.getAttribute('data-student');
+        var studentDetails = JSON.parse(studentDetailsString);
+        console.log(studentDetails)
+
+        var session_id = $('#session_id').val();
+        var class_id = $('#class_id').val();
+        var section_id = $('#section_id').val();
+        if (class_id) {
+            $('#modal_previous_session_id').val(session_id);
+            $('#modal_previous_class_id').val(class_id);
+            $('#modal_previous_class_id').trigger('change');
+            setTimeout(function() {
+                $('#modal_previous_section_id').val(section_id);
+            }, 1500);
         }
+
+        
+
+        $('#staticBackdrop').modal('show');
+
+        // if(event.checked){
+        //     if (!userIds.includes(user_id.id)) {
+        //         userIds.push(user_id.id);
+        //     }
+        // }else{
+        //     userIds = userIds.filter(function(id) {
+        //         return id !== user_id.id;
+        //     });
+        // }
     }
 
     function enrolledStudent(){
