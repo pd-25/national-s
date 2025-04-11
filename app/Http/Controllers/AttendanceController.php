@@ -188,9 +188,14 @@ class AttendanceController extends Controller
      */
     public function destroy(Request $request)
     {
-        $attendance = Attendance::find($request->id);
-        $attendance->delete();
-        return ['warning'=>'Attendance Deleted successfully'];
+        try {
+            $attendance = Attendance::find($request->id);
+            $attendance->delete();
+            return ['warning'=>'Attendance Deleted successfully'];
+          
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error'.$th->getMessage()]);
+        }
     }
     
     public function classAttendance(Request $request)
