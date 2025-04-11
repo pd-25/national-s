@@ -65,7 +65,6 @@
 
         $('#class_id').change(function() {
             var classId = $(this).val();
-
             $('#section_id').empty();
             $('#section_id').append('<option value="">Select Section</option>');
             if (classId) {
@@ -74,11 +73,6 @@
                     type: 'GET',
                     success: function(data) {
                         if(data.length == 1){
-                            $.each(data, function(index, item) {
-                                $('#section_id').append('<option value="' + item.id + '" ' + (item.id == data[0].id ? 'selected' : '') + '>' + item.section_name + '</option>');
-                            });
-                            getAllStudent();
-                        }else{
                             $.each(data, function(index, item) {
                                 $('#section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
                             });
@@ -123,16 +117,6 @@
                         $.each(data, function(index, item) {
                             $('#modal_previous_section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
                         });
-                        // if(data.length == 1){
-                        //     $.each(data, function(index, item) {
-                        //         $('#modal_previous_section_id').append('<option value="' + item.id + '" ' + (item.id == data[0].id ? 'selected' : '') + '>' + item.section_name + '</option>');
-                        //     });
-                        //     getAllStudent();
-                        // }else{
-                        //     $.each(data, function(index, item) {
-                        //         $('#modal_previous_section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
-                        //     });
-                        // }
                     },
                     error: function() {
                         console.error('Error fetching sections');

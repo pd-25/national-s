@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 class DepositeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         return view('admin.feedeposite.add_deposite');
@@ -50,7 +48,6 @@ class DepositeController extends Controller
             'branch' => 'nullable|string',
         ]);
         $today = now()->format('ymd');
-        // $userId = str_pad($request->user_id, 4, '0', STR_PAD_LEFT);
         $sequence = 1;
         do {
             $paymentOrderNumber = sprintf('%s%s', $today, str_pad($sequence, 3, '0', STR_PAD_LEFT));
@@ -92,7 +89,7 @@ class DepositeController extends Controller
             'payment_getway_id' => $request->payment_getway_id,
             'status' => $request->status == null ? "Completed" : "Pending",
         ]);
-        return redirect()->route('deposite.viewDownloadDeposite',$paymentOrderNumber)->withSuccess('Payment processed successfully');
+            return redirect()->route('deposite.viewDownloadDeposite',$paymentOrderNumber)->withSuccess('Payment processed successfully');
     }
 
     /**
@@ -205,8 +202,17 @@ class DepositeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $deposite = Deposite::find($request->id);
-        $deposite->delete();
-        return ['warning'=>'Deposite Data Deleted successfully'];
+        try {
+            $deposite = Deposite::find($request->id);
+            $deposite->delete();
+            return ['warning'=>'Deposite Data Deleted successfully'];
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error'.$th->getMessage()]);
+        }
+    }
+
+    public function paymentdue(Request $request)
+    {
+        return view('admin.feedeposite.payment_due');
     }
 }

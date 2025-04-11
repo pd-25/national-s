@@ -5,7 +5,7 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('student.studentsEntrollment') }}">Student Enrollment</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('student.studentsEntrollment') }}">Enrolled New Session</a></li>
             <li class="breadcrumb-item active">Enrollment History</li>
         </ol>
     </nav>
@@ -46,10 +46,12 @@
     </div>
     <div class="card border-0">
         <div class="card-body pt-4">
+            <h5 class="card-text fw-bold mb-3">Promoted students History.</h5>
+            <hr>
             <div class="table-responsive">
-                <table class="w-100 table table-striped overflow-sc" id="DataTables">
+                <table class="w-100 table table-striped table-sm overflow-sc" id="DataTables">
                     <thead>
-                        <tr>
+                        <tr class="table-primary">
                             <th>SL NO </th>
                             <th>Student Name</th>
                             <th>Admission Number</th>

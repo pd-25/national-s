@@ -19,6 +19,7 @@
         <div class="card-body pt-4">
             <div class="row my-3">
                 <div class="col-md-4 col-sm-12 mb-2">
+                    <label for="" class="form-label">Select Session<span class="text-danger">*</span></label>
                     <select name="session_id" id="session_id" class="form-select">
                         @if (!@empty(GetSession('all_session')))
                             @foreach (GetSession('all_session') as $index=>$item)
@@ -27,12 +28,27 @@
                         @endif
                     </select>
                 </div>
-                <div class="col-md-4 col-sm-12 mb-2">
-                    <div id="dateWiseAttendance">
-                        <input class="form-control" type="date" id="dateAttendance" value="{{date('Y-m-d')}}" name="dateAttendance">
-                    </div>
+                <div class="col-4 mb-2">
+                    <label for="" class="form-label">Type<span class="text-danger">*</span></label>
+                    <select name="type" id="type" onchange="getType()" class="form-select">
+                        <option value="">--Select--</option>
+                        <option value="1">By Single Date</option>
+                        <option value="2">By Date Range</option>
+                    </select>
                 </div>
-                <div class="col-md-4 col-sm-12 text-end mb-2">
+                <div class="col-4 mb-2" id="showSelectDate">
+                    <label for="" class="form-label">Select Date <span class="text-danger">*</span></label>
+                    <input class="form-control" type="date" id="dateAttendance" value="{{date('Y-m-d')}}" name="dateAttendance">
+                </div>
+                <div class="col-4 mb-2 showFromToDate">
+                    <label for="" class="form-label">from Date</label>
+                    <input class="form-control" type="date" id="from_date" name="from_date">
+                </div>
+                <div class="col-4 mb-2 showFromToDate">
+                    <label for="" class="form-label">To Date</label>
+                    <input class="form-control" type="date" id="to_date" name="to_date">
+                </div>
+                <div class="col-md-12 col-sm-12 text-end mt-2">
                     <button onclick="viewAttendance()" type="submit" class="btn btn-primary me-2">View Attendance</button>
                 </div>
             </div>
@@ -40,15 +56,22 @@
     </div>
     <div class="card border-0">
         <div class="card-body pt-4">
+            <div class="d-flex justify-content-between">
+                <h5 class="mb-0 fw-bold text-uppercase">Class Attendance</h5>
+                <button id="exportExcel" class="btn btn-secondary btn-sm"><i class="bi bi-file-excel"></i> Export to Excel</button>
+            </div>
+            <hr>
             <div class="table-responsive">
                 <table class="w-100 table  table-striped overflow-sc" id="DataTables">
                     <thead>
                         <tr>
                             <th>SL NO </th>
+                            <th>Teacher</th>
                             <th>Admission Number</th>
                             <th>Student Name</th>
+                            <th class="text-center">Date</th>
                             <th class="text-center">Time</th>
-                            <th class="text-center">Check</th>
+                            <th class="text-center">Present/Absent</th>
                             <th class="text-center">Late</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -62,7 +85,10 @@
     </div>
 </section>
 <script>
+    var table;
     $(document).ready(function() {
+        $("#showSelectDate").hide();
+        $(".showFromToDate").hide();
         $('#DataTables').DataTable({
             bLengthChange: true,
             "lengthMenu": [[10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"]],
@@ -72,12 +98,30 @@
             "bAutoWidth": false
         });
     });
+    function getType(){
+       var typeData =  $("#type").val();
+       if(typeData==1){
+           $("#showSelectDate").show();
+           $(".showFromToDate").hide();
+           $('#from_date').val(null);
+           $('#to_date').val(null);
+        }else if(typeData==2){
+            $("#showSelectDate").hide();
+            $(".showFromToDate").show();
+            $('#dateAttendance').val(null);
+        }else{
+            $("#showSelectDate").hide();
+            $(".showFromToDate").hide();
+        }
+    }
     function viewAttendance(){
         var dateAttendance = $('#dateAttendance').val();
         var session_id = $('#session_id').val();
         var classDetails = {!! json_encode($teacher_details->teacherclassmapping[0]) !!};
-        class_id = classDetails.class_id
-        section_id = classDetails.section_id
+        class_id = classDetails.class_id;
+        section_id = classDetails.section_id;
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
         $.ajax({
             url: "{{ route('attendance.getTodayAttendanceData') }}",
             type: "POST",
@@ -87,17 +131,21 @@
                 class_id:class_id,
                 section_id:section_id,
                 dateAttendance:dateAttendance,
+                from_date : from_date,
+                to_date : to_date,
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                var table = $('#DataTables').DataTable({
+                table = $('#DataTables').DataTable({
                     destroy: true,
                     data: response.today || [], 
                     iDisplayLength: 50,
                     columns: [
                         { data: null, render: function(data, type, row, meta) { return meta.row + 1; } },
+                        { data: 'teacher_details.name' },
                         { data: 'student_details.admission_number' },
                         { data: 'student_details.student_name' },
+                        { data: 'date_taken', className: 'text-center' },
                         { data: 'time_taken', className: 'text-center' },
                         { 
                             data: null,
@@ -142,6 +190,23 @@
             }
         });
     }
+
+        // Excel export functionality
+    $('#exportExcel').on('click', function() {
+        var data = table.rows().data().toArray();
+        var ws = XLSX.utils.json_to_sheet(data.map(row => ({
+            'Teacher Name': row.teacher_details.name,
+            'Admission Number': row.student_details.admission_number,
+            'Student Name': row.student_details.student_name,
+            'Date Taken': row.date_taken,
+            'Time Taken': row.time_taken,
+            'Status': row.status == 1 ? (row.late == 0 ? 'Present' : 'Late') : 'Absent'
+        })));
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Attendance Data');
+        XLSX.writeFile(wb, 'Attendance_Data.xlsx');
+    });
 
     function deleteStudentAttendance(attendanceId){
         Notiflix.Confirm.Show(

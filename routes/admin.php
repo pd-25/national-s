@@ -70,14 +70,15 @@ Route::group(['prefix' => 'admin'], function () {
 
             // Fee Deposite
             Route::controller(DepositeController::class)->group(function() {
-                Route::get('add-deposite', 'index')->name('deposite.index');
-                Route::post('store-deposite', 'store')->name('deposite.store');
-                Route::get('all-deposite', 'create')->name('deposite.create');
-                Route::post('show-deposite', 'show')->name('deposite.show');
-                Route::get('edit-deposite/{payment_number}', 'edit')->name('deposite.edit');
-                Route::put('update-deposite/{deposite}/update', 'update')->name('deposite.update');
-                Route::get('view-download-deposite/{payment_number}', 'viewDownloadDeposite')->name('deposite.viewDownloadDeposite');
-                Route::post('destroy-deposite', 'destroy')->name('deposite.destroy');
+                Route::get('fees-payment', 'index')->name('deposite.index');
+                Route::post('store-payment', 'store')->name('deposite.store');
+                Route::get('payment-history', 'create')->name('deposite.create');
+                Route::post('show-payment', 'show')->name('deposite.show');
+                Route::get('edit-payment/{payment_number}', 'edit')->name('deposite.edit');
+                Route::put('update-payment/{deposite}/update', 'update')->name('deposite.update');
+                Route::get('view-download-payment/{payment_number}', 'viewDownloadDeposite')->name('deposite.viewDownloadDeposite');
+                Route::post('destroy-payment', 'destroy')->name('deposite.destroy');
+                Route::get('payment-due', 'paymentdue')->name('deposite.paymentdue');
             });
 
             // Attendance Management

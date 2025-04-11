@@ -67,24 +67,30 @@
                     <label for="" class="form-label">To Date</label>
                     <input class="form-control" type="date" id="to_date" name="to_date">
                 </div>
-                <div class="col-12 text-end">
+                <div class="col-12 mt-3 text-end">
                     <button onclick="viewStudentAttendance()" type="submit" class="btn btn-primary me-2">View Attendance</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card border-0">
-        <div class="card-body pt-2">
+    <div class="card">
+        <div class="card-body pt-4">
+            <div class="d-flex justify-content-between">
+                <h5 class="mb-0 fw-bold text-uppercase">Student Attendance</h5>
+                <button id="exportExcel" class="btn btn-secondary btn-sm"><i class="bi bi-file-excel"></i> Export to Excel</button>
+            </div>
+            <hr>
             <div class="table-responsive">
                 <table class="w-100 table  table-striped overflow-sc" id="DataTables">
                     <thead>
                         <tr>
                             <th>SL NO </th>
+                            <th>Teacher</th>
                             <th>Student Name</th>
                             <th>Admission Number</th>
                             <th>Attenadnce Date</th>
                             <th class="text-center">Time</th>
-                            <th class="text-center">Check</th>
+                            <th class="text-center">Present/Absent</th>
                             <th class="text-center">Late</th>
                         </tr>
                     </thead>
@@ -97,6 +103,7 @@
     </div>
 </section>
 <script>
+    var table;
     $(document).ready(function() {
         $("#showSelectDate").hide();
         $(".showFromToDate").hide();
@@ -160,12 +167,13 @@
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                var table = $('#DataTables').DataTable({
+                table = $('#DataTables').DataTable({
                     destroy: true,
                     data: response || [],
                     iDisplayLength: 50, 
                     columns: [
                         { data: null, render: function(data, type, row, meta) { return meta.row + 1; } },
+                        { data: 'teacher_details.name' },
                         { data: 'student_details.student_name' },
                         { data: 'student_details.admission_number' },
                         {
@@ -215,5 +223,23 @@
         });
         }
     }
+
+        // Excel export functionality
+    $('#exportExcel').on('click', function() {
+        var data = table.rows().data().toArray();
+        var ws = XLSX.utils.json_to_sheet(data.map(row => ({
+            'Teacher Name': row.teacher_details.name,
+            'Admission Number': row.student_details.admission_number,
+            'Student Name': row.student_details.student_name,
+            'Date Taken': row.date_taken,
+            'Time Taken': row.time_taken,
+            'Status': row.status == 1 ? (row.late == 0 ? 'Present' : 'Late') : 'Absent'
+        })));
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Attendance Data');
+        XLSX.writeFile(wb, 'Student_Attendance_Data.xlsx');
+    });
+
 </script>
 @endsection

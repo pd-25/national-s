@@ -22,7 +22,8 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('student.studentList') }}">All Student</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('student.StudentRegister') }}">Registration</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('student.studentList') }}">Manage Student's</a></li>
             <li class="breadcrumb-item"><a href="{{ route('student.studentEdit', @$studentClassMapping->id) }}">Edit Student</a></li>
             <li class="breadcrumb-item active">View Student</li>
         </ol>

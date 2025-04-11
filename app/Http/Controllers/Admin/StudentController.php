@@ -13,6 +13,12 @@ use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
+    private $depositClass;
+    public function __construct(\App\Http\Controllers\DepositeController $depositeController) 
+    {
+        $this->depositClass = $depositeController;
+    }
+    
     public function StudentRegister(Request $request)
     {
         return view('admin.studentmanagement.student_register');
@@ -223,29 +229,36 @@ class StudentController extends Controller
 
     public function studentsEntrollmentStore(Request $request)
     {
-        $userIds = json_decode($request->userIds);
         $request->validate([
             'session_id' => 'required|integer',
             'class_id' => 'required|integer',
             'section_id' => 'required|integer',
+            'user_id' => 'required|integer',
+            'month' => 'required',
+            'year' => 'required',
+            'payment_mode' => 'required'
         ]);
-        foreach ($userIds as $key => $user_id) {
-            StudentClassMapping::where('user_id', $user_id)->update(['status' => 0]);
-            
-            $studentClassMapping = StudentClassMapping::where('user_id', $user_id)->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->count();
-            if($studentClassMapping > 0){
-                continue;
-            }
-            $studentClassMapping = new StudentClassMapping;
-            $studentClassMapping->user_id = $user_id;
-            $studentClassMapping->session_id = $request->session_id;
-            $studentClassMapping->class_id = $request->class_id;
-            $studentClassMapping->section_id = $request->section_id;
-            $studentClassMapping->status = 1;
-            $studentClassMapping->save();
-            
+        
+        try {
+            DB::transaction(function () use ($request) {
+                StudentClassMapping::where('user_id', $request->user_id)->update(['status' => 0]);
+                $studentClassMapping = StudentClassMapping::where('user_id', $request->user_id)->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->count();
+                if($studentClassMapping == 0){
+                    $studentClassMapping = new StudentClassMapping;
+                    $studentClassMapping->user_id = $request->user_id;
+                    $studentClassMapping->session_id = $request->session_id;
+                    $studentClassMapping->class_id = $request->class_id;
+                    $studentClassMapping->section_id = $request->section_id;
+                    $studentClassMapping->status = 1;
+                    $studentClassMapping->save();
+                    $this->depositClass->store($request);
+                }
+            });
+            return redirect()->back()->with('success', 'Payment Completed and promoted to current session');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
-        return  ['success'=>'Student enrolled successfully'];
     }
 
     public function studentView(Request $request)
@@ -344,15 +357,20 @@ class StudentController extends Controller
 
     public function destroy(Request $request)
     {
-        $user = User::find($request->id);
-        if ($user) {
-            DB::table('student_class_mappings')->where('user_id', $user->id)->delete();
-            DB::table('attendances')->where('user_id', $user->id)->delete();
-            DB::table('deposites')->where('user_id', $user->id)->delete();
-            $user->delete();
-            return response()->json(['warning' => 'Student deleted successfully']);
+        try {
+            $user = User::find($request->id);
+            if ($user) {
+                DB::table('student_class_mappings')->where('user_id', $user->id)->delete();
+                DB::table('attendances')->where('user_id', $user->id)->delete();
+                DB::table('deposites')->where('user_id', $user->id)->delete();
+                $user->delete();
+                return response()->json(['warning' => 'Student deleted successfully']);
+            }
+            return response()->json(['error' => 'User  not found'], 404);
+          
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error'.$th->getMessage()]);
         }
-        return response()->json(['error' => 'User  not found'], 404);
     }
 
     // Session Wise Student
@@ -378,11 +396,16 @@ class StudentController extends Controller
 
     public function deleteEnrollmentHistory(Request $request)
     {
-        $user = StudentClassMapping::find($request->id);
-        if ($user) {
-            $user->delete();
-            return response()->json(['warning' => 'Enrollment deleted successfully']);
+        try {
+            $user = StudentClassMapping::find($request->id);
+            if ($user) {
+                $user->delete();
+                return response()->json(['warning' => 'Enrollment deleted successfully']);
+            }
+            return response()->json(['error' => 'User  not found'], 404);
+          
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error'.$th->getMessage()]);
         }
-        return response()->json(['error' => 'User  not found'], 404);
     }
 }

@@ -1,11 +1,12 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>Add Fee Deposite</h1>
+    <h1>Fees Payment</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Add Fee Deposite</li>
+            <li class="breadcrumb-item"><a href="{{ route('deposite.create') }}">Payment History</a></li>
+            <li class="breadcrumb-item active">Payment</li>
         </ol>
     </nav>
 </div>

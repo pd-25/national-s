@@ -2,11 +2,14 @@
 @section('content')
 <link href="{{asset('assets/admin/css/deposite.css')}}" rel="stylesheet">
 <div class="pagetitle">
-    <h1>View Download Deposite</h1>
+    <h1>View Payment</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">View Download Deposite</li>
+            <li class="breadcrumb-item"><a href="{{ route('deposite.index') }}">Payment</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('deposite.edit', @$deposite->payment_number) }}">Edit Payment</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('deposite.create') }}">Payment History</a></li>
+            <li class="breadcrumb-item active">View Payment</li>
         </ol>
     </nav>
 </div>
@@ -43,26 +46,36 @@
                       <div class="span-12">
                          <table class="mytable" style="border:0;margin-top:0px;">
                             <tbody>
-                               <tr>
-                                  <th scope="col">Admission Charges / Enrolment Fee</th>
-                                  <th scope="col" style="width:200px;">Rs.{{@$deposite->enrolment_fee}}</th>
-                               </tr>
-                               <tr>
-                                  <th scope="col">Tuition Fee</th>
-                                  <th scope="col" style="width:200px;">Rs.{{@$deposite->tuition_fee}}</th>
-                               </tr>
+                              @if (@$deposite->enrolment_fee > 0)
+                              <tr>
+                                 <th scope="col">Admission Charges / Enrolment Fee</th>
+                                 <th scope="col" style="width:200px;">Rs.{{@$deposite->enrolment_fee}}</th>
+                              </tr>
+                              @endif
+                              @if (@$deposite->tuition_fee > 0)
+                              <tr>
+                                 <th scope="col">Tuition Fee</th>
+                                 <th scope="col" style="width:200px;">Rs.{{@$deposite->tuition_fee}}</th>
+                              </tr>
+                              @endif
+                              @if (@$deposite->terminal_fee > 0)
                                <tr>
                                   <th scope="col">Terminal Fee(1st Installment)</th>
                                   <th scope="col" style="width:200px;">Rs.{{@$deposite->terminal_fee}}</th>
                                </tr>
+                              @endif
+                               @if (@$deposite->misc_charges > 0)
                                <tr>
                                   <th scope="col">Misc, Charges</th>
                                   <th scope="col" style="width:200px;">Rs.{{@$deposite->misc_charges}}</th>
                                </tr>
+                               @endif
+                               @if (@$deposite->identity_card > 0)
                                <tr>
                                   <th scope="col">Identity Card</th>
                                   <th scope="col" style="width:200px;border-bottom:2px #000000 solid;">Rs.{{@$deposite->identity_card}}</th>
                                </tr>
+                               @endif
                                <tr>
                                   <th scope="col"><strong style="font-size:16px;">Total</strong></th>
                                   <th scope="col" style="width:200px;border-bottom:2px #000000 solid;font-size:16px;padding-bottom:0;">Rs.{{@$deposite->total}}</th>

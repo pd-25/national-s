@@ -33,7 +33,7 @@ class AttendanceController extends Controller
             $date = date('Y-m-d');
         }
         
-        $attendance = Attendance::where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->where('date_taken', $date)->get();
+        $attendance = Attendance::where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->whereDate('date_taken', $date)->get();
         
         return  $attendance;
     }
@@ -51,7 +51,13 @@ class AttendanceController extends Controller
             'status' => 'required|boolean'
         ]);
 
-        $attendance = Attendance::where('user_id',  $request->user_id)->whereDate('date_taken', date('Y-m-d'))->count();
+        $query = Attendance::where('user_id',  $request->user_id);
+        if($request->dateAttendance){
+            $query->whereDate('date_taken', $request->dateAttendance);
+        }else{
+            $query->whereDate('date_taken', date('Y-m-d'));
+        }
+        $attendance = $query->count();
         if($attendance > 0){
             return response()->json([
                 'error' => 'Attendance already taken'
@@ -98,10 +104,20 @@ class AttendanceController extends Controller
 
     public function getTodayAttendanceData(Request $request)
     {
-        // ->where('teacher_id', auth()->guard('admin')->user()->id)
-        $attendance = Attendance::with('studentDetails','studentSession','studentClass',
-        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->whereDate('date_taken', $request->dateAttendance)->get();
+        $query = Attendance::with('teacherDetails','studentDetails','studentSession','studentClass',
+        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id);
+        if($request->dateAttendance){
+            $query->whereDate('date_taken', $request->dateAttendance);
+        }
+
+        if($request->from_date && $request->to_date){
+            $query->whereBetween('date_taken', [$request->from_date, $request->to_date]);
+        }
+        $attendance = $query->orderBy('date_taken', 'desc')->get();
+        
         return ['today' => $attendance];
+
+
     }
 
     public function viewStudentAttendance()
@@ -126,7 +142,7 @@ class AttendanceController extends Controller
             'to_date' => 'nullable|date',
         ]);
         $session_id = $request->session_id == 0 ? GetSession('active_session')[0]->id : $request->session_id;
-        $attendance = Attendance::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')
+        $attendance = Attendance::with('teacherDetails','studentDetails', 'studentSession', 'studentClass', 'studentSection')
             ->where('user_id', $request->student_id)
             ->where('session_id', $session_id)
             ->orderBy('date_taken', 'desc');
@@ -188,11 +204,18 @@ class AttendanceController extends Controller
             'session_id' => 'required',
             'class_id' => 'required',
             'section_id' => 'required',
-            'dateAttendance' => 'date',
         ]);
         
-        $attendance = Attendance::with('teacherDetails','studentDetails','studentSession','studentClass',
-        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->whereDate('date_taken', $request->dateAttendance)->get();
+        $query = Attendance::with('teacherDetails','studentDetails','studentSession','studentClass',
+        'studentSection')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id);
+        if($request->dateAttendance){
+            $query->whereDate('date_taken', $request->dateAttendance);
+        }
+
+        if($request->from_date && $request->to_date){
+            $query->whereBetween('date_taken', [$request->from_date, $request->to_date]);
+        }
+        $attendance = $query->orderBy('date_taken', 'desc')->get();
         return $attendance;
     }
 

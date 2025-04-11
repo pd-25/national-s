@@ -1,11 +1,14 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>Edit Fee Deposite</h1>
+    <h1>Edit Payment</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Edit Fee Deposite</li>
+            <li class="breadcrumb-item"><a href="{{ route('deposite.index') }}">Payment</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('deposite.viewDownloadDeposite', @$deposite->payment_number)}}">View Payment</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('deposite.create') }}">Payment History</a></li>
+            <li class="breadcrumb-item active">Edit Payment</li>
         </ol>
     </nav>
 </div>
@@ -167,7 +170,7 @@
                         <input type="text" class="form-control" name="transaction_id" id="transaction_id" placeholder="Transaction Id" value="{{@$deposite->transaction_id}}">
                     </div>
                     <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-primary" >Update</button>
+                        <button type="submit" class="btn btn-primary" >Update Payment</button>
                     </div>
                 </div>
             </form>

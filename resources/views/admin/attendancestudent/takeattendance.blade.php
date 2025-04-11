@@ -145,6 +145,7 @@
             late:late,
             class_id:class_id,
             section_id:section_id,
+            dateAttendance:null,
             _token: '{{ csrf_token() }}'
         },
         success: function(response) {

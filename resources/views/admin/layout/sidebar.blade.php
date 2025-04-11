@@ -118,6 +118,12 @@
                             <i class="bi bi-circle"></i><span>Payment History</span>
                         </a>
                     </li>
+                    {{-- <li class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}" id="">
+                        <a href="{{route('deposite.paymentdue')}}" 
+                        class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Payment Due</span>
+                        </a>
+                    </li> --}}
                 </ul>
             </li>
             <li class="nav-heading">Master Management</li>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Attendance;
+use App\Models\StudentClassMapping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -59,7 +61,39 @@ class AdminController extends Controller
      */
     public function teacherDashboard()
     {
-        return view('admin.teacher_dashboard');
+        $session_id = GetSession('active_session')[0]->id;
+        $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
+        $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
+        $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
+        
+        $totalStudent = StudentClassMapping::where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->count();
+
+        $attendance = Attendance::where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->whereDate('date_taken', date('Y-m-d'))->get();
+        
+        $totalPresent = 0;
+        $totalAbsent = 0;
+        $totalLate = 0;
+
+        foreach ($attendance as $record) {
+            if ($record->status == 1) {
+                if ($record->late == 1) {
+                    $totalLate++;
+                } else {
+                    $totalPresent++;
+                }
+            } elseif ($record->status == 0) {
+                $totalAbsent++;
+            }
+        }
+
+        $dashboardData = [
+            'total_present' => $totalPresent,
+            'total_absent' => $totalAbsent,
+            'total_late' => $totalLate,
+            'totalStudent' => $totalStudent,
+        ];
+
+        return view('admin.teacher_dashboard', compact('dashboardData'));
     }
 
     /**

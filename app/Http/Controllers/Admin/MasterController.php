@@ -35,9 +35,14 @@ class MasterController extends Controller
 
     public function destroyClasses($id)
     {
-        $classes = Classes::find($id);
-        $classes->delete();
-        return redirect()->back()->with('warning','Class deleted successfully');
+        try {
+            $classes = Classes::find($id);
+            $classes->delete();
+            return redirect()->back()->with('warning','Class deleted successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error','Error'.$th->getMessage());
+        }
+
     }
 
     //Manage Section
@@ -67,9 +72,13 @@ class MasterController extends Controller
 
     public function destroyClassesArms($id)
     {
-        $section = Section::find($id);
-        $section->delete();
-        return redirect()->back()->with('warning','Class arms deleted successfully');
+        try {
+            $section = Section::find($id);
+            $section->delete();
+            return redirect()->back()->with('warning','Class arms deleted successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error','Error'.$th->getMessage());
+        }
     }
 
     public function getclassarm($class_id)
@@ -129,9 +138,13 @@ class MasterController extends Controller
 
     public function destroyTeachers($id)
     {
-        $admin = Admin::find($id);
-        $admin->delete();
-        return redirect()->back()->with('warning','Teachers deleted successfully');
+        try {
+            $admin = Admin::find($id);
+            $admin->delete();
+            return redirect()->back()->with('warning','Teachers deleted successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error','Error'.$th->getMessage());
+        }
     }
 
     //session
@@ -163,14 +176,13 @@ class MasterController extends Controller
 
     public function destroySession($id)
     {
-        $session = Session::find($id);
-        $session->delete();
-        return redirect()->back()->with('warning','Session deleted successfully');
+        try {
+            $session = Session::find($id);
+            $session->delete();
+            return redirect()->back()->with('warning','Session deleted successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error','Error'.$th->getMessage());
+        }
     }
-    //Roll number 
-    // public function getRollNumber($session_id, $class_id, $section_id)
-    // {
-    //     $user = User::get();
-        
-    // }
+ 
 }

@@ -1,11 +1,12 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>All Fee Deposite</h1>
+    <h1>Payment History</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">All Fee Deposite</li>
+            <li class="breadcrumb-item"><a href="{{ route('deposite.index') }}">Payment</a></li>
+            <li class="breadcrumb-item active">Payment History</li>
         </ol>
     </nav>
 </div>
@@ -184,10 +185,10 @@
 
     function ViewDeposite(deposite_payment_number)
     {
-        window.location.href ="view-download-deposite/"+deposite_payment_number;
+        window.location.href ="view-download-payment/"+deposite_payment_number;
     }
     function EditDeposite(deposite_payment_number){
-        window.location.href ="edit-deposite/"+deposite_payment_number;
+        window.location.href ="edit-payment/"+deposite_payment_number;
     }
 
     function deleteDeposite(id){

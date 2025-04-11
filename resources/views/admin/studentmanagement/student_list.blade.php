@@ -1,12 +1,12 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>All Student</h1>
+    <h1>Manage Student's</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('student.StudentRegister') }}">Student Register</a></li>
-            <li class="breadcrumb-item active">All Student</li>
+            <li class="breadcrumb-item"><a href="{{ route('student.StudentRegister') }}">Registration</a></li>
+            <li class="breadcrumb-item active">Manage Student's</li>
         </ol>
     </nav>
 </div>
@@ -171,80 +171,6 @@
         });
     }
 
-    // function filterStudentDetails(){
-    //     var session_id = $('#session_id').val();
-    //     var class_id = $('#class_id').val();
-    //     var section_id = $('#section_id').val();
-    //     var admission_number = $('#admission_number').val();
-    //     var student_name = $('#student_name').val();
-    //     var mobile_no = $('#mobile_no').val();
-    //     var email_address = $('#email_address').val();
-
-    //     $.ajax({
-    //         url: "{{ route('student.getStudentData') }}",
-    //         type: "POST",
-    //         dataType: "json",
-    //         data: {
-    //             session_id: session_id,
-    //             class_id: class_id,
-    //             section_id: section_id,
-    //             admission_number: admission_number,
-    //             student_name: student_name,
-    //             mobile_no: mobile_no,
-    //             email_address: email_address,
-    //             _token: '{{ csrf_token() }}'
-    //         },
-    //         success: function(response) {
-    //             table = $('#DataTables').DataTable();
-    //             table.clear().draw();
-
-    //             console.log(response.data)
-                
-    //             $.each(response.data, function(index, student) {
-    //                 table.row.add([
-    //                     index + 1,
-    //                     "<img src="+student.student_details.image+" class='img_fluid' style='height:80px;' />",
-    //                     student.student_details.admission_number,
-    //                     student.student_details.student_name,
-    //                     new Date(student.student_details.date_of_birth).toLocaleDateString('en-UK', {
-    //                         year: 'numeric',
-    //                         month: '2-digit',
-    //                         day: '2-digit'
-    //                     }),
-    //                     student.student_session.sessions_name,
-    //                     student.student_class.class_name,
-    //                     student.student_section.section_name,
-    //                     student.student_details.gender,
-    //                     student.student_details.email,
-    //                     student.student_details.mobile_no,
-    //                     new Date(student.created_at).toLocaleDateString('en-UK', {
-    //                         year: 'numeric',
-    //                         month: '2-digit',
-    //                         day: '2-digit'
-    //                     }),
-    //                     '<a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="EditStudent(\'' + student.student_details.id + '\')"><i class="bi bi-pencil-square"></i> </a><a class="btn btn-success btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="ViewStudent(\'' + student.student_details.id + '\')"><i class="bi bi-eye-fill"></i></a>' +
-    //                     '<a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteStudent(\'' + student.student_details.id + '\')"><i class="bi bi-trash"></i></a>'
-    //                 ]).draw(true);
-    //             });
-
-    //             table.destroy();
-    //             $('#DataTables').DataTable({
-    //                 bLengthChange: true,
-    //                 "lengthMenu": [ [10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"] ],
-    //                 "iDisplayLength": 50,
-    //                 bInfo: false,
-    //                 responsive: true,
-    //                 "bAutoWidth": false
-    //             });
-
-    //         },
-    //         error: function(xhr, status, error) {
-    //             console.error(xhr.responseText);
-    //             $('#results').append('<p>An error occurred while searching for students.</p>');
-    //         }
-    //     });
-    // }
-
     $(document).ready(function() {
         $('#DataTables').DataTable();
     });
@@ -275,12 +201,12 @@
                 success:function(response)
                 {
                     if(response.warning){
+                        filterStudentDetails();
                         Notiflix.Notify.Warning(response.warning);
-                        table.ajax.reload(null, false);
                     }
                 },
                 error: function(xhr, status, error) {
-                    table.ajax.reload(null, false);
+                    filterStudentDetails();
                     Notiflix.Notify.Failure(response.warning);
                 }
             });

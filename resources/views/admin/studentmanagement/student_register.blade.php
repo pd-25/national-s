@@ -1,11 +1,12 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>Create Student</h1>
+    <h1>Registration</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Create Student</li>
+            <li class="breadcrumb-item"><a href="{{ route('student.studentList') }}">Manage Student's</a></li>
+            <li class="breadcrumb-item active">Registration</li>
         </ol>
     </nav>
 </div>
