@@ -255,11 +255,11 @@
             <div class="tab-pane fade show active" id="nav-one" role="tabpanel" aria-labelledby="nav-one-tab">
                 <div class="row">
                     <div class="col-lg-6">
-                    <div class="nws_left_box"> <img src="storage/news_images/{{Getnews()[0]->news_image}}" class="img-fluid border-radius-10">
-                        <h3>{{Getnews()[0]->news_title}}</h3>
-                        <p class="b_date">{{date('d-m-Y', strtotime(@Getnews()[0]->news_date))}}</p>
-                        <p>{!! Str::words(Getnews()[0]->news_desc, 20) !!} </p>
-                        <a href="{{route('web.edit', Getnews()[0]->news_slug)}}"  class="rm-btn">Read More</a> </div>
+                    <div class="nws_left_box"> <img src="storage/news_images/{{Getnews()[0]?->news_image}}" class="img-fluid border-radius-10">
+                        <h3>{{Getnews()[0]?->news_title}}</h3>
+                        <p class="b_date">{{date('d-m-Y', strtotime(@Getnews()[0]?->news_date))}}</p>
+                        <p>{!! Str::words(Getnews()[0]?->news_desc, 20) !!} </p>
+                        <a href="{{route('web.edit', Getnews()[0]?->news_slug)}}"  class="rm-btn">Read More</a> </div>
                     </div>
                     <div class="col-lg-6 tab_img">
                         <div class="nws_right_box">
@@ -323,14 +323,14 @@
                 <div class="row">
                     <div class="col-lg-6">
                     <div class="nws_left_box"> 
-                        @if (Getnotice()[0]->image)
-                            <img src="{{@Getnotice()[0]->image}}" class="img-fluid border-radius-10" alt="...">
+                        @if (Getnotice()[0]?->image)
+                            <img src="{{@Getnotice()[0]?->image}}" class="img-fluid border-radius-10" alt="...">
                         @else
                             <img src="assets/website/images/scholastic-pic.jpg" class="img-fluid border-radius-10" alt="...">
                         @endif
                         {{-- <h3>Cras Vestibulum Nunc</h3> --}}
-                        <p class="b_date">{{date('d-m-Y', strtotime(Getnotice()[0]->notice_date))}}</p>
-                        <p>{{ Str::words(Getnotice()[0]->notice_name, 20) }}</p>
+                        <p class="b_date">{{date('d-m-Y', strtotime(Getnotice()[0]?->notice_date))}}</p>
+                        <p>{{ Str::words(Getnotice()[0]?->notice_name, 20) }}</p>
                         <a href="{{route('web.notice')}}" class="rm-btn">Read More</a> </div>
                     </div>
                     <div class="col-lg-6 tab_img">
