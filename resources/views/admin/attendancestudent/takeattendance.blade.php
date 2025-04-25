@@ -24,10 +24,10 @@
                     <thead>
                         <tr>
                             <th>SL NO</th>
-                            <th>Admission Number</th>
-                            <th>Session</th>
+                            {{-- <th>Admission Number</th> --}}
+                            {{-- <th>Session</th>
                             <th>Class</th>
-                            <th>Section</th>
+                            <th>Section</th> --}}
                             <th>Student Name</th>
                             <th class="text-center">Present</th>
                             <th class="text-center">Absent</th>
@@ -59,13 +59,14 @@
                     tableBody.empty(); 
                     if (response.data && response.data.length > 0) {
                         $.each(response.data, function(index, item) {
+                            // <td>${item.student_details.admission_number}</td>
+                            // <td>${item.student_session.sessions_name}</td>
+                            //         <td>${item.student_class.class_name}</td>
+                            //         <td>${item.student_section.section_name}</td>
                             tableBody.append(`
                                <tr>
                                     <td>${index + 1}</td>
-                                    <td>${item.student_details.admission_number}</td>
-                                    <td>${item.student_session.sessions_name}</td>
-                                    <td>${item.student_class.class_name}</td>
-                                    <td>${item.student_section.section_name}</td>
+                                    
                                     <td>${item.student_details.student_name}</td>
                                     <td class="text-center">
                                         <input id="${item.student_details.id}_onTime" class="form-check-input larger-checkbox" 

@@ -16,8 +16,8 @@
                 <div class="col-4 mb-2">
                     <label for="" class="form-label">Select Session<span class="text-danger">*</span></label>
                     <select name="session_id" id="session_id" class="form-select">
-                        @if (!@empty(GetSession('all_session')))
-                            @foreach (GetSession('all_session') as $index=>$item)
+                        @if (!@empty(GetSession('active_session')))
+                            @foreach (GetSession('active_session') as $index=>$item)
                                 <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
                             @endforeach
                         @endif

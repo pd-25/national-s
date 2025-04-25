@@ -27,7 +27,7 @@
     @endphp
     <div class="card border-0">
         <div class="card-body pt-4">
-            @if (!@empty(GetSession('deactive_session')))
+            @if (!@empty(GetSession('active_session')) && GetSession('active_session')[0]->section_valid_to <= date('Y-m-d'))
                 <p class="text-danger">To enroll a student in a new session, you need to create a new session first. 
                     <a href="{{route('ams.manageSessionTerm')}}">Manage Session</a>
                 </p>

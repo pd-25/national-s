@@ -1,11 +1,11 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>Class Attendance</h1>
+    <h1>Student Attendance</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Class Attendance</li>
+            <li class="breadcrumb-item active">Student Attendance</li>
         </ol>
     </nav>
 </div>
@@ -90,8 +90,7 @@
                             <th>Admission Number</th>
                             <th>Attenadnce Date</th>
                             <th class="text-center">Time</th>
-                            <th class="text-center">Present/Absent</th>
-                            <th class="text-center">Late</th>
+                            <th class="text-center">P/A/L</th>
                         </tr>
                     </thead>
                     <tbody id="studentTableBody">
@@ -193,26 +192,15 @@
                             data: null,
                             render: function(data) {
                                 if (data.status == 1 && data.late == 0) {
-                                    return '<i class="bi bi-check-lg text-success fs-5"></i>';
+                                    return '<span class="text-success">P</span>';
                                 } else if (data.status == 0 && data.late == 0) {
-                                    return '<i class="bi bi-x text-danger fs-4"></i>';
-                                } else {
-                                    return '<i class="bi bi-reception-0 text-secondary fs-5"></i>';
+                                    return '<span class="text-danger">A</span>';
+                                } else if (data.status == 1 && data.late == 1) {
+                                    return '<span class="text-warning">L</span>';
                                 }
                             },
                             className: 'text-center'
                         },
-                        { 
-                            data: null,
-                            render: function(data) {
-                                if (data.status == 1 && data.late == 1) {
-                                    return '<i class="bi bi-exclamation-diamond text-warning fs-5"></i>';
-                                } else {
-                                    return '<i class="bi bi-reception-0 text-secondary fs-5"></i>';
-                                }
-                            },
-                            className: 'text-center'
-                        }
                     ]
                 });
             },

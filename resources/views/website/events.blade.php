@@ -26,7 +26,7 @@
                           <img src="{{@$item->event_image}}" class="img-fluid border-radius-10" alt="Event Image - Art Olympia">	  
                       </div>
                       <div class="blog-post-box">
-                          <h2>R{{@$item->event_name}}</h2>
+                          <h2>{{@$item->event_name}}</h2>
                           <ul class="blog-dtl">
                               <li><span><i class="fa fa-calendar" aria-hidden="true"></i></span>{{date('M d Y', strtotime(@$item->event_date))}}</li>
                           </ul>

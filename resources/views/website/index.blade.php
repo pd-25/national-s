@@ -22,19 +22,22 @@
     <div class="col-lg-4 bb-box-one">
         <div class="banner-btm-box"> <img src="assets/website/images/bb-icon1.png" class="img-fluid">
         <h3>Infrastructure</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit... <a href="general.html"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></p>
+        <p>NPS is committed to nurture its students in a happy and holistic... <a href="{{route('web.general')}}"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></p>
         </div>
     </div>
     <div class="col-lg-4 bb-box-two">
         <div class="banner-btm-box"> <img src="assets/website/images/bb-icon2.png" class="img-fluid">
         <h3>Admission Notice</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit... <a href="admission-notice.html"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></p>
+        <p>
+            @if (!@empty(GetAdmissionnotice()))
+                {{substr(GetAdmissionnotice()[0]->admi_notice_name, 0 , 55)}}... <a href="{{route('web.admissionnotice')}}"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></p>
+            @endif
         </div>
     </div>
     <div class="col-lg-4 bb-box-three">
         <div class="banner-btm-box"> <img src="assets/website/images/bb-icon3.png" class="img-fluid">
         <h3>Co-Curriculars</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit... <a href="co-curricular.html"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit... <a href="{{route('web.cocurricular')}}"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></p>
         </div>
     </div>
     </div>
@@ -53,7 +56,7 @@
         <h2>National Public School</h2>
         <p><b>National Public School</b> is situated close to Tollygunge metro station and New Alipore. The school is housed in a spacious well lighted three-storeyed building on a sprawling campus it is well equipped with modern amenities, a well-stocked library and state-of-the-art laboratories to nurture and educate students from the pre-primary to high secondary level the curriculum is comprehensive and aims to instil competitive skills and knowledge along with social and ethical values</p>
         <p>Our <b>DIGITAL CURRICULUM</b> and <b>SPACE STUDIES PROGRAM</b> empower our students with the innovative mind set and competence to get success in present and future. </p>
-        <a href="about-us.html" class="banner-btn">Know More about Us</a> </div>
+        <a href="{{route('web.aboutus')}}" class="banner-btn">Know More about Us</a> </div>
     </div>
 </div>
 </section>
@@ -64,7 +67,7 @@
     <div class="col-lg-6 align-self-center">
         <h2>Principal’s Desk</h2>
         <p>National Public School is a symbol of progressive and quality education. Our motto is ” We build the citizens of tomorrow” captures the essence of our spirit. Knowledge and learning are two aspects of human beings which are long run process. We are an institution for a child’s new beginning together with best economic and social infrastructure. Education is not merely requirement of the facts but also of values which help us improve the different facets of mankind. </p>
-        <a href="principals-desk.html" class="rm-btn">Read More</a> </div>
+        <a href="{{route('web.principalsdesk')}}" class="rm-btn">Read More</a> </div>
     <div class="col-lg-6 text-center"> <img src="assets/website/images/principal-image.jpg" class="img-fluid br-100 mb-3">
         <h3>A Successful & Flourishing Future</h3>
         <p class="mb-0">National Public School Students</p>
@@ -255,16 +258,20 @@
             <div class="tab-pane fade show active" id="nav-one" role="tabpanel" aria-labelledby="nav-one-tab">
                 <div class="row">
                     <div class="col-lg-6">
-                    <div class="nws_left_box"> <img src="storage/news_images/{{Getnews()[0]->news_image}}" class="img-fluid border-radius-10">
-                        <h3>{{Getnews()[0]->news_title}}</h3>
-                        <p class="b_date">{{date('d-m-Y', strtotime(@Getnews()[0]->news_date))}}</p>
-                        <p>{!! Str::words(Getnews()[0]->news_desc, 20) !!} </p>
-                        <a href="{{route('web.edit', Getnews()[0]->news_slug)}}"  class="rm-btn">Read More</a> </div>
-                    </div>
+                        @if (!@empty(Getnews()))
+                            <div class="nws_left_box"> <img src="storage/news_images/{{@Getnews()[0]->news_image}}" class="img-fluid border-radius-10">
+                                <h3>{{@Getnews()[0]->news_title}}</h3>
+                                <p class="b_date">{{date('d-m-Y', strtotime(@Getnews()[0]->news_date))}}</p>
+                                <p>{!! Str::words(@Getnews()[0]->news_desc, 20) !!} </p>
+                                @if (@Getnews()[0]->news_slug)
+                                    <a href="{{route('web.edit', @Getnews()[0]->news_slug)}}"  class="rm-btn">Read More</a> </div>
+                                @endif
+                            </div>
+                        @endif
                     <div class="col-lg-6 tab_img">
                         <div class="nws_right_box">
                             @if (!@empty(Getnews()))
-                                @foreach (Getnews()->take(3) as $item)
+                                @foreach (@Getnews()->take(3) as $item)
                                     <div class="media"> 
                                         <img src="storage/news_images/{{@$item->news_image}}" class="mr-4 border-radius-10" alt="...">
                                         <div class="media-body align-self-center">
@@ -283,38 +290,30 @@
             <div class="tab-pane fade" id="nav-two" role="tabpanel" aria-labelledby="nav-two-tab">
                 <div class="row">
                     <div class="col-lg-6">
-                    <div class="nws_left_box"> <img src="assets/website/images/event-pic.jpg" class="img-fluid border-radius-10">
-                        <h3>Ganesh Chaturthi</h3>
-                        <p class="b_date">06-09-2024</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at vestibulum nunc. Lorem ipsum dolor sit amet. </p>
-                        <a href="" class="rm-btn">Read More</a> </div>
-                    </div>
+                    @if (!@empty(GetEvents()))
+                        <div class="nws_left_box"> <img src="{{@GetEvents()[0]->event_image}}" class="img-fluid border-radius-10">
+                            <h3>{{@GetEvents()[0]->event_name}}</h3>
+                            <p class="b_date">{{date('d-m-Y', strtotime(@GetEvents()[0]->event_date))}}</p>
+                            <p>{!! Str::words(@GetEvents()[0]->event_desc, 20) !!} </p>
+                            @if (@GetEvents()[0]->event_slug)
+                                <a href="{{route('web.events.edit', @GetEvents()[0]->event_slug)}}" class="rm-btn">Read More</a> </div>
+                            @endif
+                        </div>
+                    @endif
                     <div class="col-lg-6 tab_img">
                     <div class="nws_right_box">
-                        <div class="media"> <img src="assets/website/images/event-pic1.jpg" class="mr-4 border-radius-10" alt="...">
-                        <div class="media-body align-self-center">
-                            <h5 class="mt-0">Deepavali Events</h5>
-                            <p class="b_date mb-2">18-10-2024</p>
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                            <a href="" class="rm-btn-sm">Read More</a>
-                        </div>
-                        </div>
-                        <div class="media"> <img src="assets/website/images/event-pic2.jpg" class="mr-4 border-radius-10" alt="...">
-                        <div class="media-body align-self-center">
-                            <h5 class="mt-0">School Games & Sports</h5>
-                            <p class="b_date mb-2">06-09-2024</p>
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                            <a href="" class="rm-btn-sm">Read More</a>
-                        </div>
-                        </div>
-                        <div class="media"> <img src="assets/website/images/event-pic3.jpg" class="mr-4 border-radius-10" alt="...">
-                        <div class="media-body align-self-center">
-                            <h5 class="mt-0">76th Independence Day</h5>
-                            <p class="b_date mb-2">06-09-2024</p>
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                            <a href="" class="rm-btn-sm">Read More</a>
-                        </div>
-                        </div>
+                        @if (!@empty(GetEvents()))
+                        @foreach (@GetEvents()->take(3) as $item)
+                            <div class="media"> <img src="{{@$item->event_image}}" class="mr-4 border-radius-10" alt="...">
+                                <div class="media-body align-self-center">
+                                    <h5 class="mt-0">{{@$item->event_name}}</h5>
+                                    <p class="b_date mb-2">{{date('M d Y', strtotime(@$item->event_date))}}</p>
+                                    <p class="mb-0"> {!! Str::words(@$item->event_desc, 8) !!}</p>
+                                    <a href="{{route('web.events.edit', @$item->event_slug)}}" class="rm-btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        @endforeach
+                        @endif
                     </div>
                     </div>
                 </div>
@@ -323,20 +322,20 @@
                 <div class="row">
                     <div class="col-lg-6">
                     <div class="nws_left_box"> 
-                        @if (Getnotice()[0]->image)
+                        @if (!@empty(Getnotice()[0]->image))
                             <img src="{{@Getnotice()[0]->image}}" class="img-fluid border-radius-10" alt="...">
                         @else
                             <img src="assets/website/images/scholastic-pic.jpg" class="img-fluid border-radius-10" alt="...">
                         @endif
                         {{-- <h3>Cras Vestibulum Nunc</h3> --}}
-                        <p class="b_date">{{date('d-m-Y', strtotime(Getnotice()[0]->notice_date))}}</p>
-                        <p>{{ Str::words(Getnotice()[0]->notice_name, 20) }}</p>
+                        <p class="b_date">{{date('d-m-Y', strtotime(@Getnotice()[0]->notice_date))}}</p>
+                        <p>{{ Str::words(@Getnotice()[0]->notice_name, 20) }}</p>
                         <a href="{{route('web.notice')}}" class="rm-btn">Read More</a> </div>
                     </div>
                     <div class="col-lg-6 tab_img">
                         <div class="nws_right_box">
                             @if (!@empty(Getnotice()))
-                                @foreach (Getnotice()->take(3) as $item)
+                                @foreach (@Getnotice()->take(3) as $item)
                                     <div class="media"> 
                                         @if ($item->image)
                                             <img src="{{@$item->image}}" class="mr-4 border-radius-10" alt="...">

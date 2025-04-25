@@ -89,8 +89,7 @@
                             <th>Student Name</th>
                             <th class="text-center">Date</th>
                             <th class="text-center">Time</th>
-                            <th class="text-center">Present/Absent</th>
-                            <th class="text-center">Late</th>
+                            <th class="text-center">P/A/L</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -169,22 +168,11 @@
                                 data: null,
                                 render: function(data) {
                                     if (data.status == 1 && data.late == 0) {
-                                        return '<i class="bi bi-check-lg text-success fs-5"></i>';
+                                        return '<span class="text-success">P</span>';
                                     } else if (data.status == 0 && data.late == 0) {
-                                        return '<i class="bi bi-x text-danger fs-4"></i>';
-                                    } else {
-                                        return '<i class="bi bi-reception-0 text-secondary fs-5"></i>';
-                                    }
-                                },
-                                className: 'text-center'
-                            },
-                            { 
-                                data: null,
-                                render: function(data) {
-                                    if (data.status == 1 && data.late == 1) {
-                                        return '<i class="bi bi-exclamation-diamond text-warning fs-5"></i>';
-                                    } else {
-                                        return '<i class="bi bi-reception-0 text-secondary fs-5"></i>';
+                                        return '<span class="text-danger">A</span>';
+                                    } else if (data.status == 1 && data.late == 1) {
+                                        return '<span class="text-warning">L</span>';
                                     }
                                 },
                                 className: 'text-center'

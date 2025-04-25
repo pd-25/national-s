@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Website\HomeController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\NewsController;
@@ -9,17 +10,27 @@ use App\Http\Controllers\AdmissionNoticeController;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\EventRegisterController;
 
-// Route::get('/linkstorage', function () {
-//     Artisan::call('storage:link');
-//     return 'link create successfully !';
-// });
+Route::get('/linkstorage', function () {
+    Artisan::call('storage:link');
+    return 'link create successfully !';
+});
 
-// Route::get('/clear-cache', function () {
-//     Artisan::call('route:cache');
-//     Artisan::call('view:clear');
-//     Artisan::call('view:clear');
-//     return 'Routes cache has clear successfully !';
-// });
+Route::get('/clear-cache', function () {
+    Artisan::call('route:cache');
+    Artisan::call('view:clear');
+    Artisan::call('optimize:clear');
+    return 'Routes cache has clear successfully !';
+});
+
+Route::get('/down', function () {
+    Artisan::call('down');
+    return 'Application is now in maintenance mode.';
+});
+
+Route::get('/up', function () {
+    Artisan::call('up');
+    return 'Application is now live.';
+});
 
 ///Website 
 Route::controller(HomeController::class)->group(function() {
