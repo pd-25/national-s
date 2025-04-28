@@ -29,7 +29,7 @@ class NoticeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'notice_name' => 'required',
+            'notice_name' => 'required|',
             'notice_date' => 'required',
         ]);
         $notice = new Notice;

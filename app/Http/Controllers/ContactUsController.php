@@ -30,12 +30,19 @@ class ContactUsController extends Controller
     {
         $request->validate([
             'first_name' => 'required|max:120',
-            // 'last_name' => 'required|max:120',
+            'last_name' => 'nullable|max:120',
             'email' => 'required|email',
-            // 'phone_no'=>'required|min:10|numeric',
-            'message'=>'required|string|max:1000'
+            'phone_no' => 'nullable|min:10|numeric',
+            'message' => 'required|string|max:1000'
         ]);
         
+        $pattern = '/\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|WHERE|;|--|#|\/\*|\*\/|http|https|www)\b/i';
+        $testString = $request->message;
+
+        if (preg_match($pattern, $testString)) {
+            return redirect()->back()->with('error', 'An unexpected error has occurred. Please try again later.');
+        }
+
         $contactUs = new ContactUs;
         $contactUs->first_name = $request->first_name;
         $contactUs->last_name = $request->last_name;

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('notices', function (Blueprint $table) {
             $table->id();
-            $table->string('notice_name');
+            $table->text('notice_name');
             $table->timestamp('notice_date');
             $table->string('image')->nullable();
             $table->boolean('status')->default(1)->comment('1=approved, 0=pending');
