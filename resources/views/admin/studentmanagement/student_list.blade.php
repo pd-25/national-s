@@ -21,7 +21,7 @@
                         <select name="session_id" id="session_id" class="form-select">
                             @if (!@empty(GetSession('all_session')))
                                 @foreach (GetSession('all_session') as $index=>$item)
-                                    <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
+                                    <option value="{{@$item->id}}" {{$item->status == 1 ? 'selected': ''}}>{{@$item->sessions_name}}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -158,6 +158,8 @@
                             day: '2-digit'
                         }),
                         '<a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="EditStudent(\'' + student.student_details.id + '\')"><i class="bi bi-pencil-square"></i> </a><a class="btn btn-success btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="ViewStudent(\'' + student.student_details.id + '\')"><i class="bi bi-eye-fill"></i></a>' +
+                        '<a class="btn btn-secondary btn-sm rounded-pill" href="javascript:void(0)" onclick="StudentPayment('+ student.student_session.id + ',' +  student.student_class.id + ',' + student.student_section.id + ',' + student.student_details.id + ')"><i class="bi bi-credit-card-fill"></i></a> '
+                        +
                         '<a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteStudent(\'' + student.student_details.id + '\')"><i class="bi bi-trash"></i></a>'
                     ]);
                 });
@@ -181,6 +183,10 @@
 
     function EditStudent(id) {
         window.location.href ="students-edit/"+id;
+    }
+
+    function StudentPayment(session_id, class_id, section_id, student_id){
+        window.location.href ="fees-payment?session_id="+session_id + '&class_id='+class_id+ '&section_id='+ section_id + '&student_id='+student_id;
     }
 
     function deleteStudent(id){

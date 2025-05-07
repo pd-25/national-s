@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('payment_number')->uniqid();
             $table->unsignedBigInteger('user_id');
             $table->string('student_name')->nullable();
-            $table->string('student_roll')->nullable();
             $table->string('parents_name')->nullable();
             $table->string('address')->nullable();
             $table->string('mobile_no')->nullable();
@@ -25,11 +24,17 @@ return new class extends Migration
             $table->unsignedBigInteger('section_id'); 
             $table->string('month'); 
             $table->string('year'); 
+            $table->decimal('admission_charges', 10,2)->nullable(); 
             $table->decimal('enrolment_fee', 10,2)->nullable(); 
             $table->decimal('tuition_fee', 10,2)->nullable(); 
             $table->decimal('terminal_fee', 10,2)->nullable(); 
+            $table->decimal('sports', 10,2)->nullable();
+            $table->text('sports_comments')->nullable(); 
             $table->decimal('misc_charges', 10,2)->nullable(); 
+            $table->text('misc_charges_comments')->nullable(); 
             $table->decimal('identity_card', 10,2)->nullable(); 
+            $table->decimal('scholarship_concession', 10,2)->nullable(); 
+            $table->text('scholarship_concession_comments')->nullable(); 
             $table->decimal('total', 18,2); 
             $table->string('payment_mode', 30);
             $table->string('transaction_id')->nullable();
@@ -40,7 +45,6 @@ return new class extends Migration
             $table->string('payment_ref_no')->uniqid()->nullable();
             $table->string('payment_getway_id')->uniqid()->nullable();
             $table->string('status')->nullable();
-            
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('session_id')->references('id')->on('sessions');
             $table->foreign('class_id')->references('id')->on('classes');

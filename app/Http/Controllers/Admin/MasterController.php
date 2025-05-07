@@ -162,8 +162,13 @@ class MasterController extends Controller
         ]);
         if($request->session_id){
             $session = Session::find($request->session_id);
+            if($request->status == 1){
+                Session::query()->update(['status' => 0]);
+            }
         }else{
-            Session::query()->update(['status' => 0]);
+            if($request->status != 0){
+                Session::query()->update(['status' => 0]);
+            }
             $session = new Session;
         }
         $session->sessions_name = $request->session_name;

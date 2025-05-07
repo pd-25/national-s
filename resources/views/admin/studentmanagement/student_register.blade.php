@@ -87,9 +87,9 @@
                     <div class="col-4 mb-1">
                         <label for="" class="form-label">Academic Year: <span class="text-danger">*</span></label>
                         <select name="session_id" id="session_id" class="form-select">
-                            @if (!@empty(GetSession('active_session')))
-                                @foreach (GetSession('active_session') as $index=>$item)
-                                    <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
+                            @if (!@empty(GetSession('all_session')))
+                                @foreach (GetSession('all_session') as $index=>$item)
+                                    <option value="{{@$item->id}}" {{$item->status == 1 ? 'selected': ''}} >{{@$item->sessions_name}}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -379,15 +379,23 @@
                         @endif
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
-                        <input type="password" id="password" class="form-control" name="password" required>
+                        <label for="password" class="form-label d-flex justify-content-between"><div>Password <span class="text-danger">*</span></div>
+                            <div><i class="bi bi-magic fs-5 text-primary" onclick="generatePassword()"></i></div>
+                        </label>
+                        <input type="password" id="password" class="form-control showPassword" name="password" required>
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
+                        <div class="form-check">
+                            <input class="form-check-input" onclick="myShowPassword()" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">
+                                Show Password
+                            </label>
+                          </div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="password" class="form-label">Confirm Password<span class="text-danger">*</span></label>
-                        <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" required>
+                        <input type="password" id="password_confirmation" class="form-control showPassword" name="password_confirmation" required>
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif

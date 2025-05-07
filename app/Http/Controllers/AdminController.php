@@ -63,11 +63,16 @@ class AdminController extends Controller
     {
         $session_id = GetSession('active_session')[0]->id;
         $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
+        if($teacher_details){
+            if($teacher_details->teacherclassmapping->count() == 0){
+                if($teacher_details->teacherclassmapping[0]->class_id && $teacher_details->teacherclassmapping[0]->section_id){
+                    return redirect()->route('admin.index')->withError('Oppes! The teacher does not have any class or section assigned.');
+                }
+            }
+        }
         $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
         $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
-        
         $totalStudent = StudentClassMapping::where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->count();
-
         $attendance = Attendance::where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->whereDate('date_taken', date('Y-m-d'))->get();
         
         $totalPresent = 0;

@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepositeController;
-
+use App\Http\Controllers\PaymentSettingsController;
 
 Route::controller(AdminController::class)->group(function() {
     Route::get('admin/login', 'index')->name('admin.index');
@@ -79,6 +79,15 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::get('view-download-payment/{payment_number}', 'viewDownloadDeposite')->name('deposite.viewDownloadDeposite');
                 Route::post('destroy-payment', 'destroy')->name('deposite.destroy');
                 Route::get('payment-due', 'paymentdue')->name('deposite.paymentdue');
+            });
+
+            //Payment settings
+            Route::controller(PaymentSettingsController::class)->group(function() {
+                Route::get('payment-settings', 'index')->name('paymentsettings.index');
+                Route::post('payment-settings-store', 'store')->name('paymentsettings.store');
+                Route::get('get-payment-data', 'create')->name('paymentsettings.create');
+                Route::get('get-session-payment-data', 'show')->name('paymentsettings.show');
+                Route::post('payment-settings-destroy', 'destroy')->name('paymentsettings.destroy');
             });
 
             // Attendance Management

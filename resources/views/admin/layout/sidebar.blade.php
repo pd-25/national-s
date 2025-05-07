@@ -101,7 +101,8 @@
                     @if (Route::is('deposite.index') ||
                     Route::is('deposite.create') ||
                     Route::is('deposite.viewDownloadDeposite') || 
-                    Route::is('deposite.edit')
+                    Route::is('deposite.edit') ||
+                    Route::is('paymentsettings.index')
                     )
                     class="nav-content"
                     @else
@@ -116,6 +117,12 @@
                         <a href="{{route('deposite.create')}}" 
                         class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }} {{ Route::is('deposite.edit') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Payment History</span>
+                        </a>
+                    </li>
+                    <li class="{{ Route::is('paymentsettings.index') ? 'active' : '' }}" id="">
+                        <a href="{{route('paymentsettings.index')}}" 
+                        class="{{ Route::is('paymentsettings.index') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Payment Settings</span>
                         </a>
                     </li>
                     {{-- <li class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}" id="">

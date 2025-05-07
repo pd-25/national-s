@@ -25,7 +25,7 @@
                         <select name="session_id" id="session_id" class="form-select">
                             @if (!@empty(GetSession('all_session')))
                                 @foreach (GetSession('all_session') as $index=>$item)
-                                    <option value="{{@$item->id}}">{{@$item->sessions_name}}</option>
+                                    <option value="{{@$item->id}}" {{$item->status == 1 ? 'selected': ''}}>{{@$item->sessions_name}}</option>
                                 @endforeach
                             @endif
                         </select>

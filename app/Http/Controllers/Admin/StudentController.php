@@ -110,7 +110,7 @@ class StudentController extends Controller
                 $user->transport_facility = $request->transport_facility;
                 $user->route = $request->route;
                 $user->email = Str::lower($request->email);
-                $user->password = Hash::make($request->password);
+                $user->password = encrypt($request->password);
                 $user->status = 1;
                 $user->save();
     

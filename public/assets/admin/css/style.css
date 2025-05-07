@@ -1953,3 +1953,32 @@ h6 {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.select2-container .select2-selection--single {
+    padding: 0.275rem 2.25rem 0.275rem 0.2rem !important;
+    height: 36px !important;
+    font-weight: 400 !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    background-color: var(--bs-body-bg) !important;
+    border: var(--bs-border-width) solid var(--bs-border-color) !important;
+    border-radius: var(--bs-border-radius) !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+.table-wrapper {
+    max-height: 250px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.table-fixed-header thead th {
+    position: sticky;
+    top: 0;
+    background: #cfe2ff;
+    z-index: 1;
+}
+
+.bg-color-items {
+    background: #f8f9fa;
+}

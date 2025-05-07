@@ -34,11 +34,17 @@ class DepositeController extends Controller
             'section_id' => 'required|exists:sections,id',
             'month' => 'required|string',
             'year' => 'required|string',
+            'admission_charges' => 'nullable|numeric',
             'enrolment_fee' => 'nullable|numeric',
             'tuition_fee' => 'nullable|numeric',
             'terminal_fee' => 'nullable|numeric',
+            'sports' => 'nullable|numeric',
+            'sports_comments' => 'nullable|string|max:500',
             'misc_charges' => 'nullable|numeric',
+            'misc_charges_comments' => 'nullable|string|max:500',
             'identity_card' => 'nullable|numeric',
+            'scholarship_concession' => 'nullable|numeric',
+            'scholarship_concession_comments' => 'nullable|string|max:500',
             'total' => 'required|numeric',
             'payment_mode' => 'required|string|max:30',
             'transaction_id' => 'nullable|string',
@@ -64,7 +70,6 @@ class DepositeController extends Controller
             'payment_number' => $paymentOrderNumber,
             'user_id' => $request->user_id,
             'student_name' => $user->student_name,
-            'student_roll' => $request->student_roll,
             'parents_name' => $user->parent_name,
             'address' => $user->address . ', ' . $user->pin_code,
             'mobile_no' => $user->mobile_no,
@@ -73,11 +78,17 @@ class DepositeController extends Controller
             'section_id' => $request->section_id,
             'month' => $request->month,
             'year' => $request->year,
+            'admission_charges' => $request->admission_charges,
             'enrolment_fee' => $request->enrolment_fee,
             'tuition_fee' => $request->tuition_fee,
             'terminal_fee' => $request->terminal_fee,
+            'sports' => $request->sports,
+            'sports_comments' => $request->sports_comments,
             'misc_charges' => $request->misc_charges,
+            'misc_charges_comments' => $request->misc_charges_comments,
             'identity_card' => $request->identity_card,
+            'scholarship_concession' => $request->scholarship_concession,
+            'scholarship_concession_comments' => $request->scholarship_concession_comments,
             'total' => $request->total,
             'payment_mode' => $request->payment_mode,
             'transaction_id' => $request->transaction_id,
@@ -89,7 +100,7 @@ class DepositeController extends Controller
             'payment_getway_id' => $request->payment_getway_id,
             'status' => $request->status == null ? "Completed" : "Pending",
         ]);
-            return redirect()->route('deposite.viewDownloadDeposite',$paymentOrderNumber)->withSuccess('Payment processed successfully');
+        return redirect()->route('deposite.viewDownloadDeposite',$paymentOrderNumber)->withSuccess('Payment processed successfully');
     }
 
     /**
@@ -129,7 +140,7 @@ class DepositeController extends Controller
             $query->where('year', $year);
         }
         
-        $allDeposite = $query->get();
+        $allDeposite = $query->orderBy('month', 'desc')->get();
         return $allDeposite;
     }
 

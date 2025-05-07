@@ -1,4 +1,6 @@
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         Notiflix.Notify.Init({});
         Notiflix.Confirm.Init({});
@@ -42,23 +44,28 @@
             $('#student_id_bind').append('<option value="">--Select Student--</option>');
 
             if (session_id && class_id && section_id) {
-                $.ajax({
-                    url: "{{route('attendance.studentsListUsingSessionClassSection')}}",
-                    type: 'Post',
-                    data:{
-                        session_id:session_id,
-                        class_id:class_id,
-                        section_id:section_id,
-                         _token: '{{ csrf_token() }}'
-                    },
-                    success: function(data) {
-                        $.each(data, function(index, item) {
-                            $('#student_id_bind').append('<option value="' + item.student_details.id + '">' + item.student_details.student_name + ' (' + item.student_details.admission_number + ') </option>');
-                        });
-                    },
-                    error: function() {
-                        console.error('Error fetching sections');
-                    }
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: "{{route('attendance.studentsListUsingSessionClassSection')}}",
+                        type: 'Post',
+                        data:{
+                            session_id:session_id,
+                            class_id:class_id,
+                            section_id:section_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(data) {
+                            $.each(data, function(index, item) {
+                                $('#student_id_bind').append('<option value="' + item.student_details.id + '">' + item.student_details.student_name + ' (' + item.student_details.admission_number + ') </option>');
+                            });
+                            $('.js-example-basic-single').select2();
+                            resolve();
+                        },
+                        error: function() {
+                            console.error('Error fetching sections');
+                            reject(err);
+                        }
+                    });
                 });
             }
         };
@@ -76,6 +83,7 @@
                             $.each(data, function(index, item) {
                                 $('#section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
                             });
+                            $(document).trigger('sectionsLoaded');
                         }
                     },
                     error: function() {
@@ -125,4 +133,53 @@
             }
         });
 
+        function myShowPassword() {
+            var x = $(".showPassword");
+            var currentType = x.attr("type");
+            if (currentType === "password") {
+                x.attr("type", "text");
+            } else {
+                x.attr("type", "password");
+            }
+        }
+
+        function generatePassword() {
+            var name = $('#student_name').val();
+            if(name == null|| name == ''){
+                alert("Please Enter the student name");
+                return;
+            }
+            var admissionNumber = "{{generateAdmissionNumber()}}"
+            
+            const cleanName = name.replace(/\s+/g, '').toLowerCase();
+            let namePart = cleanName.slice(0, 3);
+            if (namePart.length < 3) {
+            namePart = namePart.padEnd(3, 'x'); // pad with 'x'
+            }
+            let admStr = admissionNumber.toString();
+            if (admStr.length >= 4) {
+            admStr = admStr.slice(-4);
+            } else {
+            admStr = admStr.padStart(4, '0'); // pad with leading zeros
+            }
+            const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+            let randomPart = '';
+            for (let i = 0; i < 3; i++) {
+            randomPart += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+            }
+            let password = namePart + admStr + randomPart;
+            if (password.length < 8) {
+                while (password.length < 8) {
+                    password += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+                }
+            }
+            $("#password").val(password);
+            $("#password_confirmation").val(password);
+            return password;
+        }
+
+        function safeParse(value) {
+            var parsed = parseFloat(value);
+            return isNaN(parsed) ? 0 : parsed;
+        }
     </script>
