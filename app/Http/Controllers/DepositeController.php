@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class DepositeController extends Controller
 {
-    
     public function index()
     {
         return view('admin.feedeposite.add_deposite');
@@ -221,9 +220,5 @@ class DepositeController extends Controller
             return response()->json(['error' => 'Error'.$th->getMessage()]);
         }
     }
-
-    public function paymentdue(Request $request)
-    {
-        return view('admin.feedeposite.payment_due');
-    }
+    
 }

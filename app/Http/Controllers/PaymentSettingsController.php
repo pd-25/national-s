@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PaymentSettings;
 use Illuminate\Http\Request;
+use App\Models\Deposite;
 
 class PaymentSettingsController extends Controller
 {
@@ -198,5 +199,54 @@ class PaymentSettingsController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error'.$th->getMessage()]);
         }
+    }
+
+
+    public function paymentdue(Request $request)
+    {
+        return view('admin.paymentsettings.payment_due');
+    }
+
+    public function show_due_payment(Request $request)
+    {
+        $session_id = $request->session_id;
+        $class_id = $request->class_id;
+        $section_id = $request->section_id;
+        $user_id = $request->user_id;
+        $month = $request->month;
+        $year = $request->year;
+
+        $query = Deposite::with('studentDetails', 'studentSession', 'studentClass', 'studentSection');
+        
+        if ($session_id) {
+            $query->where('session_id', $session_id);
+        }
+        if ($class_id) {
+            $query->where('class_id', $class_id);
+        }
+        if ($section_id) {
+            $query->where('section_id', $section_id);
+        }
+        if ($user_id) {
+            $query->where('user_id', $user_id);
+        }
+        if ($month) {
+            $query->where('month', $month);
+        }
+        if ($year) {
+            $query->where('year', $year);
+        }
+        $due_payment = $query->orderBy('month', 'desc')->get();
+
+        $studentList = $this->students->studentsListUsingSessionClassSection($request);
+        dd($studentList);
+        if(isset($studentList)){
+            foreach ($studentList as $key => $value) {
+                if($due_payment->user_id != $value->id && $month != $due_payment->month && $due_payment->year != $year){
+                    
+                }
+            }
+        }
+        return $due_payment;
     }
 }

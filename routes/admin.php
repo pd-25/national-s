@@ -68,7 +68,7 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::post('session-student-details', 'sessionWiseStudent')->name('student.sessionWiseStudent');
             });
 
-            // Fee Deposite
+            // Payment Fee
             Route::controller(DepositeController::class)->group(function() {
                 Route::get('fees-payment', 'index')->name('deposite.index');
                 Route::post('store-payment', 'store')->name('deposite.store');
@@ -78,7 +78,6 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::put('update-payment/{deposite}/update', 'update')->name('deposite.update');
                 Route::get('view-download-payment/{payment_number}', 'viewDownloadDeposite')->name('deposite.viewDownloadDeposite');
                 Route::post('destroy-payment', 'destroy')->name('deposite.destroy');
-                Route::get('payment-due', 'paymentdue')->name('deposite.paymentdue');
             });
 
             //Payment settings
@@ -88,6 +87,9 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::get('get-payment-data', 'create')->name('paymentsettings.create');
                 Route::get('get-session-payment-data', 'show')->name('paymentsettings.show');
                 Route::post('payment-settings-destroy', 'destroy')->name('paymentsettings.destroy');
+                // Payment Due
+                Route::get('payment-due', 'paymentdue')->name('deposite.paymentdue');
+                Route::post('payment-due-list', 'show_due_payment')->name('deposite.show_due_payment');
             });
 
             // Attendance Management

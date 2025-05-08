@@ -50,15 +50,11 @@
                             <option value="">--Select Section--</option>
                         </select>
                     </div>
-                    <div class="col-4 mb-2">
+                    <div class="col-6 mb-2">
                         <label for="" class="form-label">Select Student<span class="text-danger">*</span></label>
                         <select name="user_id" id="student_id_bind" class="form-select" disabled>
                             <option value="">--Select Student--</option>
                         </select>
-                    </div>
-                    <div class="col-2 mb-2">
-                        <label for="" class="form-label">Student Roll<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="student_roll" id="student_roll" placeholder="Roll" value="{{@$deposite->student_roll}}">
                     </div>
                     <div class="col-3 mb-2">
                         <label for="" class="form-label">Select Month<span class="text-danger">*</span></label>
@@ -85,12 +81,21 @@
                     <div class="col-12 my-2">
                         <div class="row p-3">
                             <div class="col-8">
-                                Admission Charges / Enrolment Fee
+                                Admission Charges
                             </div>
                             <div class="col-4">
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">Rs. </span>
-                                    <input type="number" name="enrolment_fee" onblur="CountTotalPayment()" id="enrolment_fee" value="{{(@$deposite->enrolment_fee)}}" min="0"  class="form-control" >
+                                    <input type="number" name="admission_charges" onblur="CountTotalPayment()" id="admission_charges" min="0" class="form-control" value="{{@$deposite->admission_charges}}" >
+                                </div>
+                            </div>
+                            <div class="col-8">
+                               Enrolment Fee
+                            </div>
+                            <div class="col-4">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Rs. </span>
+                                    <input type="number" name="enrolment_fee" onblur="CountTotalPayment()" id="enrolment_fee" min="0" class="form-control" value="{{@$deposite->enrolment_fee}}" >
                                 </div>
                             </div>
                             <div class="col-8">
@@ -99,7 +104,7 @@
                             <div class="col-4">
                               <div class="input-group mb-3">
                                     <span class="input-group-text">Rs. </span>
-                                    <input type="number" min="0" name="tuition_fee" onblur="CountTotalPayment()" id="tuition_fee"  class="form-control" value="{{(@$deposite->tuition_fee)}}" >
+                                    <input type="number" min="0" name="tuition_fee" onblur="CountTotalPayment()" id="tuition_fee" class="form-control" value="{{@$deposite->tuition_fee}}">
                                 </div>
                             </div>
                             <div class="col-8">
@@ -108,16 +113,31 @@
                             <div class="col-4">
                               <div class="input-group mb-3">
                                     <span class="input-group-text">Rs. </span>
-                                    <input type="number" min="0" name="terminal_fee" onblur="CountTotalPayment()" id="terminal_fee"  class="form-control" value="{{(@$deposite->terminal_fee)}}">
+                                    <input type="number" min="0" name="terminal_fee" onblur="CountTotalPayment()" id="terminal_fee" class="form-control" value="{{@$deposite->terminal_fee}}">
                                 </div>
                             </div>
-                            <div class="col-8">
+                            <div class="col-4 mb-2">
+                                Sports Fee
+                            </div>
+                            <div class="col-4 mb-2">
+                                <textarea name="sports_comments" class="form-control" id="sports_comments" placeholder="Sports Comments" rows="2">{{@$deposite->sports_comments}}</textarea>
+                            </div>
+                            <div class="col-4 mb-2">
+                              <div class="input-group mb-3">
+                                    <span class="input-group-text">Rs. </span>
+                                    <input type="number" min="0" name="sports" onblur="CountTotalPayment()" id="sports" class="form-control" value="{{@$deposite->sports}}">
+                                </div>
+                            </div>
+                            <div class="col-4">
                                 Misc, Charges
+                            </div>
+                            <div class="col-4">
+                                <textarea name="misc_charges_comments" class="form-control" id="misc_charges_comments" placeholder=" Misc, Charges Comments" rows="2">{{@$deposite->misc_charges_comments}}</textarea>
                             </div>
                             <div class="col-4">
                               <div class="input-group mb-3">
                                     <span class="input-group-text">Rs. </span>
-                                    <input type="number" min="0" name="misc_charges" onblur="CountTotalPayment()" id="misc_charges"  class="form-control" value="{{(@$deposite->misc_charges)}}">
+                                    <input type="number" min="0" name="misc_charges" onblur="CountTotalPayment()" id="misc_charges" class="form-control" value="{{@$deposite->misc_charges}}">
                                 </div>
                             </div>
                             <div class="col-8">
@@ -126,18 +146,32 @@
                             <div class="col-4">
                               <div class="input-group mb-3">
                                     <span class="input-group-text">Rs. </span>
-                                    <input type="number" min="0" name="identity_card" onblur="CountTotalPayment()" id="identity_card"  class="form-control" value="{{(@$deposite->identity_card)}}">
+                                    <input type="number" min="0" name="identity_card" onblur="CountTotalPayment()" id="identity_card" class="form-control" value="{{@$deposite->identity_card}}">
                                 </div>
                             </div>
+                            <div class="col-4 mb-3">
+                                Scholarship / Concession
+                            </div>
+                            <div class="col-4 mb-3">
+                                <textarea name="scholarship_concession_comments" class="form-control" id="scholarship_concession_comments" placeholder="Scholarship / Concession Comments" rows="2">{{@$deposite->scholarship_concession_comments}}</textarea>
+                            </div>
+                            <div class="col-4 mb-3">
+                              <div class="input-group mb-3">
+                                    <span class="input-group-text">Rs. (-) </span>
+                                    <input type="number" min="0" name="scholarship_concession" onblur="CountTotalPayment()" id="scholarship_concession" class="form-control" value="{{@$deposite->scholarship_concession}}">
+                                </div>
+                            </div>
+                            <hr>
                             <div class="col-8">
                                 <b>Total</b>
                             </div>
                             <div class="col-4">
                               <div class="input-group mb-3">
-                                    <span class="input-group-text">Rs. </span>
-                                    <input type="number" min="0" name="total" id="total"  class="form-control" value="{{@$deposite->total}}">
+                                    <span class="input-group-text">Rs.</span>
+                                    <input type="number" min="0" name="total" value="{{@$deposite->total}}" id="total" class="form-control" >
                                 </div>
                             </div>
+                            <hr>
                         </div>
                     </div>
                     <div class="col-4 mb-2">
@@ -195,25 +229,6 @@
                     }, 2500);
                 }
             }, 2500);
-
-
-        }
-        checkPaymentMode("{{@$deposite->payment_mode}}");
-
-        if("{{@$deposite->enrolment_fee}}"){
-            CountTotalPayment();
-        }
-        if("{{@$deposite->tuition_fee}}" ){
-            CountTotalPayment();
-        }
-        if("{{@$deposite->terminal_fee}}" ){
-            CountTotalPayment();
-        }
-        if("{{@$deposite->misc_charges}}"){
-            CountTotalPayment();
-        }
-        if("{{@$deposite->identity_card}}"){
-            CountTotalPayment();
         }
     });
     function checkPaymentMode(payment_mode){
@@ -227,13 +242,15 @@
     }
 
     function CountTotalPayment(){
+        var admission_charges = parseFloat($("#admission_charges").val()) || 0;
         var enrolment_fee = parseFloat($("#enrolment_fee").val()) || 0;
         var tuition_fee = parseFloat($("#tuition_fee").val()) || 0;
         var terminal_fee = parseFloat($("#terminal_fee").val()) || 0;
+        var sports = parseFloat($("#sports").val()) || 0;
         var misc_charges = parseFloat($("#misc_charges").val()) || 0;
         var identity_card = parseFloat($("#identity_card").val()) || 0;
-
-        var total = enrolment_fee + tuition_fee + terminal_fee + misc_charges + identity_card;
+        var scholarship_concession = parseFloat($("#scholarship_concession").val()) || 0;
+        var total = ((admission_charges + enrolment_fee + tuition_fee + terminal_fee + sports + misc_charges + identity_card) - scholarship_concession);
         $("#total").val(total.toFixed(2));
     }
 </script>

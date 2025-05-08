@@ -13,7 +13,7 @@
 <section>
     <div class="card border-0">
         <div class="card-body pt-4">
-            <form action="{{route('deposite.store')}}" method="post">
+            <form action="" method="post">
                 @csrf
                 <div class="row my-3">
                     <div class="col-4 mb-2">
@@ -177,7 +177,7 @@
                             </div>
                             <div class="col-4 mb-3">
                               <div class="input-group mb-3">
-                                    <span class="input-group-text">Rs. </span>
+                                    <span class="input-group-text">Rs. (-) </span>
                                     <input type="number" min="0" name="scholarship_concession" onblur="CountTotalPayment()" id="scholarship_concession" class="form-control" >
                                 </div>
                             </div>
@@ -340,6 +340,14 @@
     }
 
     function GetPaymentSettingsData(){
+        $('#admission_charges').val('');
+        $('#enrolment_fee').val('');
+        $('#tuition_fee').val('');
+        $('#terminal_fee').val('');
+        $('#sports').val('');
+        $('#misc_charges').val('');
+        $('#scholarship_concession').val('');
+
         var month = $('#month').val();
         var session_id = $('#session_id').val();
         var class_id = $('#class_id').val();
