@@ -12,7 +12,7 @@ class AttendanceController extends Controller
     
     public function index()
     {
-        return view('admin.attendancestudent.takeattendance');
+        return view('teacher.attendanceStudent.takeattendance');
     }
 
     /**
@@ -99,7 +99,7 @@ class AttendanceController extends Controller
      */
     public function show(Attendance $attendance)
     {
-        return view('admin.attendancestudent.viewattendance');
+        return view('teacher.attendanceStudent.viewattendance');
     }
 
     public function getTodayAttendanceData(Request $request)
@@ -127,7 +127,7 @@ class AttendanceController extends Controller
         $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
         $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
         $studentList = StudentClassMapping::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')->where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->get();
-        return view('admin.attendancestudent.viewstudentattendance', compact('studentList'));
+        return view('teacher.attendanceStudent.viewstudentattendance', compact('studentList'));
     }
 
     public function viewStudentList(Request $request)
@@ -200,7 +200,7 @@ class AttendanceController extends Controller
     
     public function classAttendance(Request $request)
     {
-        return view('admin.manageattendance.classattendance');
+        return view('admin.attendance.classattendance');
     }
 
     public function classAttendanceData(Request $request)
@@ -226,11 +226,11 @@ class AttendanceController extends Controller
 
     public function studentAttendance(Request $request)
     {
-        return view('admin.manageattendance.studentattendance');
+        return view('admin.attendance.studentattendance');
     }
 
     public function takeClassAttendance()
     {
-        return view('admin.manageattendance.attendance');
+        return view('admin.attendance.attendance');
     }
 }

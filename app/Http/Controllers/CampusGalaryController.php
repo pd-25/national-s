@@ -20,7 +20,7 @@ class CampusGalaryController extends Controller
      */
     public function create()
     {
-        return view('admin.campusgalary.list');
+        return view('admin.websiteSettings.campusgalary.list');
     }
 
     /**
@@ -78,8 +78,12 @@ class CampusGalaryController extends Controller
      */
     public function destroy(Request $request)
     {
-        $campusGalary =  CampusGalary::find($request->id);
-        $campusGalary->delete();
-        return ['warning'=>'Galary Images Deleted successfully'];
+        try{
+            $campusGalary =  CampusGalary::find($request->id);
+            $campusGalary->delete();
+            return response()->json(['warning'=>'Galary Images Deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error'.$th->getMessage()]);
+        }
     }
 }

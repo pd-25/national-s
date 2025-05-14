@@ -140,6 +140,8 @@ class MasterController extends Controller
     {
         try {
             $admin = Admin::find($id);
+            $teacherClassMapping = TeacherClassMapping::where('teacher_id', $id)->first();
+            $teacherClassMapping->delete();
             $admin->delete();
             return redirect()->back()->with('warning','Teachers deleted successfully');
         } catch (\Throwable $th) {

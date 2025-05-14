@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepositeController;
 use App\Http\Controllers\PaymentSettingsController;
+use App\Http\Controllers\PayrollSettingsController;
+use App\Http\Controllers\StudentFeeSettingsController;
 
 Route::controller(AdminController::class)->group(function() {
     Route::get('admin/login', 'index')->name('admin.index');
@@ -66,6 +68,13 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::post('delete-enrollemnt-students', 'deleteEnrollmentHistory')->name('student.deleteEnrollmentHistory');
                 
                 Route::post('session-student-details', 'sessionWiseStudent')->name('student.sessionWiseStudent');
+                //Reset password
+                Route::get('students-reset-password', 'studentsResetPassword')->name('student.studentsResetPassword');
+                Route::post('reset-password', 'resetPassword')->name('student.resetPassword');
+                // Upload profile images
+                Route::get('students-upload-profile-image', 'studentsUploadProfileImage')->name('student.studentsUploadProfileImage');
+                Route::post('/student/upload-image', 'uploadImage')->name('student.uploadImage');
+
             });
 
             // Payment Fee
@@ -84,7 +93,6 @@ Route::group(['prefix' => 'admin'], function () {
             Route::controller(PaymentSettingsController::class)->group(function() {
                 Route::get('payment-settings', 'index')->name('paymentsettings.index');
                 Route::post('payment-settings-store', 'store')->name('paymentsettings.store');
-                Route::get('get-payment-data', 'create')->name('paymentsettings.create');
                 Route::get('get-session-payment-data', 'show')->name('paymentsettings.show');
                 Route::post('payment-settings-destroy', 'destroy')->name('paymentsettings.destroy');
                 // Payment Due
@@ -92,8 +100,24 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::post('payment-due-list', 'show_due_payment')->name('deposite.show_due_payment');
             });
 
-            // Attendance Management
+            // Payroll settings 
+            Route::controller(PayrollSettingsController::class)->group(function() {
+                Route::get('payroll-settings', 'index')->name('payroll.index');
+                Route::post('payroll-settings-store', 'store')->name('payroll.store');
+                Route::get('get-payroll-settings', 'show')->name('payroll.show');
+                Route::get('payroll-data', 'create')->name('payroll.create');
+                Route::post('payroll-settings-deleted', 'destroy')->name('payroll.destroy');
+            });
 
+            // Student Fee settings 
+            Route::controller(StudentFeeSettingsController::class)->group(function() {
+                Route::get('student-fee-settings', 'index')->name('studentFeeSettings.index');
+                Route::post('student-fee-store', 'store')->name('studentFeeSettings.store');
+                Route::get('get-student-fee-settings', 'show')->name('studentFeeSettings.show');
+                Route::post('student-fee-settings-destroy', 'destroy')->name('studentFeeSettings.destroy');
+            });
+
+            // Attendance Management
             Route::controller(AttendanceController::class)->group(function() {
                 Route::get('take-class-attendance', 'takeClassAttendance')->name('attendance.takeClassAttendance');
                 

@@ -19,17 +19,7 @@ Route::get('/clear-cache', function () {
     Artisan::call('route:cache');
     Artisan::call('view:clear');
     Artisan::call('optimize:clear');
-    return 'Routes cache has clear successfully !';
-});
-
-Route::get('/down', function () {
-    Artisan::call('down');
-    return 'Application is now in maintenance mode.';
-});
-
-Route::get('/up', function () {
-    Artisan::call('up');
-    return 'Application is now live.';
+    return back()->with('cache','Routes cache has clear successfully!');
 });
 
 ///Website 

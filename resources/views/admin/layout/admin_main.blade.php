@@ -17,7 +17,6 @@
     <link rel="shortcut icon" type="image/png" href="{{asset('assets/website/images/favicon.png')}}">
 
     @include('admin.layout.header')
-
 </head>
 
 <body>
@@ -25,10 +24,15 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
         <div class="d-flex align-items-center justify-content-between m-2">
             <a href="javascript:void(0)" class="logo d-flex align-items-center">
+                <img src="{{asset('assets/website/images/logo.png')}}" class="img_fluid" style="height:70px" alt="Logo">
                 <span class="d-none d-lg-block">{{env('APP_NAME')}}</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
-        </div><!-- End Logo -->
+            <div class="ml-3">
+                <a class="btn btn-outline-info btn-sm" href="/clear-cache" >Cache Clear</a>
+            </div>
+        </div>
+        <!-- End Logo -->
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
                 <li class="nav-item dropdown pe-3">

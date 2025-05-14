@@ -28,7 +28,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin.dashboard');
+        return view('admin.dashboard.dashboard');
     }
 
     /**
@@ -98,7 +98,7 @@ class AdminController extends Controller
             'totalStudent' => $totalStudent,
         ];
 
-        return view('admin.teacher_dashboard', compact('dashboardData'));
+        return view('admin.websiteSettings.teacherDashboard.teacher_dashboard', compact('dashboardData'));
     }
 
     /**

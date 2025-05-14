@@ -20,7 +20,7 @@ class ContactUsController extends Controller
      */
     public function create()
     {
-        return view('admin.contact.list');
+        return view('admin.websiteSettings.contact.list');
     }
 
     /**
@@ -88,8 +88,12 @@ class ContactUsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $contactUs =  ContactUs::find($request->id);
-        $contactUs->delete();
-        return ['warning'=>'Contact Deleted successfully'];
+        try{
+            $contactUs =  ContactUs::find($request->id);
+            $contactUs->delete();
+          return response()->json(['warning'=>'Contact Deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error'.$th->getMessage()]);
+        }
     }
 }

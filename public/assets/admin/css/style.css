@@ -12,6 +12,7 @@ body {
     background-image: url(../img/bg-pattern.png);
     color: #444444;
     height: 100%;
+    zoom: 90%;
 }
 
 a {
@@ -1981,4 +1982,9 @@ h6 {
 
 .bg-color-items {
     background: #f8f9fa;
+}
+
+.modal-backdrop {
+    width: 100% !important;
+    height: 100% !important;
 }

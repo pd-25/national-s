@@ -10,7 +10,7 @@ class DepositeController extends Controller
 {
     public function index()
     {
-        return view('admin.feedeposite.add_deposite');
+        return view('admin.fees.add_deposite');
     }
 
     /**
@@ -18,7 +18,7 @@ class DepositeController extends Controller
      */
     public function create()
     {
-        return view('admin.feedeposite.list_deposite');
+        return view('admin.fees.list_deposite');
     }
 
     /**
@@ -33,18 +33,9 @@ class DepositeController extends Controller
             'section_id' => 'required|exists:sections,id',
             'month' => 'required|string',
             'year' => 'required|string',
-            'admission_charges' => 'nullable|numeric',
-            'enrolment_fee' => 'nullable|numeric',
-            'tuition_fee' => 'nullable|numeric',
-            'terminal_fee' => 'nullable|numeric',
-            'sports' => 'nullable|numeric',
-            'sports_comments' => 'nullable|string|max:500',
-            'misc_charges' => 'nullable|numeric',
-            'misc_charges_comments' => 'nullable|string|max:500',
-            'identity_card' => 'nullable|numeric',
-            'scholarship_concession' => 'nullable|numeric',
-            'scholarship_concession_comments' => 'nullable|string|max:500',
-            'total' => 'required|numeric',
+            'amount' => 'nullable|array',
+            'comments' => 'nullable|array',
+            'total_payable' => 'required|numeric',
             'payment_mode' => 'required|string|max:30',
             'transaction_id' => 'nullable|string',
             'cheque_no' => 'nullable|string',
@@ -77,18 +68,9 @@ class DepositeController extends Controller
             'section_id' => $request->section_id,
             'month' => $request->month,
             'year' => $request->year,
-            'admission_charges' => $request->admission_charges,
-            'enrolment_fee' => $request->enrolment_fee,
-            'tuition_fee' => $request->tuition_fee,
-            'terminal_fee' => $request->terminal_fee,
-            'sports' => $request->sports,
-            'sports_comments' => $request->sports_comments,
-            'misc_charges' => $request->misc_charges,
-            'misc_charges_comments' => $request->misc_charges_comments,
-            'identity_card' => $request->identity_card,
-            'scholarship_concession' => $request->scholarship_concession,
-            'scholarship_concession_comments' => $request->scholarship_concession_comments,
-            'total' => $request->total,
+            'amount' => json_encode($request->amount),
+            'comments' => json_encode($request->comments),
+            'total_payable' => $request->total_payable,
             'payment_mode' => $request->payment_mode,
             'transaction_id' => $request->transaction_id,
             'cheque_no' => $request->cheque_no,
@@ -146,7 +128,7 @@ class DepositeController extends Controller
     public function viewDownloadDeposite($payment_number)
     {
         $deposite = Deposite::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')->where('payment_number', $payment_number)->first();
-        return view('admin.feedeposite.view_download_deposite', compact('deposite'));
+        return view('admin.fees.view_download_deposite', compact('deposite'));
     }
 
     /**
@@ -155,7 +137,7 @@ class DepositeController extends Controller
     public function edit($payment_number)
     {
         $deposite = Deposite::where('payment_number', $payment_number)->first();
-        return view('admin.feedeposite.edit_deposite', compact('deposite'));
+        return view('admin.fees.edit_deposite', compact('deposite'));
     }
 
     /**
@@ -166,12 +148,9 @@ class DepositeController extends Controller
         $request->validate([
             'month' => 'required|string',
             'year' => 'required|string',
-            'enrolment_fee' => 'nullable|numeric',
-            'tuition_fee' => 'nullable|numeric',
-            'terminal_fee' => 'nullable|numeric',
-            'misc_charges' => 'nullable|numeric',
-            'identity_card' => 'nullable|numeric',
-            'total' => 'required|numeric',
+            'amount' => 'nullable',
+            'comments' => 'nullable',
+            'total_payable' => 'required|numeric',
             'payment_mode' => 'required|string|max:30',
             'transaction_id' => 'nullable|string',
             'cheque_no' => 'nullable|string',
@@ -186,12 +165,9 @@ class DepositeController extends Controller
         $deposite->update([
             'month' => $request->month,
             'year' => $request->year,
-            'enrolment_fee' => $request->enrolment_fee ?? 0,
-            'tuition_fee' => $request->tuition_fee ?? 0,
-            'terminal_fee' => $request->terminal_fee ?? 0,
-            'misc_charges' => $request->misc_charges ?? 0,
-            'identity_card' => $request->identity_card ?? 0,
-            'total' => $request->total,
+            'amount' => $request->amount,
+            'comments' => $request->comments,
+            'total_payable' => $request->total_payable,
             'payment_mode' => $request->payment_mode,
             'transaction_id' => $request->transaction_id ?? null,
             'cheque_no' => $request->cheque_no ?? null,

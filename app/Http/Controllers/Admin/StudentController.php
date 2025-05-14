@@ -21,7 +21,7 @@ class StudentController extends Controller
     
     public function StudentRegister(Request $request)
     {
-        return view('admin.studentmanagement.student_register');
+        return view('admin.students.student_register');
     }
     public function storeStudentDetails(Request $request)
     {
@@ -77,7 +77,7 @@ class StudentController extends Controller
                 $user = new User();
                 $user->admission_number = generateAdmissionNumber();
                 $user->image = $imagePath;
-                $user->student_name = Str::ucfirst($request->student_name);
+                $user->student_name = Str::upper($request->student_name);
                 $user->date_of_birth = $request->date_of_birth;
                 $user->aadhar_no = $request->aadhar_no;
                 $user->nationality = Str::ucfirst($request->nationality);
@@ -133,7 +133,7 @@ class StudentController extends Controller
 
     public function studentList(Request $request)
     {
-        return view('admin.studentmanagement.student_list');
+        return view('admin.students.student_list');
     }
 
     public function getStudentData(Request $request)
@@ -183,7 +183,7 @@ class StudentController extends Controller
 
     public function teacherManageStudent(Request $request)
     {
-        return view('admin.teachermanagestudent.managestudent');
+        return view('teacher.teacherManageStudent.managestudent');
     }
 
     public function studentsInClass(Request $request)
@@ -210,7 +210,9 @@ class StudentController extends Controller
         ->where('session_id', $request->session_id)
         ->where('class_id', $request->class_id)
         ->where('section_id', $request->section_id);
-        
+        if($request->user_id){
+            $query->where('user_id', $request->user_id);
+        }
         $request->session()->put('session_session_id', $request->class_id);
         $request->session()->put('session_class_id', $request->class_id);
         $request->session()->put('session_section_id', $request->section_id);
@@ -224,7 +226,7 @@ class StudentController extends Controller
     
     public function studentsEntrollment(Request $request)
     {
-        return view('admin.studentmanagement.studentsentrollment');
+        return view('admin.academics.studentsentrollment');
     }
 
     public function studentsEntrollmentStore(Request $request)
@@ -234,9 +236,9 @@ class StudentController extends Controller
             'class_id' => 'required|integer',
             'section_id' => 'required|integer',
             'user_id' => 'required|integer',
-            'month' => 'required',
-            'year' => 'required',
-            'payment_mode' => 'required'
+            // 'month' => 'required',
+            // 'year' => 'required',
+            // 'payment_mode' => 'required'
         ]);
         
         try {
@@ -251,10 +253,12 @@ class StudentController extends Controller
                     $studentClassMapping->section_id = $request->section_id;
                     $studentClassMapping->status = 1;
                     $studentClassMapping->save();
-                    $this->depositClass->store($request);
+                    // $this->depositClass->store($request);
                 }
             });
-            return redirect()->back()->with('success', 'Payment Completed and promoted to current session');
+            // return redirect()->back()->with('success', 'Payment Completed and promoted to current session');
+            return redirect()->back()->with('success', 'Promoted to current session');
+
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
@@ -264,13 +268,13 @@ class StudentController extends Controller
     public function studentView(Request $request)
     {
         $studentClassMapping = User::find($request->id);
-        return view('admin.studentmanagement.student_view', compact('studentClassMapping'));
+        return view('admin.students.student_view', compact('studentClassMapping'));
     }
 
     public function studentEdit(Request $request)
     {
         $studentClassMapping = User::find($request->id);
-        return view('admin.studentmanagement.student_edit', compact('studentClassMapping'));
+        return view('admin.students.student_edit', compact('studentClassMapping'));
     }
 
     public function updateStudentDetails(Request $request)
@@ -382,7 +386,7 @@ class StudentController extends Controller
 
     public function entrollmentHistory()
     {
-        return view('admin.studentmanagement.history_enrollment');
+        return view('admin.academics.history_enrollment');
     }
 
     public function updateEntrollmentHistory(Request $request)
@@ -407,5 +411,56 @@ class StudentController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error'.$th->getMessage()]);
         }
+    }
+
+    public function studentsResetPassword()
+    {
+        return view('admin.students.student_reset_password');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        try {
+            $user = User::find($request->student_id);
+            $user->email = Str::lower($request->email);
+            $user->password = encrypt($request->password);
+            $user->save();
+            return redirect()->back()->withSuccess('Password reset successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors(['error' => 'An error occurred: ' . $th->getMessage()]);
+        }
+    }
+
+    public function studentsUploadProfileImage()
+    {
+        return view('admin.students.upload_profile_image');
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        try {
+            $student = User::findOrFail($request->student_id);
+            if ($request->hasFile('image')) {
+                $image_path = date('Y-m-d-H_i_s').'_' .$request->file('image')->getClientOriginalName();
+                $request->file('image')->storeAs('student_images', $image_path,['disk' => 'public']);
+                $imagePath = '/storage/student_images/'.$image_path;
+            }
+            $student->image = $imagePath;
+            $student->save();
+            return response()->json(['success' => "Upload image successfully"]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
+
     }
 }

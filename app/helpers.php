@@ -9,10 +9,11 @@ use App\Models\Section;
 use App\Models\Session;
 use App\Models\Admin;
 use App\Models\User;
+use App\Models\PayrollSettings;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-
+use Illuminate\Support\Str;
 
 function Allstatus()
 {
@@ -159,7 +160,7 @@ function storeAdminAndTeacher($data)
         $returnVal = "update";
     }else{
         $admin = new Admin;
-        $admin->email = $data['email'];
+        $admin->email = Str::lower($data['email']);
         $admin->usertype = $data['usertype'];
         $admin->name = $data['name'];
         $admin->password = Hash::make($data['password']);
@@ -265,3 +266,62 @@ function NumberToWord($values)
     }
     return $result . " Rupees" . $points . " Only";
 }
+
+function GetPayrollComponent($data){
+    $payrollSettings = PayrollSettings::with('parent')->orderBy('id', 'asc');
+    if($data == 'fee_settings'){
+        $payrollSettings->where('apply_on_fee_Settings', 1)->where('parent_id', null)->where('status', 1);
+    }
+    if($data == 'student_fee_settings'){
+        $payrollSettings->where('apply_on_fee_Settings', '!=', 1)->where('parent_id', null)->where('status', 1);
+    }
+    if($data == 'all_fee_settings'){
+        $payrollSettings->where('status', 1)->orderBy('name', 'asc');
+    }
+    $payrollSettings = $payrollSettings->get();
+    return $payrollSettings;
+}
+
+// ....................................................Future referances 
+// function activeSessionMonths()
+// {
+//     $sessionDetails = GetSession('active_session');
+//     $startDate = strtotime($sessionDetails[0]->section_valid_from);
+//     $endDate = strtotime($sessionDetails[0]->section_valid_to);
+    
+//     $months = [];
+//     $currentDate = $startDate;
+//     while ($currentDate <= $endDate) {
+//         $months[] = [
+//             'month' => date('F', $currentDate),
+//             'year' => date('Y', $currentDate),
+//         ];
+//         $currentDate = strtotime("+1 month", $currentDate);
+//     }
+//     return  $months;
+// }
+
+// function activeSessionYears()
+// {
+//     $sessionDetails = GetSession('active_session');
+//     $startDate = strtotime($sessionDetails[0]->section_valid_from);
+//     $endDate = strtotime($sessionDetails[0]->section_valid_to);
+    
+//     $months = [];
+//     $currentDate = $startDate;
+//     while ($currentDate <= $endDate) {
+//         $months[] = [
+//             'month' => date('F', $currentDate),
+//             'year' => date('Y', $currentDate),
+//         ];
+//         $currentDate = strtotime("+1 month", $currentDate);
+//     }
+    
+//     $unique_array = [];
+//     foreach($months as $element) {
+//         $hash = $element['year'];
+//         $unique_array[$hash] = $element;
+//     }
+//     $result = array_values($unique_array);
+//     return  $result;
+// }

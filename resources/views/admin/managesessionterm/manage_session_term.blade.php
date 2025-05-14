@@ -1,7 +1,7 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>Create Session</h1>
+    <h1>Session</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
@@ -17,16 +17,16 @@
                 <div class="row">
                     <input type="hidden" name="session_id" id="session_id">
                     <div class="col-4 mb-2">
-                        <label class="form-label">Session Name <span class="text-danger">*</span></label>
-                        <input type="text" id="session_name" class="form-control" placeholder="Session Name" name="session_name" required>
+                        <label class="form-label">Session <span class="text-danger">*</span></label>
+                        <input type="text" id="session_name" class="form-control" placeholder="Enter Session" name="session_name" required>
                     </div>
                     <div class="col-4 mb-4">
-                        <label class="form-label">Session Valid From<span class="text-danger">*</span></label>
+                        <label class="form-label">Start Date<span class="text-danger">*</span></label>
                         <input type="date" id="section_valid_from" class="form-control" name="section_valid_from" required>
                     </div>
                     <div class="col-4 mb-4">
-                        <label class="form-label">Session Valid To<span class="text-danger">*</span></label>
-                        <input type="date" id="section_valid_to" class="form-control" placeholder="Class Arm Name" name="section_valid_to" required>
+                        <label class="form-label">End Date<span class="text-danger">*</span></label>
+                        <input type="date" id="section_valid_to" class="form-control" name="section_valid_to" required>
                     </div>
                     <div class="col-4 mb-4">
                         <label class="form-label">Status <span class="text-danger">*</span></label>
@@ -36,10 +36,10 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-12">
-                        <a type="button" href="javascript:void(0)" onclick="reload()" id="reset" class="btn btn-secondary btn-sm">Clear</a>
-                        <button type="submit" id="save" class="btn btn-primary btn-sm">Save</button>
-                        <button type="submit" id="update" class="btn btn-success btn-sm">Update</button>
+                    <div class="col-8 d-flex align-items-center justify-content-end">
+                        <a type="button" href="javascript:void(0)" onclick="reload()" id="reset" class="btn btn-secondary me-2">Clear</a>
+                        <button type="submit" id="save" class="btn btn-primary">Save</button>
+                        <button type="submit" id="update" class="btn btn-success">Update</button>
                     </div>
                 </div>
             </form>
@@ -47,13 +47,13 @@
     </div>
     <div class="card border-0">
         <div class="card-body pt-4">
-            <table class="small w-100 table table-striped" id="DataTables">
+            <table class="small w-100 table table-bordered table-striped">
                 <thead>
-                    <tr>
+                    <tr class="table-primary">
                         <th>SL NO</th>
-                        <th>Session Name</th>
-                        <th>Valid From</th>
-                        <th>Valid To</th>
+                        <th>Session</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -68,9 +68,9 @@
                                 <td>{{ date('d-m-Y', strtotime(@$item->section_valid_to))}}</td>
                                 <td class="text-center">
                                     @if (@$item->status ==1)
-                                        <i class="bi bi-check-lg fw-bold fs-5 text-success"></i>
+                                      <i class="bi bi-check-lg fw-bold fs-5 text-success"> Active </i>
                                     @else
-                                    <i class="bi bi-x-lg fw-bold fs-6 text-danger"></i>
+                                        <i class="bi bi-x-lg fw-bold fs-6 text-danger"> Deactive </i>
                                     @endif
                                 </td>
                                 <td >

@@ -20,7 +20,7 @@ class NoticeController extends Controller
      */
     public function create()
     {
-        return view('admin.notice.list');
+        return view('admin.websiteSettings.notice.list');
     }
 
     /**
@@ -74,8 +74,12 @@ class NoticeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $notice =  Notice::find($request->id);
-        $notice->delete();
-        return ['warning'=>'Notice Deleted successfully'];
+        try {
+            $notice =  Notice::find($request->id);
+            $notice->delete();
+            return response()->json(['warning'=>'Notice Deleted successfully']);
+        } catch (\Throwable $th) {
+             return response()->json(['error' => 'Error'.$th->getMessage()]);
+        }
     }
 }

@@ -20,7 +20,7 @@ class AdmissionNoticeController extends Controller
      */
     public function create()
     {
-        return view('admin.admissionnotice.list');
+        return view('admin.websiteSettings.admissionnotice.list');
     }
 
     /**
@@ -74,8 +74,12 @@ class AdmissionNoticeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $admissionNotice =  AdmissionNotice::find($request->id);
-        $admissionNotice->delete();
-        return ['warning'=>'Admission Notice Deleted successfully'];
+        try{
+            $admissionNotice =  AdmissionNotice::find($request->id);
+            $admissionNotice->delete();
+            return response()->json(['warning'=>'Admission Notice Deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error'.$th->getMessage()]);
+        }
     }
 }

@@ -21,7 +21,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('admin.news.list');
+        return view('admin.websiteSettings.news.list');
     }
 
     /**
@@ -80,8 +80,12 @@ class NewsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $news =  News::find($request->id);
-        $news->delete();
-        return ['warning'=>'News Deleted successfully'];
+        try {
+            $news =  News::find($request->id);
+            $news->delete();
+            return response()->json(['warning'=>'News Deleted successfully']);
+        } catch (\Throwable $th) {
+             return response()->json(['error' => 'Error'.$th->getMessage()]);
+        }
     }
 }

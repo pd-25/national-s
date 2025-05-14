@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PaymentSettings;
 use Illuminate\Http\Request;
 use App\Models\Deposite;
+use Illuminate\Support\Arr;
 
 class PaymentSettingsController extends Controller
 {
@@ -15,7 +16,7 @@ class PaymentSettingsController extends Controller
     
     public function index()
     {
-        return view('admin.paymentsettings.paymentsettings');
+        return view('admin.payroll.payment_settings');
     }
 
     /**
@@ -23,8 +24,7 @@ class PaymentSettingsController extends Controller
      */
     public function create(Request $request)
     {
-        $payementSettings = PaymentSettings::where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('user_id', $request->user_id)->first();
-        return $payementSettings;
+        //
     }
 
     /**
@@ -33,124 +33,39 @@ class PaymentSettingsController extends Controller
     public function store(Request $request)
     {
         try {
+            $request->validate([
+                'session_id' => 'required|exists:sessions,id',
+                'class_id' => 'required|exists:classes,id',
+                'section_id' => 'required|exists:sections,id',
+                'charges_amount' => 'nullable|array',
+                'months_validation' => 'nullable|array',
+            ]);
             if($request->payment_setting_id != null){
-                $request->validate([
-                    'admission_charges' => 'nullable|numeric',
-                    'enrolment_fee' => 'nullable|numeric',
-                    'tuition_fee' => 'nullable|numeric',
-                    'terminal_fee' => 'nullable|numeric',
-                    'sports' => 'nullable|numeric',
-                    'misc_charges' => 'nullable|numeric',
-                    'scholarship_concession' => 'nullable|numeric',
-                    'admission_charges_months_validation' => 'required_with:admission_charges|array',
-                    'enrolment_fee_months_validation' => 'required_with:enrolment_fee|array',
-                    'tuition_fee_months_validation' => 'required_with:tuition_fee|array',
-                    'terminal_fee_months_validation' => 'required_with:terminal_fee|array',
-                    'sports_months_validation' => 'required_with:sports|array',
-                    'misc_charges_months_validation' => 'required_with:misc_charges|array',
-                    'scholarship_concession_validation' => 'required_with:scholarship_concession|array',
-                ]);
-
                 $paymentSettings = PaymentSettings::find($request->payment_setting_id);
-                $paymentSettings->admission_charges = $request->admission_charges;
-                $paymentSettings->enrolment_fee = $request->enrolment_fee;
-                $paymentSettings->tuition_fee = $request->tuition_fee;
-                $paymentSettings->terminal_fee = $request->terminal_fee;
-                $paymentSettings->misc_charges = $request->misc_charges;
-                $paymentSettings->sports = $request->sports;
-                $paymentSettings->scholarship_concession = $request->scholarship_concession;
-                
-                $paymentSettings->admission_charges_months_validation = json_encode($request->admission_charges_months_validation);
-                $paymentSettings->enrolment_fee_months_validation = json_encode($request->enrolment_fee_months_validation);
-                $paymentSettings->tuition_fee_months_validation = json_encode($request->tuition_fee_months_validation);
-                $paymentSettings->terminal_fee_months_validation = json_encode($request->terminal_fee_months_validation);
-                $paymentSettings->sports_months_validation = json_encode($request->sports_months_validation);
-                $paymentSettings->misc_charges_months_validation = json_encode($request->misc_charges_months_validation);
-                $paymentSettings->scholarship_concession_validation = json_encode($request->scholarship_concession_validation);
+                $paymentSettings->session_id = $request->session_id;
+                $paymentSettings->class_id = $request->class_id;
+                $paymentSettings->section_id = $request->section_id;
+                $paymentSettings->charges_amount = json_encode($request->charges_amount);
+                $paymentSettings->months_validation = json_encode($request->months_validation);
+                $paymentSettings->status = 1;
                 $paymentSettings->save();
-                return redirect()->back()->with('info', 'Payment Settings Updated Successfully');
+                return redirect()->back()->with('info', 'Fees Settings Updated Successfully');
             }else{
+                $ValidationOnPayementSettings = PaymentSettings::where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->count();
                 
-                $request->validate([
-                    'session_id' => 'required|exists:sessions,id',
-                    'class_id' => 'required|exists:classes,id',
-                    'section_id' => 'required|exists:sections,id',
-                    'admission_charges' => 'nullable|numeric',
-                    'enrolment_fee' => 'nullable|numeric',
-                    'tuition_fee' => 'nullable|numeric',
-                    'terminal_fee' => 'nullable|numeric',
-                    'sports' => 'nullable|numeric',
-                    'misc_charges' => 'nullable|numeric',
-                    'scholarship_concession' => 'nullable|numeric',
-                    'admission_charges_months_validation' => 'required_with:admission_charges|array',
-                    'enrolment_fee_months_validation' => 'required_with:enrolment_fee|array',
-                    'tuition_fee_months_validation' => 'required_with:tuition_fee|array',
-                    'terminal_fee_months_validation' => 'required_with:terminal_fee|array',
-                    'sports_months_validation' => 'required_with:sports|array',
-                    'misc_charges_months_validation' => 'required_with:misc_charges|array',
-                    'scholarship_concession_validation' => 'required_with:scholarship_concession|array',
-                ]);
-
-                if(isset($request->apply_to_all) != null){
-                    $studentsList = $this->students->studentsListUsingSessionClassSection($request);
-                    if (isset($studentsList)) {
-                        foreach ($studentsList as $key => $value) {
-                            $ValidationOnPayementSettings = PaymentSettings::where('session_id', $value->session_id)->where('class_id', $value->class_id)->where('section_id', $value->section_id)->where('user_id', $value->user_id)->count();
-                            if($ValidationOnPayementSettings == 0){
-                                $paymentSettings = new PaymentSettings;
-                                $paymentSettings->session_id = $request->session_id;
-                                $paymentSettings->class_id = $request->class_id;
-                                $paymentSettings->section_id = $request->section_id;
-                                $paymentSettings->user_id = $value->user_id;
-                                $paymentSettings->apply_to_all = $request->apply_to_all;
-                                $paymentSettings->admission_charges = $request->admission_charges;
-                                $paymentSettings->enrolment_fee = $request->enrolment_fee;
-                                $paymentSettings->tuition_fee = $request->tuition_fee;
-                                $paymentSettings->terminal_fee = $request->terminal_fee;
-                                $paymentSettings->misc_charges = $request->misc_charges;
-                                $paymentSettings->sports = $request->sports;
-                                $paymentSettings->scholarship_concession = $request->scholarship_concession;
-                                $paymentSettings->admission_charges_months_validation = json_encode($request->admission_charges_months_validation);
-                                $paymentSettings->enrolment_fee_months_validation = json_encode($request->enrolment_fee_months_validation);
-                                $paymentSettings->tuition_fee_months_validation = json_encode($request->tuition_fee_months_validation);
-                                $paymentSettings->terminal_fee_months_validation = json_encode($request->terminal_fee_months_validation);
-                                $paymentSettings->sports_months_validation = json_encode($request->sports_months_validation);
-                                $paymentSettings->misc_charges_months_validation = json_encode($request->misc_charges_months_validation);
-                                $paymentSettings->scholarship_concession_validation = json_encode($request->scholarship_concession_validation);
-                                $paymentSettings->status = 1;
-                                $paymentSettings->save();
-                            }
-                        }
-                    }
-                    
-                }else{
-                    $ValidationOnPayementSettings = PaymentSettings::where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('user_id', $request->user_id)->count();
-                    if($ValidationOnPayementSettings > 0){
-                        return redirect()->back()->with('error', 'Duplicate entry: Student data is already exists.');
-                    }
+                if($ValidationOnPayementSettings == 0){
                     $paymentSettings = new PaymentSettings;
                     $paymentSettings->session_id = $request->session_id;
                     $paymentSettings->class_id = $request->class_id;
                     $paymentSettings->section_id = $request->section_id;
-                    $paymentSettings->user_id = $request->user_id;
-                    $paymentSettings->admission_charges = $request->admission_charges;
-                    $paymentSettings->enrolment_fee = $request->enrolment_fee;
-                    $paymentSettings->tuition_fee = $request->tuition_fee;
-                    $paymentSettings->terminal_fee = $request->terminal_fee;
-                    $paymentSettings->misc_charges = $request->misc_charges;
-                    $paymentSettings->sports = $request->sports;
-                    $paymentSettings->scholarship_concession = $request->scholarship_concession;
-                    $paymentSettings->admission_charges_months_validation = json_encode($request->admission_charges_months_validation);
-                    $paymentSettings->enrolment_fee_months_validation = json_encode($request->enrolment_fee_months_validation);
-                    $paymentSettings->tuition_fee_months_validation = json_encode($request->tuition_fee_months_validation);
-                    $paymentSettings->terminal_fee_months_validation = json_encode($request->terminal_fee_months_validation);
-                    $paymentSettings->sports_months_validation = json_encode($request->sports_months_validation);
-                    $paymentSettings->misc_charges_months_validation = json_encode($request->misc_charges_months_validation);
-                    $paymentSettings->scholarship_concession_validation = json_encode($request->scholarship_concession_validation);
+                    $paymentSettings->charges_amount = json_encode($request->charges_amount);
+                    $paymentSettings->months_validation = json_encode($request->months_validation);
                     $paymentSettings->status = 1;
                     $paymentSettings->save();
+                }else{
+                    return redirect()->back()->with('error', 'Fees Settings Already saved.');
                 }
-                return redirect()->back()->with('success', 'Payment Settings Saved Successfully');
+                return redirect()->back()->with('success', 'Fees Settings Saved Successfully');
             }
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Error'.$th->getMessage());
@@ -163,7 +78,17 @@ class PaymentSettingsController extends Controller
      */
     public function show(Request $request)
     {
-        $payementSettings = PaymentSettings::with('studentSession','studentClass','studentSection','studentDetails')->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->orderBy('class_id', 'asc')->get();
+        $payementSettings = PaymentSettings::with('studentSession','studentClass','studentSection');
+        if($request->session_id){
+            $payementSettings->where('session_id', $request->session_id);
+        }
+        if($request->class_id){
+            $payementSettings->where('class_id', $request->class_id);
+        }
+        if($request->section_id){
+            $payementSettings->where('section_id', $request->section_id);
+        }
+        $payementSettings = $payementSettings->orderBy('class_id', 'asc')->get();
         return $payementSettings;
     }
 
@@ -204,49 +129,48 @@ class PaymentSettingsController extends Controller
 
     public function paymentdue(Request $request)
     {
-        return view('admin.paymentsettings.payment_due');
+        return view('admin.fees.payment_due');
     }
 
     public function show_due_payment(Request $request)
     {
-        $session_id = $request->session_id;
-        $class_id = $request->class_id;
-        $section_id = $request->section_id;
-        $user_id = $request->user_id;
-        $month = $request->month;
-        $year = $request->year;
-
-        $query = Deposite::with('studentDetails', 'studentSession', 'studentClass', 'studentSection');
-        
-        if ($session_id) {
-            $query->where('session_id', $session_id);
-        }
-        if ($class_id) {
-            $query->where('class_id', $class_id);
-        }
-        if ($section_id) {
-            $query->where('section_id', $section_id);
-        }
-        if ($user_id) {
-            $query->where('user_id', $user_id);
-        }
-        if ($month) {
-            $query->where('month', $month);
-        }
-        if ($year) {
-            $query->where('year', $year);
-        }
-        $due_payment = $query->orderBy('month', 'desc')->get();
-
+        $DuePaymentDetails = [];
         $studentList = $this->students->studentsListUsingSessionClassSection($request);
-        dd($studentList);
-        if(isset($studentList)){
-            foreach ($studentList as $key => $value) {
-                if($due_payment->user_id != $value->id && $month != $due_payment->month && $due_payment->year != $year){
-                    
-                }
+        if(GetallMonths() != null){
+            foreach (GetallMonths() as $key => $month) {
+                if ($month == $request->month) {
+                    foreach ($studentList as $key => $value) {
+                        $query = Deposite::where('session_id', $request->session_id)
+                            ->where('section_id', $request->section_id);
+    
+                        if ($request->month) {
+                            $query->where('month', $request->month);
+                        }
+                        if ($request->year) {
+                            $query->where('year', $request->year);
+                        }
+                        if ($request->user_id) {
+                            $query->where('user_id', $request->user_id);
+                        }
+    
+                        $depositHistory = $query->get();
+    
+                        $tempPayment = array(
+                            'student_id' => $value->studentDetails->id,
+                            'student_name' => $value->studentDetails->student_name,
+                            'admission_number' => $value->studentDetails->admission_number,
+                            'month' => $month,
+                            'year' => $request->year, 
+                            'status' => 'Unpaid'
+                        );
+    
+                        if ($depositHistory->isEmpty() || !$depositHistory->contains('user_id', $value->user_id)) {
+                            array_push($DuePaymentDetails, $tempPayment);
+                        }
+                    }
+                }   
             }
         }
-        return $due_payment;
+        return $DuePaymentDetails;
     }
 }

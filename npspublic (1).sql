@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2025 at 02:44 PM
+-- Generation Time: May 14, 2025 at 03:50 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -264,18 +264,9 @@ CREATE TABLE `deposites` (
   `section_id` bigint(20) UNSIGNED NOT NULL,
   `month` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `year` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `admission_charges` decimal(10,2) DEFAULT NULL,
-  `enrolment_fee` decimal(10,2) DEFAULT NULL,
-  `tuition_fee` decimal(10,2) DEFAULT NULL,
-  `terminal_fee` decimal(10,2) DEFAULT NULL,
-  `sports` decimal(10,2) DEFAULT NULL,
-  `sports_comments` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `misc_charges` decimal(10,2) DEFAULT NULL,
-  `misc_charges_comments` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `identity_card` decimal(10,2) DEFAULT NULL,
-  `scholarship_concession` decimal(10,2) DEFAULT NULL,
-  `scholarship_concession_comments` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `total` decimal(18,2) NOT NULL,
+  `amount` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`amount`)),
+  `comments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`comments`)),
+  `total_payable` decimal(18,2) NOT NULL,
   `payment_mode` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `transaction_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `cheque_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -293,13 +284,8 @@ CREATE TABLE `deposites` (
 -- Dumping data for table `deposites`
 --
 
-INSERT INTO `deposites` (`id`, `payment_number`, `user_id`, `student_name`, `parents_name`, `address`, `mobile_no`, `session_id`, `class_id`, `section_id`, `month`, `year`, `admission_charges`, `enrolment_fee`, `tuition_fee`, `terminal_fee`, `sports`, `sports_comments`, `misc_charges`, `misc_charges_comments`, `identity_card`, `scholarship_concession`, `scholarship_concession_comments`, `total`, `payment_mode`, `transaction_id`, `cheque_no`, `cheque_date`, `bank_name`, `branch`, `payment_ref_no`, `payment_getway_id`, `status`, `created_at`, `updated_at`) VALUES
-(7, '250425001', 231, 'NYRA SINGH', 'RANDHIR SINGH', '128 TARAMONI GHAT  ROAD PASCHIM PUTIARY KOL-41, ', '9063567455', 11, 18, 22, 'April', '2025', NULL, '200.00', '400.00', '0.00', NULL, NULL, '0.00', NULL, '100.00', NULL, NULL, '700.00', 'Cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Completed', '2025-04-25 10:56:12', '2025-04-25 10:56:12'),
-(8, '250504001', 418, 'Emon Debnath', 'Test data', 'Debnath house, Nabapally, Near Jogendranath school, 700126', '6291648982', 11, 18, 22, 'January', '2025', NULL, '1000.00', '800.00', '700.00', NULL, NULL, '400.00', NULL, '300.00', NULL, NULL, '5500.00', 'Cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Completed', '2025-05-04 18:06:12', '2025-05-04 18:06:12'),
-(9, '250504002', 418, 'Emon Debnath', 'Test data', 'Debnath house, Nabapally, Near Jogendranath school, 700126', '6291648982', 11, 18, 22, 'February', '2025', NULL, '200.00', '300.00', '400.00', NULL, NULL, '598.00', NULL, '700.00', NULL, NULL, '2398.00', 'Cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Completed', '2025-05-04 18:09:25', '2025-05-04 18:09:25'),
-(10, '250504003', 418, 'Emon Debnath', 'Test data', 'Debnath house, Nabapally, Near Jogendranath school, 700126', '6291648982', 11, 18, 22, 'March', '2025', NULL, '46.00', '445.00', '43.00', NULL, NULL, '4564.00', NULL, '34.00', NULL, NULL, '5788.00', 'Cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Completed', '2025-05-04 18:11:15', '2025-05-04 18:11:15'),
-(11, '250504004', 418, 'Emon Debnath', 'Test data', 'Debnath house, Nabapally, Near Jogendranath school, 700126', '6291648982', 11, 18, 22, 'May', '2025', '3123.00', '123.00', '312.00', '123.00', '123.00', NULL, '123.00', NULL, '12.00', '121.00', NULL, '3818.00', 'Cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Completed', '2025-05-04 18:14:28', '2025-05-04 18:14:28'),
-(16, '250507001', 223, 'AAYANSH SHARMA', 'PARESH SHARMA', '937A OSTAD AMIR KHAN SARANI KOL-82, ', '8777480239', 11, 17, 21, 'May', '2025', '2000.00', NULL, '800.00', '550.00', '300.00', 'test', NULL, 'test 2', NULL, '200.00', 'test 3', '3450.00', 'Cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Completed', '2025-05-07 10:56:11', '2025-05-07 10:56:11');
+INSERT INTO `deposites` (`id`, `payment_number`, `user_id`, `student_name`, `parents_name`, `address`, `mobile_no`, `session_id`, `class_id`, `section_id`, `month`, `year`, `amount`, `comments`, `total_payable`, `payment_mode`, `transaction_id`, `cheque_no`, `cheque_date`, `bank_name`, `branch`, `payment_ref_no`, `payment_getway_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, '250514001', 223, 'AAYANSH SHARMA', 'PARESH SHARMA', '937A OSTAD AMIR KHAN SARANI KOL-82, ', '8777480239', 11, 17, 21, 'May', '2025', '{\"1\":null,\"2\":null,\"3\":\"3000\",\"4\":null,\"5\":\"800\",\"6\":\"600\",\"7\":null,\"8\":\"1000\"}', 'null', '3400.00', 'Cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Completed', '2025-05-14 13:44:48', '2025-05-14 13:44:48');
 
 -- --------------------------------------------------------
 
@@ -410,8 +396,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (22, '2025_03_09_055547_create_teacher_class_mappings_table', 12),
 (24, '2014_10_12_000000_create_users_table', 13),
 (26, '2025_03_10_094808_create_attendances_table', 14),
-(27, '2025_03_13_164221_create_deposites_table', 15),
-(30, '2025_05_01_223504_create_payment_settings_table', 16);
+(38, '2025_03_13_164221_create_deposites_table', 15),
+(39, '2025_05_01_223504_create_payment_settings_table', 15),
+(40, '2025_05_12_145816_create_payroll_settings_table', 15),
+(41, '2025_05_13_153119_create_student_fee_settings_table', 15);
 
 -- --------------------------------------------------------
 
@@ -490,22 +478,8 @@ CREATE TABLE `payment_settings` (
   `session_id` bigint(20) UNSIGNED NOT NULL,
   `class_id` bigint(20) UNSIGNED NOT NULL,
   `section_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `apply_to_all` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `admission_charges` decimal(10,2) DEFAULT NULL,
-  `admission_charges_months_validation` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `enrolment_fee` decimal(10,2) DEFAULT NULL,
-  `enrolment_fee_months_validation` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tuition_fee` decimal(10,2) DEFAULT NULL,
-  `tuition_fee_months_validation` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `terminal_fee` decimal(10,2) DEFAULT NULL,
-  `terminal_fee_months_validation` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `sports` decimal(10,2) DEFAULT NULL,
-  `sports_months_validation` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `misc_charges` decimal(10,2) DEFAULT NULL,
-  `misc_charges_months_validation` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `scholarship_concession` decimal(10,2) DEFAULT NULL,
-  `scholarship_concession_validation` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `charges_amount` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`charges_amount`)),
+  `months_validation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`months_validation`)),
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -515,13 +489,43 @@ CREATE TABLE `payment_settings` (
 -- Dumping data for table `payment_settings`
 --
 
-INSERT INTO `payment_settings` (`id`, `session_id`, `class_id`, `section_id`, `user_id`, `apply_to_all`, `admission_charges`, `admission_charges_months_validation`, `enrolment_fee`, `enrolment_fee_months_validation`, `tuition_fee`, `tuition_fee_months_validation`, `terminal_fee`, `terminal_fee_months_validation`, `sports`, `sports_months_validation`, `misc_charges`, `misc_charges_months_validation`, `scholarship_concession`, `scholarship_concession_validation`, `status`, `created_at`, `updated_at`) VALUES
-(1, 11, 18, 22, 231, 'applyallstudent', '2000.00', '[\"February\",\"April\",\"June\",\"August\",\"November\"]', '1000.00', '[\"March\",\"June\",\"September\",\"December\"]', '500.00', '[\"January\",\"March\",\"May\",\"July\",\"September\",\"November\"]', '100.00', '[\"January\",\"March\",\"May\",\"July\",\"September\",\"November\"]', '500.00', '[\"April\",\"May\",\"June\",\"July\"]', '300.00', '[\"March\",\"April\",\"May\"]', NULL, 'null', 1, '2025-05-06 10:40:46', '2025-05-06 10:40:46'),
-(2, 11, 18, 22, 418, 'applyallstudent', '2000.00', '[\"February\",\"April\",\"June\",\"August\",\"November\"]', '1000.00', '[\"March\",\"June\",\"September\",\"December\"]', '500.00', '[\"January\",\"March\",\"May\",\"July\",\"September\",\"November\"]', '100.00', '[\"January\",\"March\",\"May\",\"July\",\"September\",\"November\"]', '500.00', '[\"April\",\"May\",\"June\",\"July\"]', '300.00', '[\"March\",\"April\",\"May\"]', NULL, 'null', 1, '2025-05-06 10:40:46', '2025-05-06 10:40:46'),
-(3, 11, 17, 21, 223, 'applyallstudent', '2000.00', '[\"February\",\"March\",\"April\",\"May\",\"September\",\"December\"]', '1000.00', '[\"February\",\"April\",\"June\",\"November\",\"December\"]', '800.00', '[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"]', '550.00', '[\"February\",\"May\",\"July\",\"September\",\"November\"]', '300.00', '[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"]', '200.00', '[\"February\",\"April\",\"June\",\"July\",\"November\",\"December\"]', '200.00', '[\"February\",\"March\",\"May\",\"June\",\"July\",\"November\",\"December\"]', 1, '2025-05-06 12:53:07', '2025-05-06 13:20:24'),
-(4, 11, 17, 21, 224, 'applyallstudent', '2000.00', '[\"February\",\"March\",\"April\",\"May\",\"September\",\"December\"]', '800.00', '[\"February\",\"April\",\"June\",\"November\",\"December\"]', '1000.00', '[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"]', '500.00', '[\"February\",\"May\",\"July\",\"September\",\"November\"]', '300.00', '[\"February\",\"April\",\"June\",\"August\",\"September\",\"November\",\"December\"]', '200.00', '[\"February\",\"April\",\"June\",\"July\",\"November\",\"December\"]', '200.00', '[\"February\",\"March\",\"May\",\"June\",\"July\",\"November\",\"December\"]', 1, '2025-05-06 12:53:07', '2025-05-06 12:53:07'),
-(5, 11, 17, 21, 225, 'applyallstudent', '2000.00', '[\"February\",\"March\",\"April\",\"May\",\"September\",\"December\"]', '800.00', '[\"February\",\"April\",\"June\",\"November\",\"December\"]', '1000.00', '[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"]', '500.00', '[\"February\",\"May\",\"July\",\"September\",\"November\"]', '300.00', '[\"February\",\"April\",\"June\",\"August\",\"September\",\"November\",\"December\"]', '200.00', '[\"February\",\"April\",\"June\",\"July\",\"November\",\"December\"]', '200.00', '[\"February\",\"March\",\"May\",\"June\",\"July\",\"November\",\"December\"]', 1, '2025-05-06 12:53:07', '2025-05-06 12:53:07'),
-(7, 11, 17, 21, 226, 'applyallstudent', '3000.00', '[\"January\",\"February\",\"March\",\"April\",\"May\"]', '2000.00', '[\"April\",\"May\",\"June\",\"July\"]', '1000.00', '[\"September\",\"October\",\"November\",\"December\"]', '500.00', '[\"February\",\"April\",\"July\",\"November\"]', '400.00', '[\"March\",\"July\",\"November\",\"December\"]', '300.00', '[\"March\",\"May\",\"July\",\"September\",\"December\"]', '200.00', '[\"February\",\"April\",\"May\",\"June\",\"November\",\"December\"]', 1, '2025-05-06 13:01:10', '2025-05-06 13:01:10');
+INSERT INTO `payment_settings` (`id`, `session_id`, `class_id`, `section_id`, `charges_amount`, `months_validation`, `status`, `created_at`, `updated_at`) VALUES
+(1, 11, 17, 21, '{\"2\":\"10000\",\"3\":\"3000\",\"4\":\"2800\",\"6\":\"600\"}', '{\"2\":[\"April\"],\"3\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"4\":[\"March\",\"June\",\"September\",\"December\"],\"6\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"]}', 1, '2025-05-14 12:50:02', '2025-05-14 12:50:02');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payroll_settings`
+--
+
+CREATE TABLE `payroll_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fixed_amount` decimal(10,2) DEFAULT NULL,
+  `apply_on_fee_Settings` tinyint(1) DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `payroll_settings`
+--
+
+INSERT INTO `payroll_settings` (`id`, `type`, `parent_id`, `name`, `fixed_amount`, `apply_on_fee_Settings`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Allowances', NULL, 'Admission Charges', NULL, 0, 1, '2025-05-14 12:45:52', '2025-05-14 12:45:52'),
+(2, 'Allowances', NULL, 'Enrolment Fee', NULL, 1, 1, '2025-05-14 12:46:47', '2025-05-14 12:46:47'),
+(3, 'Allowances', NULL, 'Tuition Fee', NULL, 1, 1, '2025-05-14 12:46:55', '2025-05-14 12:47:14'),
+(4, 'Allowances', NULL, 'Terminal Fee', NULL, 1, 1, '2025-05-14 12:47:06', '2025-05-14 12:47:06'),
+(5, 'Allowances', NULL, 'Sports Fee', NULL, 0, 1, '2025-05-14 12:47:48', '2025-05-14 12:47:48'),
+(6, 'Allowances', NULL, 'Misc, Charges', NULL, 1, 1, '2025-05-14 12:48:07', '2025-05-14 12:48:07'),
+(7, 'Allowances', NULL, 'Identity Card', '100.00', 0, 1, '2025-05-14 12:48:47', '2025-05-14 12:48:47'),
+(8, 'Deductions', NULL, 'Scholarship / Concession', NULL, 0, 1, '2025-05-14 12:48:57', '2025-05-14 12:48:57'),
+(9, 'Allowances', 5, 'Comments', NULL, 0, 1, '2025-05-14 13:46:18', '2025-05-14 13:46:18'),
+(10, 'Allowances', 6, 'Comments', NULL, 0, 1, '2025-05-14 13:46:30', '2025-05-14 13:46:30'),
+(12, 'Deductions', 8, 'Comments', NULL, 0, 1, '2025-05-14 13:47:02', '2025-05-14 13:47:02');
 
 -- --------------------------------------------------------
 
@@ -600,9 +604,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `sessions_name`, `section_valid_from`, `section_valid_to`, `status`, `created_at`, `updated_at`) VALUES
-(9, '2024/2025', '2024-03-01', '2025-03-31', 0, '2025-03-21 05:53:01', '2025-05-01 06:12:01'),
-(11, '2025/2026', '2025-04-01', '2026-02-28', 1, '2025-04-25 06:29:30', '2025-05-01 06:12:01'),
-(12, '2026/2027', '2026-03-01', '2027-12-31', 0, '2025-05-01 06:11:50', '2025-05-01 06:12:01');
+(9, '2024 - 25', '2024-03-01', '2025-03-31', 0, '2025-03-21 05:53:01', '2025-05-12 18:08:02'),
+(11, '2025 - 26', '2025-04-01', '2026-02-28', 1, '2025-04-25 06:29:30', '2025-05-12 18:07:43');
 
 -- --------------------------------------------------------
 
@@ -626,8 +629,8 @@ CREATE TABLE `student_class_mappings` (
 --
 
 INSERT INTO `student_class_mappings` (`id`, `user_id`, `session_id`, `class_id`, `section_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 6, 9, 14, 17, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
-(2, 7, 9, 14, 17, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
+(1, 6, 9, 14, 17, 0, '2025-03-20 18:30:00', '2025-05-10 18:28:41'),
+(2, 7, 9, 14, 17, 0, '2025-03-20 18:30:00', '2025-05-10 19:07:11'),
 (3, 8, 9, 14, 17, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (4, 9, 9, 14, 17, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (5, 10, 9, 14, 17, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
@@ -837,7 +840,37 @@ INSERT INTO `student_class_mappings` (`id`, `user_id`, `session_id`, `class_id`,
 (219, 223, 11, 17, 21, 1, '2025-05-06 12:36:31', '2025-05-06 12:36:31'),
 (220, 224, 11, 17, 21, 1, '2025-05-06 12:37:03', '2025-05-06 12:37:03'),
 (221, 225, 11, 17, 21, 1, '2025-05-06 12:37:27', '2025-05-06 12:37:27'),
-(222, 226, 11, 17, 21, 1, '2025-05-06 12:38:14', '2025-05-06 12:38:14');
+(222, 226, 11, 17, 21, 1, '2025-05-06 12:38:14', '2025-05-06 12:38:14'),
+(223, 6, 11, 15, 18, 1, '2025-05-10 18:28:41', '2025-05-10 18:28:41'),
+(224, 7, 11, 15, 18, 1, '2025-05-10 19:07:11', '2025-05-10 19:07:11'),
+(225, 419, 11, 19, 23, 1, '2025-05-11 16:15:11', '2025-05-11 16:15:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_fee_settings`
+--
+
+CREATE TABLE `student_fee_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `session_id` bigint(20) UNSIGNED NOT NULL,
+  `class_id` bigint(20) UNSIGNED NOT NULL,
+  `section_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `charges_amount` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`charges_amount`)),
+  `months_validation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`months_validation`)),
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `student_fee_settings`
+--
+
+INSERT INTO `student_fee_settings` (`id`, `session_id`, `class_id`, `section_id`, `user_id`, `charges_amount`, `months_validation`, `status`, `created_at`, `updated_at`) VALUES
+(1, 11, 17, 21, 223, '{\"1\":null,\"5\":\"800\",\"7\":\"100.00\",\"8\":\"1000\"}', '{\"5\":[\"April\",\"May\",\"June\",\"July\"],\"7\":[\"April\"],\"8\":[\"April\",\"May\",\"June\",\"July\",\"December\"]}', 1, '2025-05-14 13:00:24', '2025-05-14 13:00:24'),
+(2, 11, 17, 21, 224, '{\"1\":null,\"5\":\"1000\",\"7\":\"100.00\",\"8\":\"1200\"}', '{\"5\":[\"April\",\"May\",\"June\",\"July\",\"August\"],\"7\":[\"April\"],\"8\":[\"April\",\"May\",\"June\",\"July\",\"August\"]}', 1, '2025-05-14 13:02:12', '2025-05-14 13:02:12');
 
 -- --------------------------------------------------------
 
@@ -907,7 +940,7 @@ CREATE TABLE `users` (
   `route` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1=approved, 0=pending',
+  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1=approved, 0=Deactive',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -928,15 +961,15 @@ INSERT INTO `users` (`id`, `admission_number`, `image`, `student_name`, `date_of
 (14, 'NPS2025009', NULL, 'MIVAAN NAYAK', NULL, NULL, '', NULL, NULL, NULL, '63 D . R.R. ROY ROAD KOL-82', NULL, NULL, 'AB+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'PURANJAYA NAYAK', NULL, NULL, NULL, NULL, NULL, '8777568483', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (15, 'NPS2025010', NULL, 'MIVAN AUDDY', NULL, NULL, '', NULL, NULL, NULL, '62/A, J.M. LANE KOL-27', NULL, NULL, 'A+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ANIRBAN AUDDY', NULL, NULL, NULL, NULL, NULL, '9831680314', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (221, 'NPS2025015', NULL, 'PARIDHI JHA', NULL, NULL, NULL, NULL, NULL, NULL, 'KULDARI, P.O-NEPALGUNJ,DIST-24PGS(S) KOL-700103', NULL, NULL, 'O+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SHUBH CHANDRA JHA', NULL, NULL, NULL, NULL, NULL, '7827270322', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
-(223, 'NPS2025017', NULL, 'AAYANSH SHARMA', NULL, NULL, NULL, NULL, NULL, NULL, '937A OSTAD AMIR KHAN SARANI KOL-82', NULL, NULL, 'O+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'PARESH SHARMA', NULL, NULL, NULL, NULL, NULL, '8777480239', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
-(224, 'NPS2025018', NULL, 'AVYAANSH TIWARI', NULL, NULL, NULL, NULL, NULL, NULL, '36B/4 CHANDITALA MAIN ROAD KOL-700053', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ANITA TIWARI', NULL, NULL, NULL, NULL, NULL, '8820931541', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
+(223, 'NPS2025017', '/storage/student_images/2025-05-12-13_39_16_Emon2.jpeg', 'AAYANSH SHARMA', NULL, NULL, NULL, NULL, NULL, NULL, '937A OSTAD AMIR KHAN SARANI KOL-82', NULL, NULL, 'O+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'PARESH SHARMA', NULL, NULL, NULL, NULL, NULL, '8777480239', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-05-12 08:09:16'),
+(224, 'NPS2025018', '/storage/student_images/2025-05-12-13_48_32_logo.jpg', 'AVYAANSH TIWARI', NULL, NULL, NULL, NULL, NULL, NULL, '36B/4 CHANDITALA MAIN ROAD KOL-700053', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ANITA TIWARI', NULL, NULL, NULL, NULL, NULL, '8820931541', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-05-12 08:18:32'),
 (225, 'NPS2025019', NULL, 'RISHAN MONDAL', NULL, NULL, NULL, NULL, NULL, NULL, '36/1 B P.N. MITRA BRICK FIELD ROAD KOL-41', NULL, NULL, 'AB+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SURATH MONDAL', NULL, NULL, NULL, NULL, NULL, '7003503668', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (226, 'NPS2025020', NULL, 'ABHAY PRATAP SINGH', NULL, NULL, NULL, NULL, NULL, NULL, '34 T.C ROAD KOL-700053', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ASHA DAS SINGH', NULL, NULL, NULL, NULL, NULL, '9903537407', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (227, 'NPS2025021', NULL, 'ANAMIKA SINGH', NULL, NULL, NULL, NULL, NULL, NULL, '34 T.C ROAD KOL-700053', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ASHA DAS SINGH', NULL, NULL, NULL, NULL, NULL, '9903537407', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (228, 'NPS2025022', NULL, 'PRIYANGSHU MONDAL', NULL, NULL, NULL, NULL, NULL, NULL, '1180B OSTAD AMIR KHAN SARANI KOL-82', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RAJU MONDAL', NULL, NULL, NULL, NULL, NULL, '6289280231', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (229, 'NPS2025023', NULL, 'RAYANSH PRASAD', NULL, NULL, NULL, NULL, NULL, NULL, '93/32 MAJLISH ARA ROAD KOL-41', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'KUNDAN PRASAD', NULL, NULL, NULL, NULL, NULL, '9628608777', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (230, 'NPS2025024', NULL, 'ANKUSH YADAV', NULL, NULL, NULL, NULL, NULL, NULL, '3NO. TARPAN GHAT ROAD KOL-53', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'MR. RANJIT YADAV', NULL, NULL, NULL, NULL, NULL, '8583061972', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
-(231, 'NPS2025025', NULL, 'NYRA SINGH', NULL, NULL, NULL, NULL, NULL, NULL, '128 TARAMONI GHAT  ROAD PASCHIM PUTIARY KOL-41', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RANDHIR SINGH', NULL, NULL, NULL, NULL, NULL, '9063567455', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
+(231, 'NPS2025025', '/storage/student_images/2025-05-12-13_39_08_logo.png', 'NYRA SINGH', NULL, NULL, NULL, NULL, NULL, NULL, '128 TARAMONI GHAT  ROAD PASCHIM PUTIARY KOL-41', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RANDHIR SINGH', NULL, NULL, NULL, NULL, NULL, '9063567455', NULL, NULL, NULL, NULL, NULL, NULL, 'nyrasingh@gmail.com', '$2y$12$KJ8AQH6q7QgznKNVFCxMje1Nn1DDXf8Ptg.nlG02OB.dzULA9P3LC', 1, '2025-03-20 18:30:00', '2025-05-12 08:09:08'),
 (232, 'NPS2025026', NULL, 'RONAK SHARMA', NULL, NULL, NULL, NULL, NULL, NULL, '787 R.K.NAGAR DOLLY VILLA KOL-82', NULL, NULL, 'A+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NITESH SHARMA', NULL, NULL, NULL, NULL, NULL, '8240574377', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (233, 'NPS2025027', NULL, 'AYUSH KR. JHA', NULL, NULL, NULL, NULL, NULL, NULL, '177/18A B.L.SAHA ROAD KOL-53', NULL, NULL, 'A+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ASHUTOSH KR. JHA', NULL, NULL, NULL, NULL, NULL, '9836424867', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (234, 'NPS2025028', NULL, 'MOUMITA CHOUDHURY', NULL, NULL, NULL, NULL, NULL, NULL, '229 ABHINASH MONDAL ROAD KOL-93', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'MANIK CHOUDHURY', NULL, NULL, NULL, NULL, NULL, '9007922440', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
@@ -1060,9 +1093,9 @@ INSERT INTO `users` (`id`, `admission_number`, `image`, `student_name`, `date_of
 (352, 'NPS2025146', NULL, 'TARANA SABNAM', NULL, NULL, NULL, NULL, NULL, NULL, '60/12 P.B ROAD KOL-41', NULL, NULL, 'O+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NAUSAD ALAM', NULL, NULL, NULL, NULL, NULL, '8017077435', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (353, 'NPS2025147', NULL, 'AYESHA PARVIN', NULL, NULL, NULL, NULL, NULL, NULL, 'SODEPUR BRICK FIELD ROAD KOL-82', NULL, NULL, 'A+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SK. ALIUDDIN', NULL, NULL, NULL, NULL, NULL, '9064824279', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (354, 'NPS2025148', NULL, 'SUBHAM MONDAL', NULL, NULL, NULL, NULL, NULL, NULL, '10/1A CHANDITALA BRANCH ROAD', NULL, NULL, 'A+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'MANASHI MONDAL', NULL, NULL, NULL, NULL, NULL, '9007985499', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
-(355, 'NPS2025149', NULL, 'ADITYA KUMAR DAS', NULL, NULL, NULL, NULL, NULL, NULL, '265/1/H.L B.L SAHA ROAD KOL-53', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'MR. RAJIV KUMAR DAS', NULL, NULL, NULL, NULL, NULL, '6291880967', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
-(356, 'NPS2025150', NULL, 'ADITYA KUMAR LAL', NULL, NULL, NULL, NULL, NULL, NULL, '34 P.B. ROAD KOL-41', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SUJIT KUMAR LAL', NULL, NULL, NULL, NULL, NULL, '6290807499', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00');
+(355, 'NPS2025149', NULL, 'ADITYA KUMAR DAS', NULL, NULL, NULL, NULL, NULL, NULL, '265/1/H.L B.L SAHA ROAD KOL-53', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'MR. RAJIV KUMAR DAS', NULL, NULL, NULL, NULL, NULL, '6291880967', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00');
 INSERT INTO `users` (`id`, `admission_number`, `image`, `student_name`, `date_of_birth`, `aadhar_no`, `nationality`, `religion`, `gender`, `caste`, `address`, `pin_code`, `mother_tongue`, `blood_group`, `stream`, `combination_text`, `school_name`, `academic_session`, `class`, `second_language`, `achievements`, `previous_school_info`, `parent_name`, `parent_relation`, `qualification`, `occupation`, `organization`, `designation`, `mobile_no`, `parent_aadhar_number`, `annual_income`, `office_contact_number`, `mention_relationship`, `transport_facility`, `route`, `email`, `password`, `status`, `created_at`, `updated_at`) VALUES
+(356, 'NPS2025150', NULL, 'ADITYA KUMAR LAL', NULL, NULL, NULL, NULL, NULL, NULL, '34 P.B. ROAD KOL-41', NULL, NULL, 'B+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SUJIT KUMAR LAL', NULL, NULL, NULL, NULL, NULL, '6290807499', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (357, 'NPS2025151', NULL, 'ISHAN KAYAL', NULL, NULL, NULL, NULL, NULL, NULL, '3/2 CHANDITALA BRANCH ROAD KOL-53', NULL, NULL, 'A+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SUDIPTOKAYAL', NULL, NULL, NULL, NULL, NULL, '9831154605', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (358, 'NPS2025152', NULL, 'AYUSH MISHRA', NULL, NULL, NULL, NULL, NULL, NULL, '154/A KALIPUR KANCHA ROAD KOL-82', NULL, NULL, 'AB+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SURAJ MISHRA', NULL, NULL, NULL, NULL, NULL, '9903536627', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (359, 'NPS2025153', NULL, 'RANGAN  CHEL', NULL, NULL, NULL, NULL, NULL, NULL, '119 KARUNAMOYEE GHAT ROAD KOL-82', NULL, NULL, 'AB+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RANJIT CHEL', NULL, NULL, NULL, NULL, NULL, '9830027710', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
@@ -1124,7 +1157,8 @@ INSERT INTO `users` (`id`, `admission_number`, `image`, `student_name`, `date_of
 (415, 'NPS2025209', NULL, 'SOHAM MAITY', NULL, NULL, NULL, NULL, NULL, NULL, '89/1 RAJA RAMMOHAN ROY ROAD, KOL-8', NULL, NULL, 'O+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'MANASH MAITY', NULL, NULL, NULL, NULL, NULL, '9330820324', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (416, 'NPS2025210', NULL, 'ABHRANIL DAS', NULL, NULL, NULL, NULL, NULL, NULL, '6/2 T.C. ROAD KOL-53', NULL, NULL, 'O+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SUSANTA DAS', NULL, NULL, NULL, NULL, NULL, '9903954933', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
 (417, 'NPS2025211', NULL, 'RISHAV GUPTA', NULL, NULL, NULL, NULL, NULL, NULL, '181/16B RAJA RAM MOHAN ROY ROAD-41', NULL, NULL, 'O+', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'BHOLA PRASAD GUPTA', NULL, NULL, NULL, NULL, NULL, '9123763754', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-03-20 18:30:00', '2025-03-20 18:30:00'),
-(418, 'NPS2025212', '/storage/student_images/2025-04-25-16_30_08_logo.jpg', 'Emon Debnath', '2025-04-25', '21312312312131', 'Indian', 'Hindu', 'Male', 'General', 'Debnath house, Nabapally, Near Jogendranath school', '700126', 'Bengali', 'A+', 'Science', NULL, '[\"test\"]', '[\"2025\"]', '[\"one\"]', '[\"Bengali\"]', 'Achievements', 'mention', 'Test data', 'Brother', 'Masters', 'Developer', 'Gwambo', 'Software developer', '6291648982', '1212121212', '12323.00', '06291648982', NULL, NULL, NULL, 'teso@mail.com', '$2y$12$36Q.Biqbm6Y/2F2Puhw2XOd66emJdklyD3xaJI3t9maorqOpeNjna', 1, '2025-04-25 10:59:08', '2025-04-25 11:00:09');
+(418, 'NPS2025212', '/storage/student_images/2025-04-25-16_30_08_logo.jpg', 'Emon Debnath', '2025-04-25', '21312312312131', 'Indian', 'Hindu', 'Male', 'General', 'Debnath house, Nabapally, Near Jogendranath school', '700126', 'Bengali', 'A+', 'Science', NULL, '[\"test\"]', '[\"2025\"]', '[\"one\"]', '[\"Bengali\"]', 'Achievements', 'mention', 'Test data', 'Brother', 'Masters', 'Developer', 'Gwambo', 'Software developer', '6291648982', '1212121212', '12323.00', '06291648982', NULL, NULL, NULL, 'teso@mail.com', '$2y$12$36Q.Biqbm6Y/2F2Puhw2XOd66emJdklyD3xaJI3t9maorqOpeNjna', 1, '2025-04-25 10:59:08', '2025-04-25 11:00:09'),
+(419, 'NPS2025213', NULL, 'Test Emon 01', '2025-02-05', '1232342342323', 'Indian', 'Hindu', 'Male', 'General', 'Test', '700124', 'Bengali', 'B-', NULL, NULL, '[null]', '[null]', '[null]', '[null]', 'test', 'test', 'Emon Debnath', 'Father', 'Masters', 'Developer', 'Gwambo', 'Software developer', '6291648982', '723127365126', '23333.00', NULL, NULL, NULL, NULL, 'testemon01@gmail.com', '$2y$12$/2eZXtHj7NK45lbQORQr0uhzW1gbuhlUQU8xLSayRKdEdn50S0rPa', 1, '2025-05-11 16:15:11', '2025-05-11 16:15:11');
 
 --
 -- Indexes for dumped tables
@@ -1234,8 +1268,13 @@ ALTER TABLE `payment_settings`
   ADD PRIMARY KEY (`id`),
   ADD KEY `payment_settings_session_id_foreign` (`session_id`),
   ADD KEY `payment_settings_class_id_foreign` (`class_id`),
-  ADD KEY `payment_settings_section_id_foreign` (`section_id`),
-  ADD KEY `payment_settings_user_id_foreign` (`user_id`);
+  ADD KEY `payment_settings_section_id_foreign` (`section_id`);
+
+--
+-- Indexes for table `payroll_settings`
+--
+ALTER TABLE `payroll_settings`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `personal_access_tokens`
@@ -1268,6 +1307,16 @@ ALTER TABLE `student_class_mappings`
   ADD KEY `student_class_mappings_section_id_foreign` (`section_id`);
 
 --
+-- Indexes for table `student_fee_settings`
+--
+ALTER TABLE `student_fee_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_fee_settings_session_id_foreign` (`session_id`),
+  ADD KEY `student_fee_settings_class_id_foreign` (`class_id`),
+  ADD KEY `student_fee_settings_section_id_foreign` (`section_id`),
+  ADD KEY `student_fee_settings_user_id_foreign` (`user_id`);
+
+--
 -- Indexes for table `teacher_class_mappings`
 --
 ALTER TABLE `teacher_class_mappings`
@@ -1293,7 +1342,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `admission_notices`
@@ -1329,7 +1378,7 @@ ALTER TABLE `contact_us`
 -- AUTO_INCREMENT for table `deposites`
 --
 ALTER TABLE `deposites`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `events`
@@ -1353,7 +1402,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `news`
@@ -1371,7 +1420,13 @@ ALTER TABLE `notices`
 -- AUTO_INCREMENT for table `payment_settings`
 --
 ALTER TABLE `payment_settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `payroll_settings`
+--
+ALTER TABLE `payroll_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -1395,19 +1450,25 @@ ALTER TABLE `sessions`
 -- AUTO_INCREMENT for table `student_class_mappings`
 --
 ALTER TABLE `student_class_mappings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
+
+--
+-- AUTO_INCREMENT for table `student_fee_settings`
+--
+ALTER TABLE `student_fee_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `teacher_class_mappings`
 --
 ALTER TABLE `teacher_class_mappings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=419;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=420;
 
 --
 -- Constraints for dumped tables
@@ -1444,8 +1505,7 @@ ALTER TABLE `event_registers`
 ALTER TABLE `payment_settings`
   ADD CONSTRAINT `payment_settings_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`),
   ADD CONSTRAINT `payment_settings_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`),
-  ADD CONSTRAINT `payment_settings_session_id_foreign` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`),
-  ADD CONSTRAINT `payment_settings_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `payment_settings_session_id_foreign` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`);
 
 --
 -- Constraints for table `student_class_mappings`
@@ -1455,6 +1515,15 @@ ALTER TABLE `student_class_mappings`
   ADD CONSTRAINT `student_class_mappings_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`),
   ADD CONSTRAINT `student_class_mappings_session_id_foreign` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`),
   ADD CONSTRAINT `student_class_mappings_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_fee_settings`
+--
+ALTER TABLE `student_fee_settings`
+  ADD CONSTRAINT `student_fee_settings_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`),
+  ADD CONSTRAINT `student_fee_settings_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`),
+  ADD CONSTRAINT `student_fee_settings_session_id_foreign` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`),
+  ADD CONSTRAINT `student_fee_settings_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `teacher_class_mappings`

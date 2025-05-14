@@ -1,31 +1,31 @@
 @extends('admin.layout.admin_main')
 @section('content')
 <div class="pagetitle">
-    <h1>Create Class Teachers</h1>
+    <h1>Class Teacher's</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Manage Class Teachers</li>
+            <li class="breadcrumb-item active">Manage Class Teacher's</li>
         </ol>
     </nav>
 </div>
 <section class="section">
     <div class="card border-0">
         <div class="card-body pt-4">
-            <form action="{{route('ams.addTeacher')}}" method="post">
+            <form action="{{route('ams.addTeacher')}}" method="post" autocomplete="off">
                 @csrf
                 <div class="row">
                     <input type="hidden" name="admin_id" id="admin_id">
                     <div class="col-4 mb-2">
-                        <label for="name" class="form-label">Teacher Name</label>
-                        <input type="text" id="name" class="form-control" name="name" required>
+                        <label for="name" class="form-label">Teacher's <span class="text-danger">*</span></label>
+                        <input type="text" id="name" placeholder="Enter Teacher's Name" class="form-control" name="name" required>
                         @if ($errors->has('name'))
                             <span class="text-danger">{{ $errors->first('name') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-2">
                         <label for="" class="form-label">Select Class <span class="text-danger">*</span></label>
-                        <select name="class_id" id="class_id" class="form-select">
+                        <select name="class_id" id="class_id" class="form-select" required>
                             <option value="">Select Class</option>
                             @if (!@empty(GetClasses()))
                                 @foreach (GetClasses() as $index=>$item)
@@ -36,35 +36,36 @@
                     </div>
                     <div class="col-4 mb-2">
                         <label for="" class="form-label">Select Section <span class="text-danger">*</span></label>
-                        <select name="section_id" id="section_id" class="form-select">
+                        <select name="section_id" id="section_id" class="form-select" required>
                             <option value="">Select Section</option>
                         </select>
                     </div>
                     <div class="col-4 mb-4">
-                        <label for="email_address" class="form-label">E-Mail Address</label>
-                        <input type="text" id="email_address" class="form-control" name="email">
+                        <label for="email_address" class="form-label">Email <span class="text-danger">*</span></label>
+                        <small class="form-text text-danger">(This email is used for system login.)</small>
+                        <input type="text" id="email_address" class="form-control" name="email" placeholder="Enter Email" autocomplete="off" required>
                         @if ($errors->has('email'))
                             <span class="text-danger">{{ $errors->first('email') }}</span>
                         @endif
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" id="password" class="form-control" name="password">
+                        <input type="password" id="password" class="form-control" name="password" placeholder="Enter Password" autocomplete="off">
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="password" class="form-label">Confirm Password</label>
-                        <input type="password" id="password_confirmation" class="form-control" name="password_confirmation">
+                        <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" placeholder="Re Enter Password" autocomplete="off">
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
                     </div>
-                    <div class="col-12">
-                        <a type="button" href="javascript:void(0)" onclick="reload()" id="reset" class="btn btn-secondary btn-sm">Clear</a>
-                        <button type="submit" id="save" class="btn btn-primary btn-sm">Save</button>
-                        <button type="submit" id="update" class="btn btn-success btn-sm">Update</button>
+                    <div class="col-12 text-end">
+                        <a type="button" href="javascript:void(0)" onclick="reload()" id="reset" class="btn btn-secondary">Clear</a>
+                        <button type="submit" id="save" class="btn btn-primary">Save</button>
+                        <button type="submit" id="update" class="btn btn-success">Update</button>
                     </div>
                 </div>
             </form>
@@ -72,12 +73,12 @@
     </div>
     <div class="card border-0">
         <div class="card-body pt-4">
-            <table class="small w-100 table table-striped" id="DataTables">
+            <table class="small w-100 table table-bordered table-striped" id="DataTables">
                 <thead>
-                    <tr>
+                    <tr class="table-primary">
                         <th>SL NO</th>
-                        <th>Teacher Name</th>
-                        <th>Teacher Email</th>
+                        <th>Teacher's</th>
+                        <th>Email</th>
                         <th>Class</th>
                         <th>Section</th>
                         <th class="text-center">Action</th>

@@ -21,7 +21,7 @@ class EventsController extends Controller
      */
     public function create()
     {
-        return view('admin.events.list');
+        return view('admin.websiteSettings.events.list');
     }
 
     /**
@@ -80,8 +80,12 @@ class EventsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $events =  Events::find($request->id);
-        $events->delete();
-        return ['warning'=>'Events Deleted successfully'];
+        try{
+            $events =  Events::find($request->id);
+            $events->delete();
+            return response()->json(['warning'=>'Events Deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error'.$th->getMessage()]);
+        }
     }
 }
