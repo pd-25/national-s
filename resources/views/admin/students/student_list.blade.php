@@ -77,9 +77,9 @@
                     <thead>
                         <tr class="table-primary">
                             <th>NO.</th>
+                            <th>Image</th>
                             <th>Name</th>
                             <th>Date of Birth</th>
-                            <th>Image</th>
                             <th>Class Section</th>
                             <th>Admission Number</th>
                             <th>Gender</th>
@@ -150,15 +150,21 @@
             success: function(response) {
                 table.clear();
                 $.each(response.data, function(index, student) {
+                    var StudentImage;
+                    if(student.student_details.image != null){
+                        StudentImage = "<img src=" + student.student_details.image + " class='img_fluid' style='height:80px;' />";
+                    }else{
+                        StudentImage = "<img src='/assets/admin/img/student.png' class='img_fluid' style='height:80px;' />";
+                    }
                     table.row.add([
                         index + 1,
+                        StudentImage,
                         student.student_details.student_name,
                         new Date(student.student_details.date_of_birth).toLocaleDateString('en-UK', {
                             year: 'numeric',
                             month: '2-digit',
                             day: '2-digit'
                         }),
-                        "<img src=" + student.student_details.image + " class='img_fluid' style='height:80px;' />",
                         student.student_class.class_name + '<br>' + student.student_section.section_name,
                         student.student_details.admission_number,
                         student.student_details.gender,

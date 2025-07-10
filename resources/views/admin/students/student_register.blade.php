@@ -105,22 +105,22 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="aadhar_no" class="form-label"> Aadhar No: <span class="text-danger">*</span></label>
-                        <input type="text" id="aadhar_no" class="form-control" maxlength="12" name="aadhar_no"  value="{{old('aadhar_no')}}" required>
+                        <label for="aadhar_no" class="form-label"> Aadhar No: </label>
+                        <input type="text" id="aadhar_no" class="form-control" maxlength="12" name="aadhar_no"  value="{{old('aadhar_no')}}" >
                         @if ($errors->has('aadhar_no'))
                             <span class="text-danger">{{ $errors->first('aadhar_no') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="nationality" class="form-label"> Nationality: <span class="text-danger">*</span></label>
-                        <input type="text" id="nationality" class="form-control" name="nationality"  value="{{old('nationality')}}" required>
+                        <label for="nationality" class="form-label"> Nationality: </label>
+                        <input type="text" id="nationality" class="form-control" name="nationality"  value="{{old('nationality')}}" >
                         @if ($errors->has('nationality'))
                             <span class="text-danger">{{ $errors->first('nationality') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="religion" class="form-label"> Religion: <span class="text-danger">*</span></label>
-                        <select name="religion" class="form-select" id="religion" required>
+                        <label for="religion" class="form-label"> Religion: </label>
+                        <select name="religion" class="form-select" id="religion" >
                             <option value="{{$item['name']}}">Select Religion</option>
                             @foreach (Religion() as $item)
                                 <option value="{{$item['name']}}">{{$item['name']}}</option>
@@ -131,8 +131,8 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="gender" class="form-label"> Gender: <span class="text-danger">*</span></label>
-                        <select name="gender" class="form-select" id="gender" required>
+                        <label for="gender" class="form-label"> Gender: </label>
+                        <select name="gender" class="form-select" id="gender" >
                             <option value="{{$item['name']}}">Select Gender</option>
                             @foreach (Gender() as $item)
                                 <option value="{{$item['name']}}">{{$item['name']}}</option>
@@ -143,8 +143,8 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="caste" class="form-label"> Caste: <span class="text-danger">*</span></label>
-                        <select name="caste" class="form-select" id="caste" required>
+                        <label for="caste" class="form-label"> Caste: </label>
+                        <select name="caste" class="form-select" id="caste" >
                             <option value="{{$item['name']}}">Select Caste</option>
                             @foreach (Caste() as $item)
                                 <option value="{{$item['name']}}">{{$item['name']}}</option>
@@ -169,15 +169,15 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="mother_tongue" class="form-label">Mother Tongue: <span class="text-danger">*</span></label>
-                        <input type="text" id="mother_tongue" class="form-control" required name="mother_tongue" value="{{old('mother_tongue')}}">
+                        <label for="mother_tongue" class="form-label">Mother Tongue: </label>
+                        <input type="text" id="mother_tongue" class="form-control"  name="mother_tongue" value="{{old('mother_tongue')}}">
                         @if ($errors->has('mother_tongue'))
                             <span class="text-danger">{{ $errors->first('mother_tongue') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="blood_group" class="form-label">Blood Group: <span class="text-danger">*</span></label>
-                        <select name="blood_group" class="form-select" id="blood_group" required>
+                        <label for="blood_group" class="form-label">Blood Group: </label>
+                        <select name="blood_group" class="form-select" id="blood_group" >
                             <option value="{{$item['name']}}">Select Blood Group</option>
                             @foreach (BloodGroup() as $item)
                                 <option value="{{$item['name']}}">{{$item['name']}}</option>
@@ -270,7 +270,7 @@
                     </div>
                     <div class="col-4 mb-2">
                         <label for="parent_name" class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" id="parent_name" class="form-control" name="parent_name" required value="{{old('parent_name')}}" required>
+                        <input type="text" id="parent_name" class="form-control" name="parent_name" required value="{{old('parent_name')}}">
                         @if ($errors->has('parent_name'))
                             <span class="text-danger">{{ $errors->first('parent_name') }}</span>
                         @endif
@@ -288,15 +288,15 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="qualification" class="form-label">Qualification<span class="text-danger">*</span></label>
-                        <input type="text" id="qualification" class="form-control" required name="qualification" value="{{old('qualification')}}">
+                        <label for="qualification" class="form-label">Qualification</label>
+                        <input type="text" id="qualification" class="form-control"  name="qualification" value="{{old('qualification')}}">
                         @if ($errors->has('qualification'))
                             <span class="text-danger">{{ $errors->first('qualification') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="occupation" class="form-label">Occupation<span class="text-danger">*</span></label>
-                        <input type="text" id="occupation" required class="form-control" name="occupation" value="{{old('occupation')}}">
+                        <label for="occupation" class="form-label">Occupation</label>
+                        <input type="text" id="occupation"  class="form-control" name="occupation" value="{{old('occupation')}}">
                         @if ($errors->has('occupation'))
                             <span class="text-danger">{{ $errors->first('occupation') }}</span>
                         @endif
@@ -316,22 +316,22 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="mobile_no" class="form-label">Mobile No<span class="text-danger">*</span></label>
-                        <input type="text" id="mobile_no" required maxlength="10" class="form-control" name="mobile_no" value="{{old('mobile_no')}}">
+                        <label for="mobile_no" class="form-label">Mobile No</label>
+                        <input type="text" id="mobile_no"  maxlength="10" class="form-control" name="mobile_no" value="{{old('mobile_no')}}">
                         @if ($errors->has('mobile_no'))
                             <span class="text-danger">{{ $errors->first('mobile_no') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="parent_aadhar_number" class="form-label">Aadhar Number<span class="text-danger">*</span></label>
-                        <input type="text" id="parent_aadhar_number" required class="form-control" maxlength="12" name="parent_aadhar_number" value="{{old('parent_aadhar_number')}}">
+                        <label for="parent_aadhar_number" class="form-label">Aadhar Number</label>
+                        <input type="text" id="parent_aadhar_number"  class="form-control" maxlength="12" name="parent_aadhar_number" value="{{old('parent_aadhar_number')}}">
                         @if ($errors->has('parent_aadhar_number'))
                             <span class="text-danger">{{ $errors->first('parent_aadhar_number') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="annual_income" class="form-label">Annual Income (Rs.)<span class="text-danger">*</span></label>
-                        <input type="number" id="annual_income" required class="form-control" name="annual_income" value="{{old('annual_income')}}">
+                        <label for="annual_income" class="form-label">Annual Income (Rs.)</label>
+                        <input type="number" id="annual_income"  class="form-control" name="annual_income" value="{{old('annual_income')}}">
                         @if ($errors->has('annual_income'))
                             <span class="text-danger">{{ $errors->first('annual_income') }}</span>
                         @endif
@@ -372,17 +372,17 @@
                         @endif
                     </div>
                     <div class="col-4 mb-4">
-                        <label for="email_address" class="form-label">E-Mail<span class="text-danger">*</span></label>
+                        <label for="email_address" class="form-label">E-Mail</label>
                         <input type="text" id="email_address" class="form-control text-lowercase" name="email"  value="{{old('email')}}">
                         @if ($errors->has('email'))
                             <span class="text-danger">{{ $errors->first('email') }}</span>
                         @endif
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="password" class="form-label d-flex justify-content-between"><div>Password <span class="text-danger">*</span></div>
+                        <label for="password" class="form-label d-flex justify-content-between"><div>Password </div>
                             <div><i class="bi bi-magic fs-5 text-primary" onclick="generatePassword()"></i></div>
                         </label>
-                        <input type="password" id="password" class="form-control showPassword" name="password" required>
+                        <input type="password" id="password" class="form-control showPassword" name="password" >
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
@@ -394,8 +394,8 @@
                           </div>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="password" class="form-label">Confirm Password<span class="text-danger">*</span></label>
-                        <input type="password" id="password_confirmation" class="form-control showPassword" name="password_confirmation" required>
+                        <label for="password" class="form-label">Confirm Password</label>
+                        <input type="password" id="password_confirmation" class="form-control showPassword" name="password_confirmation" >
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif

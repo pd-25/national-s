@@ -168,7 +168,7 @@
         $(".OnlineShowHide").hide();
         var session_id = $('#session_id').val();
         var class_id = $('#class_id').val();
-
+        checkPaymentMode("{{@$deposite->payment_mode}}");
         var depositSectionId = "{{@$deposite->section_id}}";
         var depositUserId = "{{@$deposite->user_id}}";
         if(class_id){

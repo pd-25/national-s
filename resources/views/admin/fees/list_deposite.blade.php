@@ -96,8 +96,8 @@
                         <thead>
                             <tr class="table-primary">
                                 <th>SL NO</th>
-                                <th>Payment NO</th>
                                 <th>Admission No</th>
+                                <th>Payment NO</th>
                                 <th>Name</th>
                                 <th>Session</th>
                                 <th>Class - Section</th>

@@ -77,34 +77,34 @@
                     </div>
                     <div class="col-12 mb-1">
                         <label for="student_name" class="form-label">Name of Pupil(In Capital Letters)<span class="text-danger">*</span></label>
-                        <input type="text" id="student_name" class="form-control" name="student_name" required value="{{@$studentClassMapping->student_name}}">
+                        <input type="text" id="student_name" class="form-control" name="student_name" required value="{{@$studentClassMapping->student_name}}" required>
                         @if ($errors->has('student_name'))
                             <span class="text-danger">{{ $errors->first('student_name') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
                         <label for="date_of_birth" class="form-label">Date of Birth: <span class="text-danger">*</span></label>
-                        <input type="date" id="date_of_birth" class="form-control" name="date_of_birth" value="{{date('Y-m-d', strtotime(@$studentClassMapping->date_of_birth))}}">
+                        <input type="date" id="date_of_birth" class="form-control" name="date_of_birth" value="{{date('Y-m-d', strtotime(@$studentClassMapping->date_of_birth))}}" required>
                         @if ($errors->has('date_of_birth'))
                             <span class="text-danger">{{ $errors->first('date_of_birth') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="aadhar_no" class="form-label"> Aadhar No: <span class="text-danger">*</span></label>
+                        <label for="aadhar_no" class="form-label"> Aadhar No: </label>
                         <input type="number" id="aadhar_no" class="form-control" name="aadhar_no"  value="{{@$studentClassMapping->aadhar_no}}">
                         @if ($errors->has('aadhar_no'))
                             <span class="text-danger">{{ $errors->first('aadhar_no') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="nationality" class="form-label"> Nationality: <span class="text-danger">*</span></label>
+                        <label for="nationality" class="form-label"> Nationality: </label>
                         <input type="text" id="nationality" class="form-control" name="nationality"  value="{{@$studentClassMapping->nationality}}">
                         @if ($errors->has('nationality'))
                             <span class="text-danger">{{ $errors->first('nationality') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="religion" class="form-label"> Religion: <span class="text-danger">*</span></label>
+                        <label for="religion" class="form-label"> Religion: </label>
                         <select name="religion" class="form-select" id="religion">
                             <option value="">Select Religion</option>
                             @foreach (Religion() as $item)
@@ -116,7 +116,7 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="gender" class="form-label"> Gender: <span class="text-danger">*</span></label>
+                        <label for="gender" class="form-label"> Gender: </label>
                         <select name="gender" class="form-select" id="gender">
                             <option value="">Select Gender</option>
                             @foreach (Gender() as $item)
@@ -128,7 +128,7 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="caste" class="form-label"> Caste: <span class="text-danger">*</span></label>
+                        <label for="caste" class="form-label"> Caste: </label>
                         <select name="caste" class="form-select" id="caste">
                             <option value="">Select Caste</option>
                             @foreach (Caste() as $item)
@@ -141,27 +141,27 @@
                     </div>
                     <div class="col-12 mb-1">
                         <label for="address" class="form-label">Address<span class="text-danger">*</span></label>
-                        <textarea id="address" class="form-control" rows="4" name="address">{{@$studentClassMapping->address}} </textarea>
+                        <textarea id="address" class="form-control" rows="4" name="address" required>{{@$studentClassMapping->address}} </textarea>
                         @if ($errors->has('address'))
                             <span class="text-danger">{{ $errors->first('address') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
                         <label for="pin_code" class="form-label">Pin Code: <span class="text-danger">*</span></label>
-                        <input type="number" id="pin_code" class="form-control" name="pin_code"  value="{{@$studentClassMapping->pin_code}}">
+                        <input type="number" id="pin_code" class="form-control" name="pin_code"  value="{{@$studentClassMapping->pin_code}}" required>
                         @if ($errors->has('pin_code'))
                             <span class="text-danger">{{ $errors->first('pin_code') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="mother_tongue" class="form-label">Mother Tongue: <span class="text-danger">*</span></label>
+                        <label for="mother_tongue" class="form-label">Mother Tongue: </label>
                         <input type="text" id="mother_tongue" class="form-control" name="mother_tongue" value="{{@$studentClassMapping->mother_tongue}}">
                         @if ($errors->has('mother_tongue'))
                             <span class="text-danger">{{ $errors->first('mother_tongue') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="blood_group" class="form-label">Blood Group: <span class="text-danger">*</span></label>
+                        <label for="blood_group" class="form-label">Blood Group: </label>
                         <select name="blood_group" class="form-select" id="blood_group">
                             <option value="">Select Blood Group</option>
                             @foreach (BloodGroup() as $item)
@@ -249,14 +249,14 @@
                     </div>
                     <div class="col-4 mb-2">
                         <label for="parent_name" class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" id="parent_name" class="form-control" name="parent_name" required value="{{@$studentClassMapping->parent_name}}">
+                        <input type="text" id="parent_name" class="form-control" name="parent_name" required value="{{@$studentClassMapping->parent_name}}" required>
                         @if ($errors->has('parent_name'))
                             <span class="text-danger">{{ $errors->first('parent_name') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-2">
                         <label for="parent_relation" class="form-label">Relation <span class="text-danger">*</span></label>
-                        <select name="parent_relation" class="form-select" id="parent_relation">
+                        <select name="parent_relation" class="form-select" id="parent_relation" required>
                             <option value="{{$item['name']}}">Select Relation</option>
                             @foreach (Relation() as $item)
                                 <option value="{{$item['name']}}" {{@$studentClassMapping->parent_relation == @$item['name'] ? "selected":""}}>{{$item['name']}}</option>
@@ -267,14 +267,14 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="qualification" class="form-label">Qualification<span class="text-danger">*</span></label>
+                        <label for="qualification" class="form-label">Qualification</label>
                         <input type="text" id="qualification" class="form-control" name="qualification" value="{{@$studentClassMapping->qualification}}">
                         @if ($errors->has('qualification'))
                             <span class="text-danger">{{ $errors->first('qualification') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="occupation" class="form-label">Occupation<span class="text-danger">*</span></label>
+                        <label for="occupation" class="form-label">Occupation</label>
                         <input type="text" id="occupation" class="form-control" name="occupation" value="{{@$studentClassMapping->occupation}}">
                         @if ($errors->has('occupation'))
                             <span class="text-danger">{{ $errors->first('occupation') }}</span>
@@ -295,21 +295,21 @@
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="mobile_no" class="form-label">Mobile No<span class="text-danger">*</span></label>
+                        <label for="mobile_no" class="form-label">Mobile No</label>
                         <input type="text" id="mobile_no" maxlength="10" class="form-control" name="mobile_no" value="{{@$studentClassMapping->mobile_no}}">
                         @if ($errors->has('mobile_no'))
                             <span class="text-danger">{{ $errors->first('mobile_no') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="parent_aadhar_number" class="form-label">Aadhar Number<span class="text-danger">*</span></label>
+                        <label for="parent_aadhar_number" class="form-label">Aadhar Number</label>
                         <input type="text" id="parent_aadhar_number" class="form-control" name="parent_aadhar_number" value="{{@$studentClassMapping->parent_aadhar_number}}">
                         @if ($errors->has('parent_aadhar_number'))
                             <span class="text-danger">{{ $errors->first('parent_aadhar_number') }}</span>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
-                        <label for="annual_income" class="form-label">Annual Income (Rs.)<span class="text-danger">*</span></label>
+                        <label for="annual_income" class="form-label">Annual Income (Rs.)</label>
                         <input type="text" id="annual_income" class="form-control" name="annual_income" value="{{@$studentClassMapping->annual_income}}">
                         @if ($errors->has('annual_income'))
                             <span class="text-danger">{{ $errors->first('annual_income') }}</span>
@@ -351,7 +351,7 @@
                         @endif
                     </div>
                     <div class="col-4 mb-4">
-                        <label for="email_address" class="form-label">E-Mail<span class="text-danger">*</span></label>
+                        <label for="email_address" class="form-label">E-Mail</label>
                         <input type="text" id="email_address" disabled class="form-control" name="email"  value="{{@$studentClassMapping->email}}">
                         @if ($errors->has('email'))
                             <span class="text-danger">{{ $errors->first('email') }}</span>
