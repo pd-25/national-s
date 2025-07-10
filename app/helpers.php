@@ -282,6 +282,11 @@ function GetPayrollComponent($data){
     return $payrollSettings;
 }
 
+function PayrollComponentName($id){
+    $payrollSettings = PayrollSettings::with('parent')->select('id','name','parent_id')->find($id);
+    return $payrollSettings;
+}
+
 // ....................................................Future referances 
 // function activeSessionMonths()
 // {

@@ -157,7 +157,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-Enrollment" aria-expanded="true" aria-controls="panelsStayOpen-Enrollment" onclick="GetStudentEnrollment()" id="enrollmentAndHistory"> 
-                        Enrollment History
+                        Transfer & Promote Students History
                         </button>
                     </h2>
                     <div id="panelsStayOpen-Enrollment" class="accordion-collapse collapse">
@@ -166,13 +166,11 @@
                                 <table class="w-100 table  table-striped overflow-sc" id="DataTables">
                                     <thead>
                                         <tr>
-                                            <th>SL NO </th>
-                                            <th>Student Name</th>
-                                            <th>Admission Number</th>
-                                            <th class="text-center">Session</th>
-                                            <th class="text-center">Class</th>
-                                            <th class="text-center">Section</th>
-                                            <th class="text-center">Status</th>
+                                            <th>No.</th>
+                                            <th>Student</th>
+                                            <th>Session</th>
+                                            <th>Class Section</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody id="studentTableBody">
@@ -213,10 +211,9 @@
                                             <th>SL NO </th>
                                             <th>Student Name</th>
                                             <th>Admission Number</th>
-                                            <th>Attenadnce Date</th>
+                                            <th>Date</th>
                                             <th class="text-center">Time</th>
-                                            <th class="text-center">Check</th>
-                                            <th class="text-center">Late</th>
+                                            <th class="text-center">P/A/L</th>
                                         </tr>
                                     </thead>
                                     <tbody >
@@ -232,7 +229,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-Deposite" aria-expanded="true" aria-controls="panelsStayOpen-Deposite" onclick="filterDepositeDetails()" id="DepositeHistory"> 
-                        Deposite History
+                        Fees Transaction Logs
                         </button>
                     </h2>
                     <div id="panelsStayOpen-Deposite" class="accordion-collapse collapse">
@@ -293,12 +290,10 @@
                     $.each(response, function(index, item) {
                         tableBody.row.add([
                             index + 1,
-                            item.student_details.student_name,
-                            item.student_details.admission_number,
+                            item.student_details.student_name + "<br>" + item.student_details.admission_number,
                             item.student_session.sessions_name,
-                            item.student_class.class_name,
-                            item.student_section.section_name,
-                            item.status == 1 ? '<span class="text-success">Active</span>' : '<span class="text-danger">Inactive</span>',
+                            item.student_class.class_name + " - "+ item.student_section.section_name,
+                            item.status == 1 ? '<span class="badge text-bg-success">Active</span>' : '<span class="badge text-bg-danger">Inactive</span>',
 
                         ]).draw(false);
 
@@ -368,26 +363,16 @@
                                 data: null,
                                 render: function(data) {
                                     if (data.status == 1 && data.late == 0) {
-                                        return '<i class="bi bi-check-lg text-success fs-5"></i>';
+                                        return '<span class="text-success">P</span>';
                                     } else if (data.status == 0 && data.late == 0) {
-                                        return '<i class="bi bi-x text-danger fs-4"></i>';
-                                    } else {
-                                        return '<i class="bi bi-reception-0 text-secondary fs-5"></i>';
+                                        return '<span class="text-danger">A</span>';
+                                    } else if (data.status == 1 && data.late == 1) {
+                                        return '<span class="text-warning">L</span>';
                                     }
                                 },
                                 className: 'text-center'
                             },
-                            { 
-                                data: null,
-                                render: function(data) {
-                                    if (data.status == 1 && data.late == 1) {
-                                        return '<i class="bi bi-exclamation-diamond text-warning fs-5"></i>';
-                                    } else {
-                                        return '<i class="bi bi-reception-0 text-secondary fs-5"></i>';
-                                    }
-                                },
-                                className: 'text-center'
-                            }
+                            
                         ]
                     });
                 },
@@ -434,7 +419,7 @@
                             deposite.student_section.section_name,
                             deposite.month,
                             deposite.year,
-                            deposite.total,
+                            deposite.total_payable,
                             new Date(deposite.created_at).toLocaleDateString('en-UK', {
                                 year: 'numeric',
                                 month: '2-digit',
@@ -463,18 +448,22 @@
     }
 
     function DynamictrtdBind() {
-        var school_name = {!! json_encode(@$studentClassMapping->school_name) !!} || [];
-        var academic_session = {!! json_encode(@$studentClassMapping->academic_session) !!} || [];
-        var class_data = {!! json_encode(@$studentClassMapping->class) !!} || []; 
-        var second_language = {!! json_encode(@$studentClassMapping->second_language) !!} || [];
+        // var school_name = {!! json_encode(@$studentClassMapping->school_name) !!} || [];
+        // var academic_session = {!! json_encode(@$studentClassMapping->academic_session) !!} || [];
+        // var class_data = {!! json_encode(@$studentClassMapping->class) !!} || []; 
+        // var second_language = {!! json_encode(@$studentClassMapping->second_language) !!} || [];
+
+        var school_name =@json(@$studentClassMapping->school_name);
+        var academic_session =@json(@$studentClassMapping->academic_session);
+        var class_data =@json(@$studentClassMapping->class); 
+        var second_language =@json(@$studentClassMapping->second_language);
 
         var school_name_data = JSON.parse(school_name);
         var academic_session_data = JSON.parse(academic_session);
         var class_data_data = JSON.parse(class_data);
         var second_language_data = JSON.parse(second_language);
 
-
-        if (school_name_data.length > 0 || academic_session_data.length > 0 || class_data_data.length > 0 || second_language_data.length > 0) {
+        if (school_name_data || academic_session_data || class_data_data || second_language_data) {
             let tableBody = $("#tableBody");
             let lastRow = tableBody.find("tr.dynamicRow").last();
             if (lastRow.length) {

@@ -30,6 +30,18 @@
                         });
                 });
             });
+
+            $('#fullscreenBtn').click(function () {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().then(() => {
+                        $('#fullscreenIcon').removeClass('bi-arrows-fullscreen').addClass('bi-fullscreen-exit');
+                    });
+                } else {
+                    document.exitFullscreen().then(() => {
+                        $('#fullscreenIcon').removeClass('bi-fullscreen-exit').addClass('bi-arrows-fullscreen');
+                    });
+                }
+            });
         });
         function reload() {
             window.location.reload();
@@ -81,10 +93,16 @@
                     success: function(data) {
                         if(data.length == 1){
                             $.each(data, function(index, item) {
+                                $('#section_id').append('<option value="' + item.id + '" selected>' + item.section_name + '</option>');
+                            });
+                            getStudent();
+                            GetFeeSettingsData();
+                        }else{
+                            $.each(data, function(index, item) {
                                 $('#section_id').append('<option value="' + item.id + '">' + item.section_name + '</option>');
                             });
-                            $(document).trigger('sectionsLoaded');
                         }
+                        $(document).trigger('sectionsLoaded');
                     },
                     error: function() {
                         console.error('Error fetching sections');

@@ -54,41 +54,26 @@
                   <th colspan="3">Fee Details</th>
                   <th>Amount (Rs.)</th>
                </tr>
-            
-               @if (@$deposite->admission_charges > 0)
-               <tr><td colspan="3">Admission Charges</td><td>{{ @$deposite->admission_charges }}</td></tr>
+               @if (!@empty($deposite->amount))
+                   @foreach ($deposite->amount as $key=>$item)
+                        <tr><td colspan="3">{{@$key}}</td><td>{{ @$item}}</td></tr>
+                   @endforeach
                @endif
-               @if (@$deposite->enrolment_fee > 0)
-               <tr><td colspan="3">Enrolment Fee</td><td>{{ @$deposite->enrolment_fee }}</td></tr>
-               @endif
-               @if (@$deposite->tuition_fee > 0)
-               <tr><td colspan="3">Tuition Fee</td><td>{{ @$deposite->tuition_fee }}</td></tr>
-               @endif
-               @if (@$deposite->terminal_fee > 0)
-               <tr><td colspan="3">Terminal Fee (1st Installment)</td><td>{{ @$deposite->terminal_fee }}</td></tr>
-               @endif
-               @if (@$deposite->sports > 0)
-               <tr><td colspan="3">Sports Fee</td><td>{{ @$deposite->sports }}</td></tr>
-               @endif
-               @if (@$deposite->misc_charges > 0)
-               <tr><td colspan="3">Misc. Charges</td><td>{{ @$deposite->misc_charges }}</td></tr>
-               @endif
-               @if (@$deposite->identity_card > 0)
-               <tr><td colspan="3">Identity Card</td><td>{{ @$deposite->identity_card }}</td></tr>
-               @endif
-               @if (@$deposite->scholarship_concession > 0)
-               <tr><td colspan="3">Scholarship / Concession</td><td>-{{ @$deposite->scholarship_concession }}</td></tr>
-               @endif
-            
                <tr>
                   <td colspan="3" style="text-align:right;"><strong>Total</strong></td>
-                  <td><strong>Rs.{{ @$deposite->total }}</strong></td>
+                  <td><strong>Rs.{{ @$deposite->total_payable }}</strong></td>
                </tr>
             
                <tr>
-                  <td colspan="4"><strong>Amount in Words:</strong> {{ NumberToWord(@$deposite->total) }}</td>
+                  <td colspan="4"><strong>Amount in Words:</strong> {{ NumberToWord(@$deposite->total_payable) }}</td>
                </tr>
-            
+               <tr>
+                  @if (!@empty($deposite->comments))
+                     @foreach ($deposite->comments as $key=>$item)
+                           <tr><td colspan="4"> <strong>{{@$key}}:</strong> {{ @$item}}</td></tr>
+                     @endforeach
+                  @endif
+               </tr>
                <tr>
                   <td><strong>Payment Mode:</strong> {{ @$deposite->payment_mode }}</td>
                   @if ($deposite->payment_mode == 'Online')
@@ -125,32 +110,63 @@
    // function printPaymentSlip() {
    //    var printContents = document.getElementById('print_payment_slip').innerHTML;
    //    var printWindow = window.open('', '', 'width=800,height=600');
-      
+
    //    printWindow.document.open();
    //    printWindow.document.write(`
    //       <html>
    //       <head>
    //          <title>Payment Slip</title>
    //          <style>
-   //                body { font-family: Arial, sans-serif; padding: 20px; }
-   //                .container { width: 100%; max-width: 800px; margin: auto; }
+   //             @media print {
+   //                @page {
+   //                   size: A4 portrait;
+   //                   margin: 8mm;
+   //                }
+   //                body {
+   //                   margin: 0;
+   //                   padding: 0;
+   //                   font-family: Arial, sans-serif;
+   //                   font-size: 11px;
+   //                }
+   //                .copy {
+   //                   width: 100%;
+   //                   margin-bottom: 5mm;
+   //                   page-break-inside: avoid;
+   //                }
    //                .text-center { text-align: center; }
-   //                .mytable { width: 100%; border-collapse: collapse; }
-   //                .mytable th, .mytable td { border: 1px solid #000; padding: 8px; text-align: left; }
-   //                .full-line, .full-line2 { border-bottom: 1px solid #000; display: inline-block; min-width: 100px; }
-   //                .line3 { display: inline-block; border-bottom: 1px solid #000; }
+   //                .mytable {
+   //                   width: 100%;
+   //                   border-collapse: collapse;
+   //                   margin-top: 5px;
+   //                }
+   //                .mytable th, .mytable td {
+   //                   border: 1px solid #000;
+   //                   padding: 4px;
+   //                   font-size: 10px;
+   //                }
+   //                p, h2 {
+   //                   margin: 2px 0;
+   //                }
+   //                .full-line, .full-line2, .line3 {
+   //                   display: inline-block;
+   //                   border-bottom: 1px solid #000;
+   //                   min-width: 60px;
+   //                }
+   //             }
    //          </style>
    //       </head>
    //       <body>
-   //          ${printContents}
-   //       </body>
-   //       </html>
-   //    `);
-      
+   //          <div class="copy">${printContents}</div>
+   //          </body>
+   //          </html>
+   //          `);
+            
+   //    // <div class="copy">${printContents}</div>
    //    printWindow.document.close();
    //    printWindow.focus();
    //    printWindow.print();
    // }
+
    function printPaymentSlip() {
       var printContents = document.getElementById('print_payment_slip').innerHTML;
       var printWindow = window.open('', '', 'width=800,height=600');
@@ -173,44 +189,42 @@
                      font-size: 11px;
                   }
                   .copy {
-                     width: 100%;
-                     margin-bottom: 5mm;
+                     height: 50%;
+                     box-sizing: border-box;
                      page-break-inside: avoid;
+                     margin-bottom: 4mm;
                   }
-                  .text-center { text-align: center; }
-                  .mytable {
+                  table {
                      width: 100%;
                      border-collapse: collapse;
-                     margin-top: 5px;
+                     font-size: 11px;
                   }
-                  .mytable th, .mytable td {
+                  th, td {
                      border: 1px solid #000;
-                     padding: 4px;
-                     font-size: 10px;
+                     padding: 6px;
+                     text-align: left;
                   }
-                  p, h2 {
+                  img {
+                     max-width: 80px;
+                     height: auto;
+                  }
+                  h2, p {
                      margin: 2px 0;
-                  }
-                  .full-line, .full-line2, .line3 {
-                     display: inline-block;
-                     border-bottom: 1px solid #000;
-                     min-width: 60px;
                   }
                }
             </style>
          </head>
          <body>
             <div class="copy">${printContents}</div>
-            </body>
-            </html>
-            `);
-            
+         </body>
+         </html>
+      `);
       // <div class="copy">${printContents}</div>
+
       printWindow.document.close();
       printWindow.focus();
       printWindow.print();
    }
-
 
 </script>
 @endsection

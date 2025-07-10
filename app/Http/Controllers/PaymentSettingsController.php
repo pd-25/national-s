@@ -159,6 +159,8 @@ class PaymentSettingsController extends Controller
                             'student_id' => $value->studentDetails->id,
                             'student_name' => $value->studentDetails->student_name,
                             'admission_number' => $value->studentDetails->admission_number,
+                            'mobile_no' => $value->studentDetails->mobile_no,
+                            'email' => $value->studentDetails->email,
                             'month' => $month,
                             'year' => $request->year, 
                             'status' => 'Unpaid'

@@ -68,6 +68,10 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::post('delete-enrollemnt-students', 'deleteEnrollmentHistory')->name('student.deleteEnrollmentHistory');
                 
                 Route::post('session-student-details', 'sessionWiseStudent')->name('student.sessionWiseStudent');
+
+                Route::get('students-class-wise-section', 'studentsClasWiseSection')->name('student.studentsClasWiseSection');
+                Route::post('transfer-student-section', 'storeTransferStudents')->name('student.storeTransferStudents');
+                
                 //Reset password
                 Route::get('students-reset-password', 'studentsResetPassword')->name('student.studentsResetPassword');
                 Route::post('reset-password', 'resetPassword')->name('student.resetPassword');

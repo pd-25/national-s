@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-4 mb-2">
                         <label for="" class="form-label">Select Student</label>
-                        <select name="user_id" id="student_id_bind" class="form-select">
+                        <select name="user_id" id="student_id_bind" class="form-select js-example-basic-single">
                             <option value="">--Select Student--</option>
                         </select>
                     </div>
@@ -59,7 +59,8 @@
                             <option value="">--Select Month--</option>
                             @if (!@empty(GetallMonths()))
                                 @foreach (GetallMonths() as $item)
-                                    <option value="{{@$item}}" {{$item == date('F') ? "selected": ""}}>{{@$item}}</option>
+                                    <option value="{{@$item}}" >{{@$item}}</option>
+                                    {{-- {{$item == date('F') ? "selected": ""}} --}}
                                 @endforeach
                             @endif
                         </select>
@@ -87,6 +88,9 @@
     <section class="section">
         <div class="card border-0">
             <div class="card-body pt-4">
+                <div class="d-flex justify-content-end">
+                    <a href="javascript:void(0)" id="exportExcel" class="btn btn-secondary btn-sm"><i class="bi bi-file-excel"></i> Export to Excel</a>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped" id="DataTables">
                         <thead>
@@ -96,11 +100,12 @@
                                 <th>Admission No</th>
                                 <th>Name</th>
                                 <th>Session</th>
-                                <th>Class</th>
-                                <th>Section</th>
+                                <th>Class - Section</th>
                                 <th>Month</th>
                                 <th>Year</th>
-                                <th>Total</th>
+                                <th>Mobile</th>
+                                <th>Status</th>
+                                <th>Amount</th>
                                 <th>Date</th>
                                 <th>Action</th>
                             </tr>
@@ -123,6 +128,7 @@
             responsive: true,
             "bAutoWidth": false
         });
+        $('.js-example-basic-single').select2();
     });
 
     function filterDepositeDetails(){
@@ -149,21 +155,26 @@
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                // table = $('#DataTables').DataTable();
-                // table.clear().draw();
                 table.clear();
                 $.each(response, function(index, deposite) {
+                    var status;
+                    if(deposite.status == "Completed"){
+                        status = "<span class='badge text-bg-success'>Paid</span>"
+                    }else if(deposite.status == "Pending"){
+                        status = "<span class='badge text-bg-danger'>Unpaid</span>"
+                    }
                     table.row.add([
                         index + 1,
                         deposite.student_details.admission_number,
                         deposite.payment_number,
                         deposite.student_name,
                         deposite.student_session.sessions_name,
-                        deposite.student_class.class_name,
-                        deposite.student_section.section_name,
+                        deposite.student_class.class_name + '<br>' + deposite.student_section.section_name,
                         deposite.month,
                         deposite.year,
-                        deposite.total,
+                        deposite.student_details.mobile_no,
+                        status,
+                        deposite.total_payable,
                         new Date(deposite.created_at).toLocaleDateString('en-UK', {
                             year: 'numeric',
                             month: '2-digit',
@@ -210,16 +221,37 @@
                 {
                     if(response.warning){
                         Notiflix.Notify.Warning(response.warning);
-                        table.ajax.reload(null, false);
-                        table.ajax.reload();
+                       filterDepositeDetails();
                     }
                 },
                 error: function(xhr, status, error) {
-                    table.ajax.reload(null, false);
                     Notiflix.Notify.Failure(response.error);
+                    filterDepositeDetails();
                 }
             });
         });
     }
+
+    // Excel export functionality
+    $('#exportExcel').on('click', function() {
+        var data = table.rows().data().toArray();
+        var ws = XLSX.utils.json_to_sheet(data.map(row => ({
+            'Payment No': row[2],
+            'Session': row[4],
+            'Class-Section': row[5],
+            'Student': row[3],
+            'Admission Number': row[1],
+            'Mobile No': row[8],
+            'Month': row[6],
+            'Year': row[7],
+            'Amount': row[10],
+            'Date' :row[11],
+            'Status': 'Paid'
+        })));
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Payment History');
+        XLSX.writeFile(wb, 'Paid_Payment_History.xlsx');
+    });
 </script>
 @endsection

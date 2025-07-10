@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Js;
 use Illuminate\Support\Str;
+use App\Models\Section;
 
 class StudentController extends Controller
 {
@@ -131,152 +132,6 @@ class StudentController extends Controller
         }
     }
 
-    public function studentList(Request $request)
-    {
-        return view('admin.students.student_list');
-    }
-
-    public function getStudentData(Request $request)
-    {
-        $session_id = $request->session_id;
-        $class_id = $request->class_id;
-        $section_id = $request->section_id;
-        $admission_number = $request->admission_number;
-        $student_name = $request->student_name;
-        $mobile_no = $request->mobile_no;
-        $email_address = $request->email_address;
-    
-        $query = StudentClassMapping::with('studentDetails', 'studentSession', 'studentClass', 'studentSection');
-        
-        if ($session_id) {
-            $query->where('session_id', $session_id);
-        }
-        if ($class_id) {
-            $query->where('class_id', $class_id);
-        }
-        if ($section_id) {
-            $query->where('section_id', $section_id);
-        }
-        if ($mobile_no) {
-            $query->whereHas('studentDetails', function($q) use ($mobile_no) {
-                $q->where('mobile_no', $mobile_no);
-            });
-        }
-        if ($admission_number) {
-            $query->whereHas('studentDetails', function($q) use ($admission_number) {
-                $q->where('admission_number', $admission_number);
-            });
-        }
-        if ($student_name) {
-            $query->whereHas('studentDetails', function($q) use ($student_name) {
-                $q->where('student_name', 'like', "%{$student_name}%");
-            });
-        }
-        if ($email_address) {
-            $query->whereHas('studentDetails', function($q) use ($email_address) {
-                $q->where('email_address', $email_address);
-            });
-        }
-        $StudentClassMappings = $query->get();
-        return ["data"=>$StudentClassMappings];
-    }
-
-    public function teacherManageStudent(Request $request)
-    {
-        return view('teacher.teacherManageStudent.managestudent');
-    }
-
-    public function studentsInClass(Request $request)
-    {
-        if($request->session_id && $request->class_id && $request->section_id){
-            $session_id = $request->session_id;
-            $teacher_class_assigned = $request->class_id;
-            $teacher_section_assigned = $request->section_id;
-        }else{
-            $session_id = GetSession('active_session')[0]->id;
-            $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
-            $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
-            $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
-        }
-        
-        $query = StudentClassMapping::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')->where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->get();
-        
-        return ["data"=>$query];
-    }
-
-    public function studentsListUsingSessionClassSection(Request $request)
-    {
-        $query = StudentClassMapping::with('studentDetails')
-        ->where('session_id', $request->session_id)
-        ->where('class_id', $request->class_id)
-        ->where('section_id', $request->section_id);
-        if($request->user_id){
-            $query->where('user_id', $request->user_id);
-        }
-        $request->session()->put('session_session_id', $request->class_id);
-        $request->session()->put('session_class_id', $request->class_id);
-        $request->session()->put('session_section_id', $request->section_id);
-
-        if ($request->history == 0) {
-            $query->where('status', 1);
-        }
-        $student = $query->get();
-        return $student;
-    }
-    
-    public function studentsEntrollment(Request $request)
-    {
-        return view('admin.academics.studentsentrollment');
-    }
-
-    public function studentsEntrollmentStore(Request $request)
-    {
-        $request->validate([
-            'session_id' => 'required|integer',
-            'class_id' => 'required|integer',
-            'section_id' => 'required|integer',
-            'user_id' => 'required|integer',
-            // 'month' => 'required',
-            // 'year' => 'required',
-            // 'payment_mode' => 'required'
-        ]);
-        
-        try {
-            DB::transaction(function () use ($request) {
-                StudentClassMapping::where('user_id', $request->user_id)->update(['status' => 0]);
-                $studentClassMapping = StudentClassMapping::where('user_id', $request->user_id)->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->count();
-                if($studentClassMapping == 0){
-                    $studentClassMapping = new StudentClassMapping;
-                    $studentClassMapping->user_id = $request->user_id;
-                    $studentClassMapping->session_id = $request->session_id;
-                    $studentClassMapping->class_id = $request->class_id;
-                    $studentClassMapping->section_id = $request->section_id;
-                    $studentClassMapping->status = 1;
-                    $studentClassMapping->save();
-                    // $this->depositClass->store($request);
-                }
-            });
-            // return redirect()->back()->with('success', 'Payment Completed and promoted to current session');
-            return redirect()->back()->with('success', 'Promoted to current session');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
-        }
-    }
-
-    public function studentView(Request $request)
-    {
-        $studentClassMapping = User::find($request->id);
-        return view('admin.students.student_view', compact('studentClassMapping'));
-    }
-
-    public function studentEdit(Request $request)
-    {
-        $studentClassMapping = User::find($request->id);
-        return view('admin.students.student_edit', compact('studentClassMapping'));
-    }
-
     public function updateStudentDetails(Request $request)
     {
         $request->validate([
@@ -359,6 +214,195 @@ class StudentController extends Controller
         return redirect()->back()->with('info','Student details updated successfully');
     }
 
+    public function studentList(Request $request)
+    {
+        return view('admin.students.student_list');
+    }
+
+    public function getStudentData(Request $request)
+    {
+        $session_id = $request->session_id;
+        $class_id = $request->class_id;
+        $section_id = $request->section_id;
+        $admission_number = $request->admission_number;
+        $student_name = $request->student_name;
+        $mobile_no = $request->mobile_no;
+        $email_address = $request->email_address;
+    
+        $query = StudentClassMapping::with('studentDetails', 'studentSession', 'studentClass', 'studentSection');
+        if ($session_id) {
+            $query->where('session_id', $session_id);
+        }
+        if ($class_id) {
+            $query->where('class_id', $class_id);
+        }
+        if ($section_id) {
+            $query->where('section_id', $section_id);
+        }
+        if ($mobile_no) {
+            $query->whereHas('studentDetails', function($q) use ($mobile_no) {
+                $q->where('mobile_no', $mobile_no);
+            });
+        }
+        if ($admission_number) {
+            $query->whereHas('studentDetails', function($q) use ($admission_number) {
+                $q->where('admission_number', $admission_number);
+            });
+        }
+        if ($student_name) {
+            $query->whereHas('studentDetails', function($q) use ($student_name) {
+                $q->where('student_name', 'like', "%{$student_name}%");
+            });
+        }
+        if ($email_address) {
+            $query->whereHas('studentDetails', function($q) use ($email_address) {
+                $q->where('email_address', $email_address);
+            });
+        }
+        $StudentClassMappings = $query->get();
+
+        return ["data"=>$StudentClassMappings];
+    }
+
+    public function teacherManageStudent(Request $request)
+    {
+        return view('teacher.teacherManageStudent.managestudent');
+    }
+
+    public function studentsInClass(Request $request)
+    {
+        if($request->session_id && $request->class_id && $request->section_id){
+            $session_id = $request->session_id;
+            $teacher_class_assigned = $request->class_id;
+            $teacher_section_assigned = $request->section_id;
+        }else{
+            $session_id = GetSession('active_session')[0]->id;
+            $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
+            $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
+            $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
+        }
+        
+        $query = StudentClassMapping::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')->where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->get();
+        
+        return ["data"=>$query];
+    }
+
+    public function studentsListUsingSessionClassSection(Request $request)
+    {
+        $query = StudentClassMapping::with('studentDetails')
+        ->where('session_id', $request->session_id)
+        ->where('class_id', $request->class_id)
+        ->where('section_id', $request->section_id);
+        if($request->user_id){
+            $query->where('user_id', $request->user_id);
+        }
+        if ($request->history == 0) {
+            $query->where('status', 1);
+        }
+        $student = $query->get();
+        return $student;
+    }
+
+    //Student Transfer and promote
+    public function studentsEntrollment(Request $request)
+    {
+        $sections = Section::with('className')->get();
+        $newSections = [];
+        foreach ($sections as $section) {
+            $newSections[] = [
+                'id' => $section->id,
+                'class_id' => $section->class_id,
+                'section_name' => $section->section_name,
+                'class_name' => $section->className->class_name,
+                'class_section' => $section->className->class_name . ' - ' . $section->section_name,
+            ];
+        }
+        return view('admin.academics.studentsentrollment', compact('newSections'));
+    }
+
+    public function studentsClasWiseSection(Request $request)
+    {
+        $class_id = explode('_', $request->class_id)[1];
+        $sections = Section::with('className')->where('class_id', $class_id)->get();
+        $newSections = [];
+        foreach ($sections as $section) {
+            $newSections[] = [
+                'id' => $section->id,
+                'class_id' => $section->class_id,
+                'section_name' => $section->section_name,
+                'class_name' => $section->className->class_name,
+                'class_section' => $section->className->class_name . ' - ' . $section->section_name,
+            ];
+        }
+        return $newSections;
+    }
+
+    public function storeTransferStudents(Request $request)
+    {
+        $request->validate([
+            'session_id' => 'required|integer',
+            'class_id' => 'required|integer',
+            'section_id' => 'required|integer',
+            'old_section_id' => 'required|integer',
+            'user_ids' => 'required|array',
+        ]);
+        try {
+            foreach ($request->user_ids as $key => $user_id) {
+                $studentClassMapping = StudentClassMapping::where('user_id', $user_id)->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->old_section_id)->first();
+                $studentClassMapping->section_id = $request->section_id;
+                $studentClassMapping->save();
+            }
+            return response()->json(['success', 'Student has been successfully transferred to another section.']);
+        } catch (\Exception $e) {
+            return response()->json(['error', 'An error occurred: ' . $e->getMessage()]);
+        }
+    }
+    
+    public function studentsEntrollmentStore(Request $request)
+    {
+        $request->validate([
+            'session_id' => 'required|integer',
+            'class_id' => 'required|integer',
+            'section_id' => 'required|integer',
+            'user_id' => 'required|integer'
+        ]);
+        
+        try {
+            DB::transaction(function () use ($request) {
+                StudentClassMapping::where('user_id', $request->user_id)->update(['status' => 0]);
+                
+                $studentClassMapping = StudentClassMapping::where('user_id', $request->user_id)->where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->count();
+                
+                if($studentClassMapping == 0){
+                    $studentClassMapping = new StudentClassMapping;
+                    $studentClassMapping->user_id = $request->user_id;
+                    $studentClassMapping->session_id = $request->session_id;
+                    $studentClassMapping->class_id = $request->class_id;
+                    $studentClassMapping->section_id = $request->section_id;
+                    $studentClassMapping->status = 1;
+                    $studentClassMapping->save();
+                    // $this->depositClass->store($request);
+                }
+            });
+            return response()->json(['success', 'Promoted to current session']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error', 'An error occurred: ' . $e->getMessage()]);
+        }
+    }
+
+    public function studentView(Request $request)
+    {
+        $studentClassMapping = User::find($request->id);
+        return view('admin.students.student_view', compact('studentClassMapping'));
+    }
+
+    public function studentEdit(Request $request)
+    {
+        $studentClassMapping = User::find($request->id);
+        return view('admin.students.student_edit', compact('studentClassMapping'));
+    }
+
     public function destroy(Request $request)
     {
         try {
@@ -386,7 +430,18 @@ class StudentController extends Controller
 
     public function entrollmentHistory()
     {
-        return view('admin.academics.history_enrollment');
+        $sections = Section::with('className')->get();
+        $newSections = [];
+        foreach ($sections as $section) {
+            $newSections[] = [
+                'id' => $section->id,
+                'class_id' => $section->class_id,
+                'section_name' => $section->section_name,
+                'class_name' => $section->className->class_name,
+                'class_section' => $section->className->class_name . ' - ' . $section->section_name,
+            ];
+        }
+        return view('admin.academics.history_enrollment', compact('newSections'));
     }
 
     public function updateEntrollmentHistory(Request $request)

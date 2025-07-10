@@ -88,7 +88,7 @@
                             <th>Teacher</th>
                             <th>Student</th>
                             <th>Admission Number</th>
-                            <th>Attenadnce Date</th>
+                            <th>Date</th>
                             <th class="text-center">Time</th>
                             <th class="text-center">P/A/L</th>
                         </tr>

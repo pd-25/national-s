@@ -50,10 +50,10 @@ class DepositeController extends Controller
             $exists = Deposite::where('payment_number', $paymentOrderNumber)->exists();
             $sequence++;
         } while ($exists);
-        $depositCount = Deposite::where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('user_id', $request->user_id)->where('month', $request->month)->where('year', $request->year)->count();
-        if($depositCount > 0){
-            return back()->withError('Payment already done');
-        }
+        //     $depositCount = Deposite::where('session_id', $request->session_id)->where('class_id', $request->class_id)->where('section_id', $request->section_id)->where('user_id', $request->user_id)->where('month', $request->month)->where('year', $request->year)->count();
+        // if($depositCount > 0){
+        //     return back()->withError('Payment already done');
+        // }
         
         $user = User::find($request->user_id);
         $deposit = Deposite::create([
@@ -121,13 +121,36 @@ class DepositeController extends Controller
             $query->where('year', $year);
         }
         
-        $allDeposite = $query->orderBy('month', 'desc')->get();
+        $allDeposite = $query->orderBy('month', 'desc')->orderBy('payment_number', 'desc')->get();
         return $allDeposite;
     }
 
     public function viewDownloadDeposite($payment_number)
     {
         $deposite = Deposite::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')->where('payment_number', $payment_number)->first();
+        
+        $depositeAmountRaw = json_decode($deposite->amount);
+        $depositeAmount = new \stdClass();
+        foreach ($depositeAmountRaw as $key => $value) {
+            if ($value) {
+                $KeyName = PayrollComponentName($key);
+                $propName = $KeyName->name;
+                $depositeAmount->$propName = $value;
+            }
+        }
+        $deposite->amount = $depositeAmount;
+        
+        $depositeCommentsRaw = json_decode($deposite->comments);
+        $depositeComments = new \stdClass();
+        foreach ($depositeCommentsRaw as $key => $value) {
+            if ($value != null) {
+                $KeyName = PayrollComponentName($key);
+                $parentName = PayrollComponentName($KeyName->parent_id);
+                $propName = $KeyName->name.' - '.$parentName->name;
+                $depositeComments->$propName = $value;
+            }
+        }
+        $deposite->comments = $depositeComments;
         return view('admin.fees.view_download_deposite', compact('deposite'));
     }
 
@@ -146,10 +169,8 @@ class DepositeController extends Controller
     public function update(Request $request, Deposite $deposite)
     {
         $request->validate([
-            'month' => 'required|string',
-            'year' => 'required|string',
-            'amount' => 'nullable',
-            'comments' => 'nullable',
+            'amount' => 'nullable|array',
+            'comments' => 'nullable|array',
             'total_payable' => 'required|numeric',
             'payment_mode' => 'required|string|max:30',
             'transaction_id' => 'nullable|string',
@@ -157,14 +178,8 @@ class DepositeController extends Controller
             'cheque_date' => 'nullable|string',
             'bank_name' => 'nullable|string',
             'branch' => 'nullable|string',
-            'payment_ref_no' => 'nullable|string',
-            'payment_getway_id' => 'nullable|string',
-            'status' => 'nullable|string',
         ]);
-
         $deposite->update([
-            'month' => $request->month,
-            'year' => $request->year,
             'amount' => $request->amount,
             'comments' => $request->comments,
             'total_payable' => $request->total_payable,

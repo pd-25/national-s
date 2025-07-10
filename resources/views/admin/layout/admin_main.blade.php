@@ -29,12 +29,18 @@
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
             <div class="ml-3">
-                <a class="btn btn-outline-info btn-sm" href="/clear-cache" >Cache Clear</a>
+                <a class="btn btn-outline-danger btn-sm" href="/clear-cache" >Cache Clear</a>
             </div>
         </div>
+        
         <!-- End Logo -->
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
+                <li class="nav-item dropdown pe-3">
+                    <button id="fullscreenBtn" class="btn btn-primary btn-sm">
+                        <i class="bi bi-arrows-fullscreen" id="fullscreenIcon"></i>
+                    </button>
+                </li>
                 <li class="nav-item dropdown pe-3">
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="{{asset('assets/admin/img/user.png')}}" alt="Profile" class="rounded-circle">

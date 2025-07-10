@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\User;
+use App\Models\Classes;
+use App\Models\Section;
+use App\Models\Session;
 use App\Models\Attendance;
 use App\Models\StudentClassMapping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
@@ -28,7 +31,20 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin.dashboard.dashboard');
+        $teachers = Admin::where('usertype', 0)->count();
+        $staff = Admin::where('usertype', 2)->count();
+        $students = User::count();
+        $classes = Classes::count();
+        $sections = Section::count();
+
+        $dashboardData = [
+            'teachers'=>$teachers,
+            'staff'=>$staff,
+            'students'=>$students,
+            'classes' => $classes,
+            'sections' => $sections
+        ];
+        return view('admin.dashboard.dashboard', compact("dashboardData"));
     }
 
     /**
@@ -98,7 +114,7 @@ class AdminController extends Controller
             'totalStudent' => $totalStudent,
         ];
 
-        return view('admin.websiteSettings.teacherDashboard.teacher_dashboard', compact('dashboardData'));
+        return view('teacher.teacherDashboard.teacher_dashboard', compact('dashboardData'));
     }
 
     /**
@@ -129,9 +145,6 @@ class AdminController extends Controller
     public function logout() 
     {
         Auth::guard('admin')->logout();
-        Session::forget('session_session_id');
-        Session::forget('session_class_id');
-        Session::forget('session_section_id');
         return Redirect()->route('admin.index')->with('info', 'Successfully Logged Out');
     }
 }

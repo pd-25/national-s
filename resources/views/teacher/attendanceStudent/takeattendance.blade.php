@@ -17,18 +17,13 @@
                 $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
                 $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
             @endphp
-            <h4 class="mb-4">  All Student in ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Class</h4>
-            <hr>
+            <h5 class="mb-4 fw-bold">Students in ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Class</h5>
             <div class="table-responsive">
-                <table class="w-100 table table-striped" id="DataTables">
+                <table class="table table-bordered table-striped" id="DataTables">
                     <thead>
-                        <tr>
-                            <th>SL NO</th>
-                            {{-- <th>Admission Number</th> --}}
-                            {{-- <th>Session</th>
-                            <th>Class</th>
-                            <th>Section</th> --}}
-                            <th>Student Name</th>
+                        <tr class="table-primary">
+                            <th>No.</th>
+                            <th>Student</th>
                             <th class="text-center">Present</th>
                             <th class="text-center">Absent</th>
                             <th class="text-center">Late</th>
@@ -67,7 +62,7 @@
                                <tr>
                                     <td>${index + 1}</td>
                                     
-                                    <td>${item.student_details.student_name}</td>
+                                    <td>${item.student_details.student_name} <br> <b> ${item.student_details.admission_number} </b> </td>
                                     <td class="text-center">
                                         <input id="${item.student_details.id}_onTime" class="form-check-input larger-checkbox" 
                                             type="checkbox" 

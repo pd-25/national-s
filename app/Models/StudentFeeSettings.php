@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StudentFeeSettings extends Model
 {
     use HasFactory;
-        public function studentSession()
+    public function studentSession()
     {
         return $this->belongsTo(Session::class,'session_id', 'id');
     }

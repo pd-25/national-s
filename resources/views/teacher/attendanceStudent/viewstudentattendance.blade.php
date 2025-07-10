@@ -59,16 +59,15 @@
     </div>
     <div class="card border-0">
         <div class="card-body pt-4">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mb-4">
                 <h5 class="mb-0 fw-bold text-uppercase">Student Attendance</h5>
                 <button id="exportExcel" class="btn btn-secondary btn-sm"><i class="bi bi-file-excel"></i> Export to Excel</button>
             </div>
-            <hr>
             <div class="table-responsive">
-                <table class="w-100 table  table-striped overflow-sc" id="DataTables">
+                <table class="w-100 table table-bordered table-striped overflow-sc" id="DataTables">
                     <thead>
-                        <tr>
-                            <th>SL NO </th>
+                        <tr class="table-primary">
+                            <th>No. </th>
                             <th>Teacher</th>
                             <th>Student Name</th>
                             <th>Attenadnce Date</th>

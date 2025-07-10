@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-3 mb-2">
                         <label for="" class="form-label">Select Month<span class="text-danger">*</span></label>
-                        <select name="month" id="month" class="form-select" onchange="GetFeeSettingsData(); GetStudentFeeSettingsData();">
+                        <select name="month" id="month" class="form-select" onchange="GetFeeSettingsData();GetStudentFeeSettingsData()">
                             <option value="">--Select Month--</option>
                             @if (!@empty(GetallMonths()))
                                 @foreach (GetallMonths() as $item)
@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-3 mb-2">
                         <label for="" class="form-label">Select Year<span class="text-danger">*</span></label>
-                        <select name="year" id="year" class="form-select" onchange="GetFeeSettingsData();GetStudentFeeSettingsData()">
+                        <select name="year" id="year" class="form-select">
                             <option value="">--Select Year--</option>
                             @if (!@empty(LastFiveYear()))
                                 @foreach (LastFiveYear() as $item)
@@ -71,33 +71,27 @@
                             @endif
                         </select>
                     </div>
-                    {{-- <div class="col-12 my-2">
+                    <div class="col-12 my-2">
                         <h5>Current Session Payment Details</h5>
                         <div class="table-wrapper" style="max-height: 250px; overflow-y: auto;">
                             <table class="table table-bordered table-striped table-sm table-fixed-header" id="DataTables">
                                 <thead>
                                     <tr class="table-primary" >
-                                        <th>Sl</th>
+                                        <th>No.</th>
                                         <th>Student</th>
                                         <th>Payment No</th>
                                         <th>Month - Year</th>
                                         <th>Status</th>
-                                        <th>Admission Charges</th>
-                                        <th>Enrolment Fee</th>
-                                        <th>Tuition Fee</th>
-                                        <th>Terminal Fee</th>
-                                        <th>Sports</th>
-                                        <th>Misc, Charges</th>
-                                        <th>Identity Card</th>
-                                        <th>Scholarship / Concession</th>
-                                        <th>Action</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        {{-- <th>Action</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
                         </div>
-                    </div> --}}
+                    </div>
 
 
                     <div class="col-12 my-2">
@@ -117,7 +111,7 @@
                                                     Rs. (-)
                                                     @endif 
                                                 </span>
-                                                <input type="number" min="0" name="amount[{{ @$item->id }}]" onblur="CountTotalPayment({{@$item->id}},value)" id="amount_{{ @$item->id }}" class="form-control" >
+                                                <input type="number" min="0" name="amount[{{ @$item->id }}]" onblur="CountTotalPayment()" id="amount_{{ @$item->id }}" class="form-control" >
                                             </div>
                                         </div>
                                     @endif
@@ -182,9 +176,9 @@
 </section>
 <script>
     var table;
-    var toatlPayable={};
+    var toatlPayableForFee = {};
+    var toatlPayableForStudentFee = {};
     var allFeeComponent = @json(GetPayrollComponent('all_fee_settings'));
-
     $(document).ready(function() {
         $(".ChequeShowHide").hide();
         $(".OnlineShowHide").hide();
@@ -193,8 +187,10 @@
         var class_id = searchParams.get('class_id');
         var section_id = searchParams.get('section_id');
         var student_id = searchParams.get('student_id');
-        var month = searchParams.get('month');
-        var year = searchParams.get('year');
+        var currentDate = new Date();
+        var fullMonthName = currentDate.toLocaleString('default', { month: 'long' });
+        var month = searchParams.get('month') != null ? searchParams.get('month') : fullMonthName;
+        var year = searchParams.get('year')!= null ? searchParams.get('year') : new Date().getFullYear();
         if(session_id){
             $("#session_id").val(session_id);
             $("#month").val(month);
@@ -208,6 +204,8 @@
                         getStudent().then(function () {
                             if (student_id) {
                                 $("#student_id_bind").val(student_id).trigger('change');
+                                GetPaymentHistoryOfStudent();
+                                GetStudentFeeSettingsData();
                             }
                         });
                     }
@@ -257,9 +255,9 @@
                     $.each(response, function(index, deposite) {
                         var status;
                         if(deposite.status == "Completed"){
-                            status = "<span class='text-success'>Completed</span>"
+                            status = "<span class='badge text-bg-success'>Paid</span>"
                         }else if(deposite.status == "Pending"){
-                            status = "<span class='text-primary'>Pending</span>"
+                            status = "<span class='badge text-bg-danger'>Unpaid</span>"
                         }
                         table.row.add([
                             index + 1,
@@ -267,24 +265,16 @@
                             '<b>'+ deposite.payment_number + '</b>',
                             deposite.month + ' / '+ deposite.year,
                             status,
-                            deposite.admission_charges != null ? deposite.admission_charges : 0,
-                            deposite.enrolment_fee != null ? deposite.enrolment_fee: 0,
-                            deposite.tuition_fee != null ? deposite.tuition_fee: 0,
-                            deposite.terminal_fee != null ? deposite.terminal_fee: 0,
-                            deposite.sports != null ? deposite.sports: 0,
-                            deposite.misc_charges != null ? deposite.misc_charges: 0,
-                            deposite.identity_card != null ? deposite.identity_card : 0,
-                            deposite.scholarship_concession != null ? '-' + deposite.scholarship_concession : 0,
-
-                            deposite.total,
+                            "<span class='fw-bold text-danger'>"+deposite.total_payable+"</span>",
                             new Date(deposite.created_at).toLocaleDateString('en-UK', {
                                 year: 'numeric',
                                 month: '2-digit',
                                 day: '2-digit'
                             }),
-                            '<a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="EditDeposite(\'' + deposite.payment_number + '\')"><i class="bi bi-pencil-square"></i> </a> <a class="btn btn-success btn-sm rounded-pill" href="javascript:void(0)" onclick="ViewDeposite(\'' + deposite.payment_number + '\')"><i class="bi bi-eye-fill"></i></a>' + 
-                            '<a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteDeposite(\'' + deposite.id + '\')"><i class="bi bi-trash"></i></a>'
+
                         ])
+                        // `<a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="EditDeposite(\'' + deposite.payment_number + '\')"><i class="bi bi-pencil-square"></i> </a> <a class="btn btn-success btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="ViewDeposite(\'' + deposite.payment_number + '\')"><i class="bi bi-eye-fill"></i></a>
+                        // <a class="btn btn-danger btn-sm rounded-pill show_confirm" href="javascript:void(0)" onclick="deleteDeposite(\'' + deposite.id + '\')"><i class="bi bi-trash"></i></a>`
                     });
                     table.draw();
                 },
@@ -313,27 +303,31 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
+                    toatlPayableForFee = {};
                     if (!response || response.length === 0) {
-                        toatlPayable = {}
                         $("[id^='amount_']").val('');
                         GetStudentFeeSettingsData();
                         CountTotalPayment();
                         return;
-                    }
-                    $.each(response, function(index, feesetting) {
-                        var chargesAmount = JSON.parse(feesetting.charges_amount);
-                        var monthsValidation = JSON.parse(feesetting.months_validation);
-                        $.each(chargesAmount, function(i, chargeAmount) {
-                            var inputSelector = "#amount_" + i;
-                            if (monthsValidation[i] && monthsValidation[i].includes(month)) {
-                                $(inputSelector).val(''); 
-                                $(inputSelector).val(chargeAmount);
-                                toatlPayable[i] = chargeAmount;
-                            }else{
-                                $(inputSelector).val(''); 
-                            }
+                    }else{
+                        $.each(response, function(index, feesetting) {
+                            var chargesAmount = JSON.parse(feesetting.charges_amount);
+                            var monthsValidation = JSON.parse(feesetting.months_validation);
+                            $.each(chargesAmount, function(i, chargeAmount) {
+                                var inputSelector = "#amount_" + i;
+                                if (monthsValidation[i] && monthsValidation[i].includes(month)) {
+                                    $(inputSelector).val(''); 
+                                    $(inputSelector).val(chargeAmount);
+                                    delete toatlPayableForFee[i];
+                                    toatlPayableForFee[i] = chargeAmount;
+                                    // $(inputSelector).prop('readonly', true);
+                                }else{
+                                    $(inputSelector).val(''); 
+                                    // $(inputSelector).prop('readonly', false);
+                                }
+                            });
                         });
-                    });
+                    }
                     CountTotalPayment();
                 },
                 error: function() {
@@ -363,28 +357,31 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
+                    toatlPayableForStudentFee = {}
                     if (!response || response.length === 0) {
-                        toatlPayable = {}
                         $("[id^='amount_']").val('');
                         GetFeeSettingsData();
                         CountTotalPayment();
                         return;
-                    }
-                    $.each(response, function(index, student_feesetting) {
-                        var chargesAmount = JSON.parse(student_feesetting.charges_amount);
-                        var monthsValidation = JSON.parse(student_feesetting.months_validation);
-                        $.each(chargesAmount, function(i, chargeAmount) {
-                            var inputSelector = "#amount_" + i;
-                            if (monthsValidation[i] && monthsValidation[i].includes(month)) {
-                                $(inputSelector).val(''); 
-                                $(inputSelector).val(chargeAmount);
-                                toatlPayable[i] = chargeAmount;
-
-                            }else{
-                                $(inputSelector).val(''); 
-                            }
+                    }else{
+                        $.each(response, function(index, student_feesetting) {
+                            var chargesAmount = JSON.parse(student_feesetting.charges_amount);
+                            var monthsValidation = JSON.parse(student_feesetting.months_validation);
+                            $.each(chargesAmount, function(i, chargeAmount) {
+                                var inputSelector = "#amount_" + i;
+                                if (monthsValidation[i] && monthsValidation[i].includes(month)) {
+                                    $(inputSelector).val(''); 
+                                    $(inputSelector).val(chargeAmount);
+                                    delete toatlPayableForStudentFee[i];
+                                    toatlPayableForStudentFee[i] = chargeAmount;
+                                    // $(inputSelector).prop('readonly', true);
+                                }else{
+                                    $(inputSelector).val(''); 
+                                    // $(inputSelector).prop('readonly', false);
+                                }
+                            });
                         });
-                    });
+                    }
                     CountTotalPayment();
                 },
                 error: function() {
@@ -394,29 +391,44 @@
         }
     }
 
+    function CountTotalPayment(){
+        // let toatlPayable = Object.assign({}, toatlPayableForFee, toatlPayableForStudentFee);
+        // if(paramKey && paramVal)
+        // {
+        //     toatlPayable[paramKey] = paramVal;
+        // }else{
+        //     toatlPayable[paramKey] = 0;
+        // }
+        // var matchedFees = allFeeComponent
+        // .filter(item => toatlPayable.hasOwnProperty(item.id))
+        // .map(item => ({
+        //     id: item.id,
+        //     name: item.name,
+        //     type: item.type,
+        //     amount: Number(toatlPayable[item.id])
+        // }));
 
-    function CountTotalPayment(paramKey, paramVal){
-        if(paramKey && paramVal)
-        {
-            toatlPayable[paramKey] = paramVal;
-        }else{
-            toatlPayable[paramKey] = 0;
-        }
-        const matchedFees = allFeeComponent
-        .filter(item => toatlPayable.hasOwnProperty(item.id))
-        .map(item => ({
-            id: item.id,
-            name: item.name,
-            type: item.type,
-            amount: Number(toatlPayable[item.id])
-        }));
+        // console.log(matchedFees);
         
+        // var total = 0;
+        // allFeeComponent.forEach((value, key) => {
+        //     if(value.type == "Allowances"){
+        //         total += $("#amount_"+value.id).val();
+        //         // total += Number(value.amount);
+        //     }else if(value.type == "Deductions"){
+        //         // total -= Number(value.amount);
+        //         total -= $("#amount_"+value.id).val();
+        //     }
+        // });
+        // $("#total_payable").val(total.toFixed(2));
+
         var total = 0;
-        matchedFees.forEach((value, key) => {
-            if(value.type == "Allowances"){
-                total += Number(value.amount);
-            }else if(value.type == "Deductions"){
-                total -= Number(value.amount);
+        allFeeComponent.forEach((value, key) => {
+            let amount = Number($("#amount_" + value.id).val()) || 0;
+            if (value.type === "Allowances") {
+                total += amount;
+            } else if (value.type === "Deductions") {
+                total -= amount;
             }
         });
         $("#total_payable").val(total.toFixed(2));

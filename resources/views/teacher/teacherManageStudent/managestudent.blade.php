@@ -17,12 +17,12 @@
                 $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
                 $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
             @endphp
-            <h4 class="mb-4">  All Student in ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Class</h4>
+            <h4 class="mb-4">Students in ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Class</h4>
             <hr>
             <div class="table-responsive">
-                <table class="w-100 table table-striped" id="DataTables">
+                <table class="table table-bordered table-striped" id="DataTables">
                     <thead>
-                        <tr>
+                        <tr class="table-primary">
                             <th>SL NO</th>
                             <th>Image</th>
                             <th>Admission Number</th>

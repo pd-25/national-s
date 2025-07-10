@@ -85,12 +85,17 @@
         <h5>Payment Due</h5>
         <div class="card border-0">
             <div class="card-body pt-4">
+                <div class="d-flex justify-content-end">
+                    <a href="javascript:void(0)" id="exportExcel" class="btn btn-secondary btn-sm"><i class="bi bi-file-excel"></i> Export to Excel</a>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped" id="DataTables">
                         <thead>
                             <tr class="table-primary">
                                 <th>SL NO</th>
                                 <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
                                 <th>Month</th>
                                 <th>Year</th>
                                 <th>Status</th>
@@ -144,6 +149,8 @@
                         table.row.add([
                             index + 1,
                             deposite.student_name + '<br>' + deposite.admission_number,
+                            deposite.mobile_no,
+                            deposite.email,
                             deposite.month,
                             deposite.year,
                             "<span class='badge text-bg-danger'>"+deposite.status+"</span>",
@@ -170,5 +177,23 @@
 
         window.location.href ="fees-payment?session_id="+session_id + '&class_id='+class_id+ '&section_id='+ section_id + '&student_id='+student_id +  '&month='+month + '&year='+year;
     }
+
+        // Excel export functionality
+    $('#exportExcel').on('click', function() {
+        var data = table.rows().data().toArray();
+        console.log(data);
+        var ws = XLSX.utils.json_to_sheet(data.map(row => ({
+            'Student': row[1],
+            'Mobile No': row[2],
+            'Email': row[3],
+            'Month': row[4],
+            'Year': row[5],
+            'Status': 'Unpaid'
+        })));
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Due Payment');
+        XLSX.writeFile(wb, 'Unpaid_Payment_History.xlsx');
+    });
 </script>
 @endsection
