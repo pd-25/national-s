@@ -115,6 +115,10 @@
                                             </div>
                                         </div>
                                     @endif
+                                @endforeach
+                            @endif
+                            @if (!@empty(GetPayrollComponent('all_fee_settings')))
+                                @foreach (GetPayrollComponent('all_fee_settings') as $index => $item)
                                     @if (@$item->parent_id)
                                         @if (@$item->parent->id == @$item->parent_id)
                                             <div class="col-4 mt-3">

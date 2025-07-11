@@ -118,21 +118,22 @@
                 <table class="table table-bordered table-striped table-sm table-fixed-header" id="DataTables">
                     <thead>
                         <tr class="table-primary">
-                            <th rowspan="2">Sl</th>
-                            <th rowspan="2">Session</th>
-                            <th rowspan="2">Class</th>
-                            <th rowspan="2">Section</th>
-                            @php $feeComponents = GetPayrollComponent('fee_settings'); @endphp
+                            <th >Sl</th>
+                            <th >Session</th>
+                            <th >Class</th>
+                            <th >Section</th>
+                            {{-- @php $feeComponents = GetPayrollComponent('fee_settings'); @endphp
                             @if (!empty($feeComponents) && $feeComponents->count())
                                 <th class="text-center" colspan="{{ $feeComponents->count() }}">Payment Settings</th>
-                            @endif
-                            <th rowspan="2">Action</th>
+                            @endif --}}
+                            <th >Payment Settings</th>
+                            <th >Action</th>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             @foreach ($feeComponents as $item)
                                 <th class="table-warning">{{ $item->name }}</th>
                             @endforeach
-                        </tr>
+                        </tr> --}}
                     </thead>
                     <tbody>
                     </tbody>
@@ -179,6 +180,7 @@
                 },
                 success: function(response) {
                     table.clear();
+                    var feeComponents =  @json(GetPayrollComponent('fee_settings'));
                     $.each(response, function(index, payemtsetting) {
                         var charges = JSON.parse(payemtsetting.charges_amount);
                         var months = JSON.parse(payemtsetting.months_validation);
@@ -188,16 +190,39 @@
                             payemtsetting.student_class.class_name,
                             payemtsetting.student_section.section_name
                         ];
-                        $.each(charges, function(index, component) {
-                            let html = '';
-                            if (component) {
-                                html += '<strong>' + component + '</strong><br>';
-                                html += '<strong>Months:</strong> ' + (months[index] ? months[index].join(', ') : '-');
-                            } else {
-                                html = '—';
-                            }
-                            rowData.push(html);
+
+                        var result = feeComponents.map(item => {
+                            let id = item.id;
+                            return {
+                                id: id,
+                                name: item.name,
+                                amount: charges[id] !== undefined ? charges[id] : '0',
+                                months: months[id] !== undefined ? months[id] : []
+                            };
                         });
+
+                        var paymentHtml = result.map(function(component) {
+                            var html = '<div style="background:#FFF3CD; padding:10px; border-bottom:2px solid #ffffff">';
+                            html += '<strong>' + component.name + '</strong><br>';
+                            html += '<span>' + component.amount + '</span><br>';
+                            html += '<strong>Months:</strong> ' + (component.months.length ? component.months.join(', ') : '-----');
+                            html += '</div>'
+                            return html;
+                        }).join('');
+
+                        rowData.push(paymentHtml);
+
+                        // console.log(rowData);
+                        // $.each(charges, function(index, component) {
+                        //     let html = '';
+                        //     if (component) {
+                        //         html += '<strong>' + component + '</strong><br>';
+                        //         html += '<strong>Months:</strong> ' + (months[index] ? months[index].join(', ') : '-');
+                        //     } else {
+                        //         html = '—';
+                        //     }
+                        //     rowData.push(html);
+                        // });
 
                         rowData.push(
                             '<a class="btn btn-primary btn-sm me-2 mb-2" href="javascript:void(0)" onclick=\'EditPaymentSettings(' + JSON.stringify(payemtsetting) +')\'><i class="bi bi-pencil-square"></i></a>' +

@@ -268,15 +268,15 @@ function NumberToWord($values)
 }
 
 function GetPayrollComponent($data){
-    $payrollSettings = PayrollSettings::with('parent')->orderBy('id', 'asc');
+    $payrollSettings = PayrollSettings::with('parent');
     if($data == 'fee_settings'){
-        $payrollSettings->where('apply_on_fee_Settings', 1)->where('parent_id', null)->where('status', 1);
+        $payrollSettings->where('apply_on_fee_Settings', 1)->where('parent_id', null)->where('status', 1)->orderBy('type', 'asc');
     }
     if($data == 'student_fee_settings'){
-        $payrollSettings->where('apply_on_fee_Settings', '!=', 1)->where('parent_id', null)->where('status', 1);
+        $payrollSettings->where('apply_on_fee_Settings', '!=', 1)->where('parent_id', null)->where('status', 1)->orderBy('type', 'asc');
     }
     if($data == 'all_fee_settings'){
-        $payrollSettings->where('status', 1)->orderBy('name', 'asc');
+        $payrollSettings->where('status', 1)->orderBy('type', 'asc');
     }
     $payrollSettings = $payrollSettings->get();
     return $payrollSettings;
