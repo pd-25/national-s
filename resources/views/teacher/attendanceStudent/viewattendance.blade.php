@@ -3,20 +3,25 @@
 <div class="pagetitle">
     @php
         $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
-        $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
-        $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
+        // $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
+        // $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
     @endphp
     <h1>View Class Attendance </h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('teacher.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">View ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Class Attendance</li>
+            <li class="breadcrumb-item active">View Class Attendance</li>
         </ol>
     </nav>
 </div>
 <section class="section">
     <div class="card border-0">
         <div class="card-body pt-4">
+            <h4 class="mb-4 d-flex justify-content-between"> <div class="fw-bold">Select Class and Section </div><select style="width: 250px" name="" id="getClassAndSectionId" class="form-select">@if (!@empty($teacher_details->teacherclassmapping))
+                @foreach ($teacher_details->teacherclassmapping as $item)
+                    <option value="{{$item->class_id}}" data-section="{{$item->section_id}}">{{@$item->teacherClass->class_name}} ( {{@$item->teacherSection->section_name}} )</option>
+                @endforeach
+            @endif</select></h4>
             <div class="row my-3">
                 <div class="col-md-4 col-sm-12 mb-2">
                     <label for="" class="form-label">Select Session<span class="text-danger">*</span></label>
@@ -114,9 +119,18 @@
     function viewAttendance(){
         var dateAttendance = $('#dateAttendance').val();
         var session_id = $('#session_id').val();
-        var classDetails = {!! json_encode($teacher_details->teacherclassmapping[0]) !!};
-        class_id = classDetails.class_id;
-        section_id = classDetails.section_id;
+
+        // var classDetails = {!! json_encode($teacher_details->teacherclassmapping[0]) !!};
+        // class_id = classDetails.class_id;
+        // section_id = classDetails.section_id;
+
+        let class_id;
+        let section_id;
+        class_id = $("#getClassAndSectionId").val();
+        var element = $("#getClassAndSectionId").find('option:selected'); 
+        section_id =  element.attr('data-section');
+        // console.log(class_id)
+        // console.log(section_id)
         var from_date = $('#from_date').val();
         var to_date = $('#to_date').val();
         $.ajax({

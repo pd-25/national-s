@@ -14,10 +14,15 @@
         <div class="card-body pt-4">
             @php
                 $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
-                $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
-                $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
+                // $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
+                // $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
             @endphp
-            <h4 class="mb-4">Students in ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Class</h4>
+            <h4 class="mb-4 d-flex justify-content-between"> <div class="fw-bold">Students in </div><select style="width: 250px" name="" id="" onchange="studentInClass(this)" class="form-select">@if (!@empty($teacher_details->teacherclassmapping))
+                @foreach ($teacher_details->teacherclassmapping as $item)
+                    <option value="{{$item->class_id}}" data-section="{{$item->section_id}}">{{@$item->teacherClass->class_name}} ( {{@$item->teacherSection->section_name}} )</option>
+                @endforeach
+            @endif</select></h4>
+            {{-- {{@$teacher_class_assigned}} - {{@$teacher_section_assigned}} --}}
             <hr>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped" id="DataTables">
@@ -55,12 +60,24 @@
         studentInClass();
     });
     // student.studentsInClass
-    function studentInClass(){
-        $.ajax({
+    function studentInClass(selectElement){
+        let class_id;
+        let section_id;
+        let session_id;
+        if(selectElement){
+            class_id = selectElement.value;
+            section_id = selectElement.options[selectElement.selectedIndex].getAttribute('data-section');
+            var sessionId = @json(GetSession('active_session'));
+            session_id = sessionId[0].id;
+        }
+            $.ajax({
             url: "{{ route('student.studentsInClass') }}",
             type: "POST",
             dataType: "json",
             data: {
+                session_id: session_id,
+                class_id:class_id,
+                section_id:section_id,
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {

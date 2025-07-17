@@ -3,31 +3,35 @@
 <div class="pagetitle">
     @php
         $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
-        $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
-        $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
+        // $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->teacherClass->class_name;
+        // $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->teacherSection->section_name;
     @endphp
     <h1>View Student Attendance </h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('teacher.dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">View ({{@$teacher_class_assigned}} - {{@$teacher_section_assigned}}) Student Attendance</li>
+            <li class="breadcrumb-item active">View Student Attendance</li>
         </ol>
     </nav>
 </div>
 <section class="section">
     <div class="card border-0">
         <div class="card-body pt-4">
-            
+            <h5 class="mb-4 d-flex justify-content-between"> <div class="fw-bold">View Attendance </div><select style="width: 250px" name="" id="getClassAndSectionId" onchange="fetchStudents(this)" class="form-select">@if (!@empty($teacher_details->teacherclassmapping))
+                @foreach ($teacher_details->teacherclassmapping as $item)
+                    <option value="{{$item->class_id}}" data-section="{{$item->section_id}}">{{@$item->teacherClass->class_name}} ( {{@$item->teacherSection->section_name}} )</option>
+                @endforeach
+            @endif</select></h5>
             <div class="row mb-4">
                 <div class="col-6 mb-3">
                     <label for="" class="form-label">Select Student<span class="text-danger">*</span></label>
                     <select name="student_id" id="student_id" class="form-select">
                         <option value="">--Select Student--</option>
-                        @if (!@empty($studentList))
+                        {{-- @if (!@empty($studentList))
                             @foreach ($studentList as $index=>$item)
                                 <option value="{{@$item->studentDetails->id}}">{{@$item->studentDetails->student_name}}</option>
                             @endforeach
-                        @endif
+                        @endif --}}
                     </select>
                 </div>
                 <div class="col-6 mb-3">
@@ -96,6 +100,7 @@
             responsive: true,
             "bAutoWidth": false
         });
+        fetchStudents();
     });
     function getType(){
        var typeData =  $("#type").val();
@@ -127,9 +132,12 @@
             single_date = null;
         }
 
-        var classDetails = {!! json_encode($teacher_details->teacherclassmapping[0]) !!};
-        class_id = classDetails.class_id
-        section_id = classDetails.section_id
+        let class_id;
+        let section_id;
+        class_id = $("#getClassAndSectionId").val();
+        var element = $("#getClassAndSectionId").find('option:selected'); 
+        section_id =  element.attr('data-section');
+
         if(student_id && typeData){
             $.ajax({
             url: "{{ route('attendance.viewStudentList') }}",
@@ -207,5 +215,77 @@
         XLSX.utils.book_append_sheet(wb, ws, 'Attendance Data');
         XLSX.writeFile(wb, 'Student_Attendance_Data.xlsx');
     });
+
+    function fetchStudents(selectElement) {
+        let class_id;
+        let section_id;
+        let session_id;
+        if(selectElement){
+            class_id = selectElement.value;
+            section_id = selectElement.options[selectElement.selectedIndex].getAttribute('data-section');
+            var sessionId = @json(GetSession('active_session'));
+            session_id = sessionId[0].id;
+        }
+        $.ajax({
+            url: "{{ route('student.studentsInClass') }}",
+            type: "POST",
+            dataType: "json",
+            data: {
+                session_id: session_id,
+                class_id:class_id,
+                section_id:section_id,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                var student = $('#student_id');
+                student.empty(); 
+                if (response.data && response.data.length > 0) {
+                    student.append('<option value="">--Select Student--</option>');
+                    $.each(response.data, function(index, item) {
+                        student.append('<option value="'+item.student_details.id+'">'+item.student_details.student_name+'</option>');
+                        // <td>${item.student_details.admission_number}</td>
+                        // <td>${item.student_session.sessions_name}</td>
+                        //         <td>${item.student_class.class_name}</td>
+                        //         <td>${item.student_section.section_name}</td>
+                        // tableBody.append(`
+                        //     <tr>
+                        //         <td>${index + 1}</td>
+                                
+                        //         <td>${item.student_details.student_name} <br> <b> ${item.student_details.admission_number} </b> </td>
+                        //         <td class="text-center">
+                        //             <input id="${item.student_details.id}_onTime" class="form-check-input larger-checkbox" 
+                        //                 type="checkbox" 
+                        //                 onclick='getAttendance(${JSON.stringify(item).replace(/'/g, "\\'")}, 1, 0)' 
+                        //                 name="attendance[]" 
+                        //                 value="${item.student_details.id}">
+                        //         </td>
+                        //         <td class="text-center">
+                        //             <input id="${item.student_details.id}_Absent" class="larger-checkbox danger-checkbox" 
+                        //                 type="checkbox" 
+                        //                 onclick='getAttendance(${JSON.stringify(item).replace(/'/g, "\\'")}, 0, 0)' 
+                        //                 name="attendance[]" 
+                        //                 value="${item.student_details.id}">
+                        //         </td>
+                        //         <td class="text-center">
+                        //             <input id="${item.student_details.id}_late" class="larger-checkbox warning-checkbox" 
+                        //                 type="checkbox" 
+                        //                 onclick='getAttendance(${JSON.stringify(item).replace(/'/g, "\\'")}, 1, 1)' 
+                        //                 name="attendance[]" 
+                        //                 value="${item.student_details.id}">
+                        //         </td>
+                        //     </tr>
+                        // `);
+                    });
+
+                } else {
+                    student.append('<option value="">--Select Student--</option>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                $('#results').append('<p>An error occurred while fetching students.</p>');
+            }
+        });
+    }
 </script>
 @endsection

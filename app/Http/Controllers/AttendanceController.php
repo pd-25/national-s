@@ -122,12 +122,13 @@ class AttendanceController extends Controller
 
     public function viewStudentAttendance()
     {
-        $session_id = GetSession('active_session')[0]->id;
-        $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
-        $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
-        $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
-        $studentList = StudentClassMapping::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')->where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->get();
-        return view('teacher.attendanceStudent.viewstudentattendance', compact('studentList'));
+        // $session_id = GetSession('active_session')[0]->id;
+        // $teacher_details = GetTeacher(auth()->guard('admin')->user()->id);
+        // $teacher_class_assigned = $teacher_details->teacherclassmapping[0]->class_id;
+        // $teacher_section_assigned = $teacher_details->teacherclassmapping[0]->section_id;
+        // $studentList = StudentClassMapping::with('studentDetails', 'studentSession', 'studentClass', 'studentSection')->where('session_id', $session_id)->where('class_id', $teacher_class_assigned)->where('section_id', $teacher_section_assigned)->get();
+        // compact('studentList')
+        return view('teacher.attendanceStudent.viewstudentattendance');
     }
 
     public function viewStudentList(Request $request)

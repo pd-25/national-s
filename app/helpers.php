@@ -145,7 +145,7 @@ function GetTeacher($teacher_id= null)
     if($teacher_id){
         $admin = Admin::with('teacherclassmapping','teacherclassmapping.teacherClass', 'teacherclassmapping.teacherSection')->find($teacher_id);
     }else{
-        $admin = Admin::with('teacherclassmapping','teacherclassmapping.teacherClass', 'teacherclassmapping.teacherSection')->where('usertype', 0)->orderBy('name', 'asc')->paginate(10);
+        $admin = Admin::with('teacherclassmapping','teacherclassmapping.teacherClass', 'teacherclassmapping.teacherSection')->where('usertype', 0)->orderBy('name', 'asc')->get();
     }
     return $admin;
 }
@@ -282,9 +282,25 @@ function GetPayrollComponent($data){
     return $payrollSettings;
 }
 
+
 function PayrollComponentName($id){
     $payrollSettings = PayrollSettings::with('parent')->select('id','name','parent_id')->find($id);
     return $payrollSettings;
+}
+
+function GetClassAndSection(){
+    $sections = Section::with('className')->get();
+    $newSections = [];
+    foreach ($sections as $section) {
+        $newSections[] = [
+            'section_id' => $section->id,
+            'class_id' => $section->class_id,
+            'section_name' => $section->section_name,
+            'class_name' => $section->className->class_name,
+            'class_section' => $section->className->class_name . ' - ' . $section->section_name,
+        ];
+    }
+    return $newSections;
 }
 
 // ....................................................Future referances 

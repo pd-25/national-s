@@ -17,8 +17,22 @@
                 <div class="row">
                     <input type="hidden" name="admin_id" id="admin_id">
                     <div class="col-4 mb-2">
-                        <label for="name" class="form-label">Teacher's <span class="text-danger">*</span></label>
-                        <input type="text" id="name" placeholder="Enter Teacher's Name" class="form-control" name="name" required>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="name" class="form-label mb-0">Teacher's <span class="text-danger">*</span></label>
+                            <div>
+                                <a href="javascript:void(0)" class="text-primary text-decoration-underline me-2" id="registerNewTeacher">Register New Teacher</a>
+                                <a href="javascript:void(0)" class="text-primary text-decoration-underline" id="existingTeacher">Existing Teacher</a>
+                            </div>
+                        </div>
+                        <input type="text" id="name" placeholder="Register New Teacher's Name" class="form-control" name="name">
+                        <select name="admin_list_id" id="adminlist_id" class="form-select" onchange="handleTeacherChange(this)">
+                            @if (!@empty(GetTeacher()))
+                                <option value="" selected>Select Existing Teacher</option>
+                                @foreach (GetTeacher() as $index=>$item)
+                                    <option value="{{@$item->id}}" data-class-mapping='@json($item->teacherclassmapping)'>{{@$item->name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
                         @if ($errors->has('name'))
                             <span class="text-danger">{{ $errors->first('name') }}</span>
                         @endif
@@ -93,48 +107,107 @@
                                 <td>{{@$item->email}}</td>
                                 <td>
                                     @if ($item->teacherclassmapping)
-                                        @foreach ($item->teacherclassmapping as $mapping)
-                                            {{ $mapping->teacherClass->class_name ?? 'N/A' }}
-                                        @endforeach
+                                        <ol>
+                                            @foreach ($item->teacherclassmapping as $mapping)
+                                                <li class="mb-3">{{ $mapping->teacherClass->class_name ?? 'N/A' }} <br></li>
+                                            @endforeach
+                                        </ol>
                                     @else
                                         N/A
                                     @endif
                                 </td>
                                 <td>
                                     @if ($item->teacherclassmapping)
-                                        @foreach ($item->teacherclassmapping as $mapping)
-                                            {{ $mapping->teacherSection->section_name ?? 'N/A' }}
-                                        @endforeach
+                                        <ol>
+                                            @foreach ($item->teacherclassmapping as $mapping)
+                                                <li class="mb-3">{{ $mapping->teacherSection->section_name ?? 'N/A' }} <br></li>
+                                            @endforeach
+                                        </ol>
                                     @else
                                         N/A
                                     @endif
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-center">
-                                        <a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="editTeacher({{@$item}})"><i class="bi bi-pencil-square"></i> </a>
-                                        <form action="{{route('ams.destroyTeachers', @$item->id)}}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm rounded-pill show_confirm"><i class="bi bi-trash"></i></button>
-                                        </form>
-                                    </div>
+                                    @if ($item->teacherclassmapping->count() > 1)
+                                        @foreach ($item->teacherclassmapping as $itemII)
+                                            <div class="d-flex justify-content-center mb-1">
+                                                <a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="editTeacher({{@$item}}, {{@$itemII}})"><i class="bi bi-pencil-square"></i> </a>
+                                                <form action="{{route('ams.destroyTeachers', @$item->id)}}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="id" value="{{$item->id}}">
+                                                    <input type="hidden" name="multipleClassTeacherId" value="{{$itemII->id}}">
+                                                    <button type="submit" class="btn btn-danger btn-sm rounded-pill show_confirm"><i class="bi bi-trash"></i></button>
+                                                </form>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="d-flex justify-content-center">
+                                            <a class="btn btn-primary btn-sm rounded-pill me-2" href="javascript:void(0)" onclick="editTeacher({{@$item}}, null)"><i class="bi bi-pencil-square"></i> </a>
+                                            <form action="{{route('ams.destroyTeachers', @$item->id)}}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="id" value="{{$item->id}}">
+                                                <input type="hidden" name="multipleClassTeacherId" value="">
+                                                <button type="submit" class="btn btn-danger btn-sm rounded-pill show_confirm"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
                     @endif
                 </tbody>
             </table>
-            <div class="justify-content-end mt-4">
+            {{-- <div class="justify-content-end mt-4">
                 {{@GetTeacher()->appends(request()->input())->links()}}
-            </div>
+            </div> --}}
         </div>
     </div>
+
 </section>
 <script>
     $(document).ready(function(e) {
         $("#update").hide();
+        $("#existingTeacher").show();
+        $("#registerNewTeacher").hide();
+        $("#name").show();
+        $("#adminlist_id").hide();
+        var table = $('#DataTables').DataTable({
+            bLengthChange: true,
+            "lengthMenu": [[10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"]],
+            "iDisplayLength": 50,
+            bInfo: false,
+            responsive: true,
+            "bAutoWidth": false
+        });
     });
-    function editTeacher(data){
+
+    $("#existingTeacher").click(function(){
+        $("#registerNewTeacher").show();
+        $("#existingTeacher").hide();
+        $("#name").val(null);
+        $("#name").hide();
+        $("#adminlist_id").show();
+
+        $("#email_address").attr('disabled', true);
+        $("#password").hide();
+        $("#password_confirmation").hide();
+    });
+
+    $("#registerNewTeacher").click(function(){
+        $("#registerNewTeacher").hide();
+        $("#existingTeacher").show();
+        $("#name").show();
+        $("#adminlist_id").val(null);
+        $("#adminlist_id").hide();
+
+        $("#email_address").attr('disabled', false);
+        $("#password").show();
+        $("#password_confirmation").show();
+    });
+
+    function editTeacher(data, mapping){
         console.log(data)
         $("#admin_id").val(data.id);
         $("#name").val(data.name);
@@ -143,18 +216,39 @@
 
         $("#password").hide();
         $("#password_confirmation").hide();
+        if(mapping){
+            $("#class_id").val(mapping.class_id)
+            $('#class_id').val(mapping.class_id).trigger('change');
 
-        $("#class_id").val(data.teacherclassmapping[0].class_id)
-        $('#class_id').val(data.teacherclassmapping[0].class_id).trigger('change');
+            setTimeout(function(){ 
+                $("#section_id").val(mapping.section_id)
+            }, 2000);
+        }
+        // $("#class_id").val(data.teacherclassmapping[0].class_id)
+        // $('#class_id').val(data.teacherclassmapping[0].class_id).trigger('change');
         
-        setTimeout(function(){ 
-            $("#section_id").val(data.teacherclassmapping[0].section_id)
-         }, 2000);
+        // setTimeout(function(){ 
+        //     $("#section_id").val(data.teacherclassmapping[0].section_id)
+        //  }, 2000);
 
         $("#update").show();
         $("#save").hide();
     }
+    
+    function handleTeacherChange(selectObj) {
+        $('#class_id option').prop('disabled', false);
+        const selectedOption = selectObj.options[selectObj.selectedIndex];
+        const classMappingJson = selectedOption.getAttribute('data-class-mapping');
+        const classMappings = JSON.parse(classMappingJson);
+        console.log(classMappings)
+        classMappings.forEach(mapping => {
+            $('#class_id option[value="'+mapping.class_id+'"]').prop('disabled', true);
+        });
+    }
 
+    function GetFeeSettingsData(){
+        // error handing
+    }
 
 </script>
 @endsection

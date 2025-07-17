@@ -94,7 +94,8 @@ class MasterController extends Controller
 
     public function addTeacher(Request $request)
     {
-        if(!$request->admin_id){
+        // dd($request->all());
+        if(!$request->admin_id && !isset($request->admin_list_id)){
             $request->validate([
                 'name' => 'required|string|max:100',
                 'email' => 'required|email|max:255|unique:admins',
@@ -104,43 +105,57 @@ class MasterController extends Controller
             ]);
         }else{
             $request->validate([
-                'name' => 'required|string|max:100',
                 'class_id' => 'required|numeric',
                 'section_id' => 'required|numeric'
             ]);
         }
-        $teacherClassMapping = TeacherClassMapping::where('class_id', $request->class_id)->where('section_id', $request->section_id)->first();
-        if($teacherClassMapping != null){
-            $teacherName  = GetTeacher($teacherClassMapping->teacher_id);
-            return redirect()->back()->withError('This class is already assigned to ' . $teacherName->name);
-        }
         
-        $data = $request->all();
-        $data['usertype'] = 0;
-        $teacher = storeAdminAndTeacher($data);
+        // $teacherClassMapping = TeacherClassMapping::where('class_id', $request->class_id)->where('section_id', $request->section_id)->first();
+        // if($teacherClassMapping != null){
+        //     $teacherName  = GetTeacher($teacherClassMapping->teacher_id);
+        //     return redirect()->back()->withError('This class is already assigned to ' . $teacherName->name);
+        // }
+        
+        if(!isset($request->admin_list_id)){
+            $data = $request->all();
+            $data['usertype'] = 0;
+            $teacher = storeAdminAndTeacher($data);
+        }
         if($request->admin_id){
-            $teacherClassMapping = TeacherClassMapping::where('teacher_id', $request->admin_id)->first();
+            $teacherClassMapping = TeacherClassMapping::where('teacher_id', $request->admin_id)->where('class_id', $request->class_id)->first();
             if($teacherClassMapping == null){
                 $teacherClassMapping = new TeacherClassMapping;
                 $teacherClassMapping->teacher_id = $request->admin_id;    
             }
         }else{
             $teacherClassMapping = new TeacherClassMapping;
-            $teacherClassMapping->teacher_id = $teacher;
+            if(!isset($request->admin_list_id)){
+                $teacherClassMapping->teacher_id = $teacher;
+            }else{
+                $teacherClassMapping->teacher_id = $request->admin_list_id;
+            }
         }
 
         $teacherClassMapping->class_id = $request->class_id;
         $teacherClassMapping->section_id = $request->section_id;
         $teacherClassMapping->save();
-
-        return $teacher == "update" ? redirect()->back()->with('info','Teacher details updated successfully') : redirect()->back()->withSuccess('Teacher register successfully');
+        if(!isset($request->admin_list_id)){
+            return $teacher == "update" ? redirect()->back()->with('info','Teacher details updated successfully') : redirect()->back()->withSuccess('Teacher register successfully');
+        }else{
+            return redirect()->back()->with('success','Teacher new class added successfully');
+        }
     }
 
-    public function destroyTeachers($id)
+    public function destroyTeachers(Request $request)
     {
         try {
-            $admin = Admin::find($id);
-            $teacherClassMapping = TeacherClassMapping::where('teacher_id', $id)->first();
+            if($request->multipleClassTeacherId){
+                $teacherClassMapping = TeacherClassMapping::where('id', $request->multipleClassTeacherId)->first();
+                $teacherClassMapping->delete();
+                return redirect()->back()->with('warning','Assigned class deleted successfully');
+            }
+            $admin = Admin::find($request->id);
+            $teacherClassMapping = TeacherClassMapping::where('teacher_id', $request->id)->first();
             $teacherClassMapping->delete();
             $admin->delete();
             return redirect()->back()->with('warning','Teachers deleted successfully');
