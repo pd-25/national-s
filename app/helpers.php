@@ -122,6 +122,12 @@ function GetCampusGalary()
     return $campusGalary;
 }
 
+function GetAdmins()
+{
+    $admins = Admin::where('usertype', 1)->orWhere('usertype', 2)->get();
+    return $admins;
+}
+
 function GetClasses()
 {
     $classes = Classes::all();
@@ -302,6 +308,37 @@ function GetClassAndSection(){
     }
     return $newSections;
 }
+
+function MenuAccessList() {
+    return [
+        'dashboard_role_id' => 'Dashboard',
+        'StudentRegister_role_id' => 'Student Admission',
+        'studentView_role_id' => "Manage Student's",
+        'ResetPassword_role_id' => 'Reset Password',
+        'ProfileImage_role_id' => "Upload's Profile Image",
+        'takeClassAttendance_role_id' => 'Take Class Attendance',
+        'classAttendance_role_id' => 'Class Attendance',
+        'studentAttendance_role_id' => 'Student Attendance',
+        'Entrollment_role_id' => 'Promote Student',
+        'History_role_id' => 'Promote History',
+        'deposite_role_id' => 'Students Fees',
+        'depositecreate_role_id' => 'Fee Transaction Fee',
+        'paymentdue_role_id' => 'Fee Due',
+        'payroll_role_id' => 'Payroll Settings',
+        'paymentsettings_role_id' => 'Fees Settings',
+        'studentFeeSettings_role_id' => 'Student Fees Settings',
+        'report_role_id' => 'Attendance Report',
+        'feesindex_role_id' => 'Payment Report',
+        'manageClasses_role_id' => 'Manage Classes',
+        'ClassesSections_role_id' => 'Manage Section',
+        'manageTeacher_role_id' => 'Manage Teachers',
+        'manageSessionTerm_role_id' => 'Manage Session',
+        'registerUser_role_id' => 'Manage System User',
+        'role_permission_role_id' => 'Role & Permission',
+        'Websitemanage_role_id' => 'Website Manage'
+    ];
+}
+
 
 // ....................................................Future referances 
 // function activeSessionMonths()

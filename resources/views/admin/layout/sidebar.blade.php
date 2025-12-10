@@ -1,434 +1,347 @@
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
-        @if (Auth::guard('admin')->user()->usertype == 1)
-            <li class="nav-item {{Route::is('admin.dashboard') ? 'active' : '' }}">
-                <a class="nav-link {{ Route::is('admin.dashboard') ? 'active' : 'collapsed' }}" href="{{route('admin.dashboard')}}">
+        @if (Auth::guard('admin')->user()->usertype == 1 || Auth::guard('admin')->user()->usertype == 2)
+            <li class="nav-item {{ Route::is('admin.dashboard') ? 'active' : '' }}">
+                <a class="nav-link {{ Route::is('admin.dashboard') ? 'active' : 'collapsed' }}"
+                    href="{{ route('admin.dashboard') }}" id="dashboard_role_id">
                     <i class="bi bi-house"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-heading">Management</li>
+            {{-- <li class="nav-heading">Management</li> --}}
             <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#Student-management" data-bs-toggle="collapse">
-                    <i class="bi bi-mortarboard-fill"></i><span>Student's</span><i class="bi bi-chevron-down ms-auto"></i>
+                <a href="#" class="nav-link collapsed" data-bs-target="#Student-management"
+                    data-bs-toggle="collapse">
+                    <i class="bi bi-mortarboard-fill"></i><span>Student's</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="Student-management" data-bs-parent="#sidebar-nav"
                     @if (Route::is('student.StudentRegister') ||
-                    Route::is('student.studentList') ||
-                    Route::is('student.studentEdit') ||
-                    Route::is('student.studentView') ||
-                    Route::is('student.studentsResetPassword')||
-                    Route::is('student.studentsUploadProfileImage')
-                    )
-                    class="nav-content"
+                            Route::is('student.studentList') ||
+                            Route::is('student.studentEdit') ||
+                            Route::is('student.studentView') ||
+                            Route::is('student.studentsResetPassword') ||
+                            Route::is('student.studentsUploadProfileImage')) class="nav-content"
                     @else
                     class="nav-content collapse" @endif>
-                    <li class="{{ Route::is('student.StudentRegister') ? 'active' : '' }}" id="">
-                        <a href="{{route('student.StudentRegister')}}" 
-                        class="{{ Route::is('student.StudentRegister') ? 'active' : '' }}">
+                    <li class="{{ Route::is('student.StudentRegister') ? 'active' : '' }}" id="StudentRegister_role_id">
+                        <a href="{{ route('student.StudentRegister') }}"
+                            class="{{ Route::is('student.StudentRegister') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Student Admission</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('student.studentList') ? 'active' : '' }} {{ Route::is('student.studentEdit') ? 'active' : '' }} {{ Route::is('student.studentView') ? 'active' : '' }} " id="">
-                        <a href="{{route('student.studentList')}}" 
-                        class="{{ Route::is('student.studentList') ? 'active' : '' }} {{ Route::is('student.studentEdit') ? 'active' : '' }} {{ Route::is('student.studentView') ? 'active' : '' }}">
+                    <li class="{{ Route::is('student.studentList') ? 'active' : '' }} {{ Route::is('student.studentEdit') ? 'active' : '' }} {{ Route::is('student.studentView') ? 'active' : '' }} "
+                        id="studentView_role_id">
+                        <a href="{{ route('student.studentList') }}"
+                            class="{{ Route::is('student.studentList') ? 'active' : '' }} {{ Route::is('student.studentEdit') ? 'active' : '' }} {{ Route::is('student.studentView') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Manage Student's</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('student.studentsResetPassword') ? 'active' : '' }} " id="">
-                        <a href="{{route('student.studentsResetPassword')}}" 
-                        class="{{ Route::is('student.studentsResetPassword') ? 'active' : '' }}">
+                    <li class="{{ Route::is('student.studentsResetPassword') ? 'active' : '' }} "
+                        id="ResetPassword_role_id">
+                        <a href="{{ route('student.studentsResetPassword') }}"
+                            class="{{ Route::is('student.studentsResetPassword') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Students Reset Password</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('student.studentsUploadProfileImage') ? 'active' : '' }} " id="">
-                        <a href="{{route('student.studentsUploadProfileImage')}}" 
-                        class="{{ Route::is('student.studentsUploadProfileImage') ? 'active' : '' }}">
+                    <li class="{{ Route::is('student.studentsUploadProfileImage') ? 'active' : '' }} "
+                        id="ProfileImage_role_id">
+                        <a href="{{ route('student.studentsUploadProfileImage') }}"
+                            class="{{ Route::is('student.studentsUploadProfileImage') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Upload Profile Image's</span>
                         </a>
                     </li>
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#Attendance-management" data-bs-toggle="collapse">
-                    <i class="bi bi-check-lg fw-bold"></i><span>Attendance</span><i class="bi bi-chevron-down ms-auto"></i>
+                <a href="#" class="nav-link collapsed" data-bs-target="#Attendance-management"
+                    data-bs-toggle="collapse">
+                    <i class="bi bi-check-lg fw-bold"></i><span>Attendance</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="Attendance-management" data-bs-parent="#sidebar-nav"
                     @if (Route::is('attendance.classAttendance') ||
-                    Route::is('attendance.studentAttendance') ||
-                    Route::is('attendance.takeClassAttendance')
-                    )
-                    class="nav-content"
+                            Route::is('attendance.studentAttendance') ||
+                            Route::is('attendance.takeClassAttendance')) class="nav-content"
                     @else
                     class="nav-content collapse" @endif>
-                    <li class="{{ Route::is('attendance.takeClassAttendance') ? 'active' : '' }}" id="">
-                        <a href="{{route('attendance.takeClassAttendance')}}" 
-                        class="{{ Route::is('attendance.takeClassAttendance') ? 'active' : '' }}">
+                    <li class="{{ Route::is('attendance.takeClassAttendance') ? 'active' : '' }}"
+                        id="takeClassAttendance_role_id">
+                        <a href="{{ route('attendance.takeClassAttendance') }}"
+                            class="{{ Route::is('attendance.takeClassAttendance') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Take Class Attendance</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('attendance.classAttendance') ? 'active' : '' }}" id="">
-                        <a href="{{route('attendance.classAttendance')}}" 
-                        class="{{ Route::is('attendance.classAttendance') ? 'active' : '' }}">
+                    <li class="{{ Route::is('attendance.classAttendance') ? 'active' : '' }}"
+                        id="classAttendance_role_id">
+                        <a href="{{ route('attendance.classAttendance') }}"
+                            class="{{ Route::is('attendance.classAttendance') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>View Class Attendance</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('attendance.studentAttendance') ? 'active' : '' }}" id="">
-                        <a href="{{route('attendance.studentAttendance')}}" 
-                        class="{{ Route::is('attendance.studentAttendance') ? 'active' : '' }}">
+                    <li class="{{ Route::is('attendance.studentAttendance') ? 'active' : '' }}"
+                        id="studentAttendance_role_id">
+                        <a href="{{ route('attendance.studentAttendance') }}"
+                            class="{{ Route::is('attendance.studentAttendance') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>View Student Attendance</span>
                         </a>
                     </li>
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#Enrollment-management" data-bs-toggle="collapse">
+                <a href="#" class="nav-link collapsed" data-bs-target="#Enrollment-management"
+                    data-bs-toggle="collapse">
                     <i class="bi bi-bank2"></i><span>Academics</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="Enrollment-management" data-bs-parent="#sidebar-nav"
-                    @if (
-                    Route::is('student.studentsEntrollment') ||
-                    Route::is('student.entrollmentHistory')
-                    )
-                    class="nav-content"
+                    @if (Route::is('student.studentsEntrollment') || Route::is('student.entrollmentHistory')) class="nav-content"
                     @else
                     class="nav-content collapse" @endif>
-                    <li class="{{ Route::is('student.studentsEntrollment') ? 'active' : '' }}" id="">
-                        <a href="{{route('student.studentsEntrollment')}}" 
-                        class="{{ Route::is('student.studentsEntrollment') ? 'active' : '' }}">
+                    <li class="{{ Route::is('student.studentsEntrollment') ? 'active' : '' }}"
+                        id="Entrollment_role_id">
+                        <a href="{{ route('student.studentsEntrollment') }}"
+                            class="{{ Route::is('student.studentsEntrollment') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Transfer & Promote Student</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('student.entrollmentHistory') ? 'active' : '' }}" id="">
-                        <a href="{{route('student.entrollmentHistory')}}" 
-                        class="{{ Route::is('student.entrollmentHistory') ? 'active' : '' }}">
+                    <li class="{{ Route::is('student.entrollmentHistory') ? 'active' : '' }}" id="History_role_id">
+                        <a href="{{ route('student.entrollmentHistory') }}"
+                            class="{{ Route::is('student.entrollmentHistory') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Transfer & Promote History</span>
                         </a>
                     </li>
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#FreesDeposit-management" data-bs-toggle="collapse">
-                   <i class="bi bi-currency-rupee"></i><span>Fees</span><i class="bi bi-chevron-down ms-auto"></i>
+                <a href="#" class="nav-link collapsed" data-bs-target="#FreesDeposit-management"
+                    data-bs-toggle="collapse">
+                    <i class="bi bi-currency-rupee"></i><span>Fees</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="FreesDeposit-management" data-bs-parent="#sidebar-nav"
                     @if (Route::is('deposite.index') ||
-                    Route::is('deposite.create') ||
-                    Route::is('deposite.viewDownloadDeposite') || 
-                    Route::is('deposite.edit') ||
-                    Route::is('deposite.paymentdue')
-                    )
-                    class="nav-content"
+                            Route::is('deposite.create') ||
+                            Route::is('deposite.viewDownloadDeposite') ||
+                            Route::is('deposite.edit') ||
+                            Route::is('deposite.paymentdue')) class="nav-content"
                     @else
                     class="nav-content collapse" @endif>
-                    
-                    <li class="{{ Route::is('deposite.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('deposite.index')}}" 
-                        class="{{ Route::is('deposite.index') ? 'active' : '' }}">
+
+                    <li class="{{ Route::is('deposite.index') ? 'active' : '' }}" id="deposite_role_id">
+                        <a href="{{ route('deposite.index') }}"
+                            class="{{ Route::is('deposite.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Student Fees</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }}" id="">
-                        <a href="{{route('deposite.create')}}" 
-                        class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }} {{ Route::is('deposite.edit') ? 'active' : '' }}">
+                    <li class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }}"
+                        id="depositecreate_role_id">
+                        <a href="{{ route('deposite.create') }}"
+                            class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }} {{ Route::is('deposite.edit') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Fees Transaction Logs</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}" id="">
-                        <a href="{{route('deposite.paymentdue')}}" 
-                        class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}">
+                    <li class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}" id="paymentdue_role_id">
+                        <a href="{{ route('deposite.paymentdue') }}"
+                            class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Fees Due</span>
                         </a>
                     </li>
                 </ul>
             </li>
-             <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#payroll-student" data-bs-toggle="collapse">
-                    <i class="bi bi-credit-card-2-back-fill"></i><span>Payroll</span><i class="bi bi-chevron-down ms-auto"></i>
+            <li class="nav-item">
+                <a href="#" class="nav-link collapsed" data-bs-target="#payroll-student"
+                    data-bs-toggle="collapse">
+                    <i class="bi bi-credit-card-2-back-fill"></i><span>Payroll</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="payroll-student" data-bs-parent="#sidebar-nav"
-                    @if (
-                        Route::is('payroll.index') ||
-                        Route::is('paymentsettings.index') ||
-                        Route::is('studentFeeSettings.index')
-                    )
-                    class="nav-content"
+                    @if (Route::is('payroll.index') || Route::is('paymentsettings.index') || Route::is('studentFeeSettings.index')) class="nav-content"
                     @else
                     class="nav-content collapse" @endif>
-                    <li class="{{ Route::is('payroll.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('payroll.index')}}" 
-                        class="{{ Route::is('payroll.index') ? 'active' : '' }}">
+                    <li class="{{ Route::is('payroll.index') ? 'active' : '' }}" id="payroll_role_id">
+                        <a href="{{ route('payroll.index') }}"
+                            class="{{ Route::is('payroll.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Payroll Settings</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('paymentsettings.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('paymentsettings.index')}}" 
-                        class="{{ Route::is('paymentsettings.index') ? 'active' : '' }}">
+                    <li class="{{ Route::is('paymentsettings.index') ? 'active' : '' }}"
+                        id="paymentsettings_role_id">
+                        <a href="{{ route('paymentsettings.index') }}"
+                            class="{{ Route::is('paymentsettings.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Fees Settings</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('studentFeeSettings.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('studentFeeSettings.index')}}" 
+                    <li class="{{ Route::is('studentFeeSettings.index') ? 'active' : '' }}"
+                        id="studentFeeSettings_role_id">
+                        <a href="{{ route('studentFeeSettings.index') }}"
                             class="{{ Route::is('studentFeeSettings.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Student Fees Settings</span>
                         </a>
                     </li>
                 </ul>
             </li>
-            <li class="nav-heading">System Settings</li>
-            <li class="nav-item {{Route::is('ams.manageClasses') ? 'active' : '' }}">
-                <a class="nav-link {{ Route::is('ams.manageClasses') ? 'active' : 'collapsed' }}" href="{{route('ams.manageClasses')}}">
+            <li class="nav-item">
+                <a href="#" class="nav-link collapsed" data-bs-target="#Report-student"
+                    data-bs-toggle="collapse">
+                    <i class="bi bi-bar-chart"></i><span>Report</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="Report-student" data-bs-parent="#sidebar-nav"
+                    @if (Route::is('report.index') || Route::is('report.feesindex')) class="nav-content"
+                    @else
+                    class="nav-content collapse" @endif>
+                    <li class="{{ Route::is('report.index') ? 'active' : '' }}" id="report_role_id">
+                        <a href="{{ route('report.index') }}"
+                            class="{{ Route::is('report.index') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Attendance Report</span>
+                        </a>
+                    </li>
+                    <li class="{{ Route::is('report.feesindex') ? 'active' : '' }}" id="feesindex_role_id">
+                        <a href="{{ route('report.feesindex') }}"
+                            class="{{ Route::is('report.feesindex') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Payment Report</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {{-- <li class="nav-heading">System Settings</li> --}}
+            <li class="nav-item {{ Route::is('ams.manageClasses') ? 'active' : '' }}" id="manageClasses_role_id">
+                <a class="nav-link {{ Route::is('ams.manageClasses') ? 'active' : 'collapsed' }}"
+                    href="{{ route('ams.manageClasses') }}">
                     <i class="bi bi-laptop"></i>
                     <span>Manage Classes</span>
                 </a>
             </li>
-            <li class="nav-item {{Route::is('ams.manageClassesSections') ? 'active' : '' }}">
-                <a class="nav-link {{ Route::is('ams.manageClassesSections') ? 'active' : 'collapsed' }}" href="{{route('ams.manageClassesSections')}}">
+            <li class="nav-item {{ Route::is('ams.manageClassesSections') ? 'active' : '' }}"
+                id="ClassesSections_role_id">
+                <a class="nav-link {{ Route::is('ams.manageClassesSections') ? 'active' : 'collapsed' }}"
+                    href="{{ route('ams.manageClassesSections') }}">
                     <i class="bi bi-share"></i>
                     <span>Manage Section</span>
                 </a>
             </li>
-            <li class="nav-item {{Route::is('ams.manageTeacher') ? 'active' : '' }}">
-                <a class="nav-link {{ Route::is('ams.manageTeacher') ? 'active' : 'collapsed' }}" href="{{route('ams.manageTeacher')}}">
+            <li class="nav-item {{ Route::is('ams.manageTeacher') ? 'active' : '' }}" id="manageTeacher_role_id">
+                <a class="nav-link {{ Route::is('ams.manageTeacher') ? 'active' : 'collapsed' }}"
+                    href="{{ route('ams.manageTeacher') }}">
                     <i class="bi bi-person-fill"></i>
                     <span>Manage Teachers</span>
                 </a>
             </li>
-            <li class="nav-item {{Route::is('ams.manageSessionTerm') ? 'active' : '' }}">
-                <a class="nav-link {{ Route::is('ams.manageSessionTerm') ? 'active' : 'collapsed' }}" href="{{route('ams.manageSessionTerm')}}">
+            <li class="nav-item {{ Route::is('ams.manageSessionTerm') ? 'active' : '' }}"
+                id="manageSessionTerm_role_id">
+                <a class="nav-link {{ Route::is('ams.manageSessionTerm') ? 'active' : 'collapsed' }}"
+                    href="{{ route('ams.manageSessionTerm') }}">
                     <i class="bi bi-calendar-check"></i>
                     <span>Manage Session</span>
                 </a>
             </li>
-            <li class="nav-heading">Website Management</li>
-            <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#Parties-nav" data-bs-toggle="collapse">
-                    <i class="bi bi-browser-chrome"></i><span>Website Settings</span><i class="bi bi-chevron-down ms-auto"></i>
+            <li class="nav-item {{ Route::is('admin.roleandpermission') ? 'active' : '' }}"
+                id="role_permission_role_id">
+                <a class="nav-link {{ Route::is('admin.roleandpermission') ? 'active' : 'collapsed' }}"
+                    href="{{ route('admin.roleandpermission') }}">
+                    <i class="bi bi-wrench-adjustable-circle"></i>
+                    <span>Role & Permission</span>
+                </a>
+            </li>
+            <li class="nav-item {{ Route::is('admin.registerUser') ? 'active' : '' }}" id="registerUser_role_id">
+                <a class="nav-link {{ Route::is('admin.registerUser') ? 'active' : 'collapsed' }}"
+                    href="{{ route('admin.registerUser') }}">
+                    <i class="bi bi-person-gear"></i>
+                    <span>Manage System User</span>
+                </a>
+            </li>
+            {{-- <li class="nav-heading">Website Management</li> --}}
+            <li class="nav-item" id="Websitemanage_role_id">
+                <a href="#" class="nav-link collapsed" data-bs-target="#Parties-nav"
+                    data-bs-toggle="collapse">
+                    <i class="bi bi-browser-chrome"></i><span>Website Settings</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="Parties-nav" data-bs-parent="#sidebar-nav"
-                    @if (request()->is('admin/all-news')||
-                    request()->is('admin/contact-list')||
-                    request()->is('admin/all-notice') ||
-                    request()->is('admin/all-admission-notice') ||
-                    request()->is('admin/all-campus-galary') ||
-                    request()->is('admin/all-events')
-                    )
-                    class="nav-content"
+                    @if (request()->is('admin/all-news') ||
+                            request()->is('admin/contact-list') ||
+                            request()->is('admin/all-notice') ||
+                            request()->is('admin/all-admission-notice') ||
+                            request()->is('admin/all-campus-galary') ||
+                            request()->is('admin/all-events')) class="nav-content"
                     @else
                     class="nav-content collapse" @endif>
-                    <li class="{{ request()->is('admin/all-campus-galary') ? 'active' : '' }}" id="">
-                        <a href="{{route('campusgalary.create')}}" 
-                        class="{{ request()->is('admin/all-campus-galary') ? 'active' : '' }}">
+                    <li class="{{ request()->is('admin/all-campus-galary') ? 'active' : '' }}">
+                        <a href="{{ route('campusgalary.create') }}"
+                            class="{{ request()->is('admin/all-campus-galary') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Manage Galary Images</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('admin/all-news') ? 'active' : '' }}" id="">
-                        <a href="{{route('news.create')}}" 
-                        class="{{ request()->is('admin/all-news') ? 'active' : '' }}">
+                    <li class="{{ request()->is('admin/all-news') ? 'active' : '' }}">
+                        <a href="{{ route('news.create') }}"
+                            class="{{ request()->is('admin/all-news') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Manage News</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('admin/all-events') ? 'active' : '' }}" id="">
-                        <a href="{{route('events.create')}}" 
-                        class="{{ request()->is('admin/all-events') ? 'active' : '' }}">
+                    <li class="{{ request()->is('admin/all-events') ? 'active' : '' }}">
+                        <a href="{{ route('events.create') }}"
+                            class="{{ request()->is('admin/all-events') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Manage Events</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('admin/all-notice') ? 'active' : '' }}" id="">
-                        <a href="{{route('notice.create')}}" 
-                        class="{{ request()->is('admin/all-notice') ? 'active' : '' }}">
+                    <li class="{{ request()->is('admin/all-notice') ? 'active' : '' }}">
+                        <a href="{{ route('notice.create') }}"
+                            class="{{ request()->is('admin/all-notice') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Manage Notice</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('admin/all-admission-notice') ? 'active' : '' }}" id="">
-                        <a href="{{route('admissionnotice.create')}}" 
-                        class="{{ request()->is('admin/all-admission-notice') ? 'active' : '' }}">
+                    <li class="{{ request()->is('admin/all-admission-notice') ? 'active' : '' }}">
+                        <a href="{{ route('admissionnotice.create') }}"
+                            class="{{ request()->is('admin/all-admission-notice') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Manage Admission Notice</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('admin/contact-list') ? 'active' : '' }}"  id="">
-                        <a href="{{route('contact.create')}}" class="{{ request()->is('admin/contact-list') ? 'active' : '' }}">
+                    <li class="{{ request()->is('admin/contact-list') ? 'active' : '' }}">
+                        <a href="{{ route('contact.create') }}"
+                            class="{{ request()->is('admin/contact-list') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Manage Contact/Enquiry</span>
                         </a>
                     </li>
                 </ul>
             </li>
-        @elseif(Auth::guard('admin')->user()->usertype == 2)
-            <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#Student-management" data-bs-toggle="collapse">
-                    <i class="bi bi-mortarboard-fill"></i><span>Student's</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="Student-management" data-bs-parent="#sidebar-nav"
-                    @if (Route::is('student.StudentRegister') ||
-                    Route::is('student.studentList') ||
-                    Route::is('student.studentEdit') ||
-                    Route::is('student.studentView') ||
-                    Route::is('student.studentsResetPassword')||
-                    Route::is('student.studentsUploadProfileImage')
-                    )
-                    class="nav-content"
-                    @else
-                    class="nav-content collapse" @endif>
-                    <li class="{{ Route::is('student.StudentRegister') ? 'active' : '' }}" id="">
-                        <a href="{{route('student.StudentRegister')}}" 
-                        class="{{ Route::is('student.StudentRegister') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Student Admission</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('student.studentList') ? 'active' : '' }} {{ Route::is('student.studentEdit') ? 'active' : '' }} {{ Route::is('student.studentView') ? 'active' : '' }} " id="">
-                        <a href="{{route('student.studentList')}}" 
-                        class="{{ Route::is('student.studentList') ? 'active' : '' }} {{ Route::is('student.studentEdit') ? 'active' : '' }} {{ Route::is('student.studentView') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Manage Student's</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('student.studentsResetPassword') ? 'active' : '' }} " id="">
-                        <a href="{{route('student.studentsResetPassword')}}" 
-                        class="{{ Route::is('student.studentsResetPassword') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Students Reset Password</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('student.studentsUploadProfileImage') ? 'active' : '' }} " id="">
-                        <a href="{{route('student.studentsUploadProfileImage')}}" 
-                        class="{{ Route::is('student.studentsUploadProfileImage') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Upload Profile Image's</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#Enrollment-management" data-bs-toggle="collapse">
-                    <i class="bi bi-bank2"></i><span>Academics</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="Enrollment-management" data-bs-parent="#sidebar-nav"
-                    @if (
-                    Route::is('student.studentsEntrollment') ||
-                    Route::is('student.entrollmentHistory')
-                    )
-                    class="nav-content"
-                    @else
-                    class="nav-content collapse" @endif>
-                    <li class="{{ Route::is('student.studentsEntrollment') ? 'active' : '' }}" id="">
-                        <a href="{{route('student.studentsEntrollment')}}" 
-                        class="{{ Route::is('student.studentsEntrollment') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Transfer & Promote Student</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('student.entrollmentHistory') ? 'active' : '' }}" id="">
-                        <a href="{{route('student.entrollmentHistory')}}" 
-                        class="{{ Route::is('student.entrollmentHistory') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Transfer & Promote History</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#FreesDeposit-management" data-bs-toggle="collapse">
-                   <i class="bi bi-currency-rupee"></i><span>Fees</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="FreesDeposit-management" data-bs-parent="#sidebar-nav"
-                    @if (Route::is('deposite.index') ||
-                    Route::is('deposite.create') ||
-                    Route::is('deposite.viewDownloadDeposite') || 
-                    Route::is('deposite.edit') ||
-                    Route::is('deposite.paymentdue')
-                    )
-                    class="nav-content"
-                    @else
-                    class="nav-content collapse" @endif>
-                    
-                    <li class="{{ Route::is('deposite.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('deposite.index')}}" 
-                        class="{{ Route::is('deposite.index') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Student Fees</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }}" id="">
-                        <a href="{{route('deposite.create')}}" 
-                        class="{{ Route::is('deposite.create') ? 'active' : '' }} {{ Route::is('deposite.viewDownloadDeposite') ? 'active' : '' }} {{ Route::is('deposite.edit') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Fees Transaction Logs</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}" id="">
-                        <a href="{{route('deposite.paymentdue')}}" 
-                        class="{{ Route::is('deposite.paymentdue') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Fees Due</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#payroll-student" data-bs-toggle="collapse">
-                    <i class="bi bi-credit-card-2-back-fill"></i><span>Payroll</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="payroll-student" data-bs-parent="#sidebar-nav"
-                    @if (
-                        Route::is('payroll.index') ||
-                        Route::is('paymentsettings.index') ||
-                        Route::is('studentFeeSettings.index')
-                    )
-                    class="nav-content"
-                    @else
-                    class="nav-content collapse" @endif>
-                    <li class="{{ Route::is('payroll.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('payroll.index')}}" 
-                        class="{{ Route::is('payroll.index') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Payroll Settings</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('paymentsettings.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('paymentsettings.index')}}" 
-                        class="{{ Route::is('paymentsettings.index') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Fees Settings</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('studentFeeSettings.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('studentFeeSettings.index')}}" 
-                            class="{{ Route::is('studentFeeSettings.index') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Student Fees Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
         @else
-            <li class="nav-item {{Route::is('teacher.dashboard') ? 'active' : '' }}">
-                <a class="nav-link {{ Route::is('teacher.dashboard') ? 'active' : 'collapsed' }}" href="{{route('teacher.dashboard')}}">
+            <li class="nav-item {{ Route::is('teacher.dashboard') ? 'active' : '' }}">
+                <a class="nav-link {{ Route::is('teacher.dashboard') ? 'active' : 'collapsed' }}"
+                    href="{{ route('teacher.dashboard') }}">
                     <i class="bi bi-house"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item {{Route::is('student.teacherManageStudent') ? 'active' : '' }}">
-                <a class="nav-link {{ Route::is('student.teacherManageStudent') ? 'active' : 'collapsed' }}" href="{{route('student.teacherManageStudent')}}">
+            <li class="nav-item {{ Route::is('student.teacherManageStudent') ? 'active' : '' }}">
+                <a class="nav-link {{ Route::is('student.teacherManageStudent') ? 'active' : 'collapsed' }}"
+                    href="{{ route('student.teacherManageStudent') }}">
                     <i class="bi bi-mortarboard-fill"></i>
                     <span>Student's</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link collapsed" data-bs-target="#Student-management" data-bs-toggle="collapse">
-                    <i class="bi bi-calendar-check"></i><span>Manage Attendance</span><i class="bi bi-chevron-down ms-auto"></i>
+                <a href="#" class="nav-link collapsed" data-bs-target="#Student-management"
+                    data-bs-toggle="collapse">
+                    <i class="bi bi-calendar-check"></i><span>Manage Attendance</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="Student-management" data-bs-parent="#sidebar-nav"
-                    @if (Route::is('attendance.index') ||
-                        Route::is('attendance.show') ||
-                        Route::is('attendance.viewstudent')
-                    )
-                    class="nav-content"
+                    @if (Route::is('attendance.index') || Route::is('attendance.show') || Route::is('attendance.viewstudent')) class="nav-content"
                     @else
                     class="nav-content collapse" @endif>
-                    <li class="{{ Route::is('attendance.index') ? 'active' : '' }}" id="">
-                        <a href="{{route('attendance.index')}}" 
-                        class="{{ Route::is('attendance.index') ? 'active' : '' }}">
+                    <li class="{{ Route::is('attendance.index') ? 'active' : '' }}">
+                        <a href="{{ route('attendance.index') }}"
+                            class="{{ Route::is('attendance.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Take Class Attendance</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('attendance.show') ? 'active' : '' }}" id="">
-                        <a href="{{route('attendance.show')}}" 
-                        class="{{ Route::is('attendance.show') ? 'active' : '' }}">
+                    <li class="{{ Route::is('attendance.show') ? 'active' : '' }}">
+                        <a href="{{ route('attendance.show') }}"
+                            class="{{ Route::is('attendance.show') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>View Class Attendance</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('attendance.viewstudent') ? 'active' : '' }}" id="">
-                        <a href="{{route('attendance.viewstudent')}}" 
-                        class="{{ Route::is('attendance.viewstudent') ? 'active' : '' }}">
+                    <li class="{{ Route::is('attendance.viewstudent') ? 'active' : '' }}">
+                        <a href="{{ route('attendance.viewstudent') }}"
+                            class="{{ Route::is('attendance.viewstudent') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>View student Attendance</span>
                         </a>
                     </li>

@@ -11,6 +11,7 @@ use App\Models\Attendance;
 use App\Models\StudentClassMapping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -47,6 +48,54 @@ class AdminController extends Controller
         return view('admin.dashboard.dashboard', compact("dashboardData"));
     }
 
+    public function registerUser()
+    {
+        return view('admin.auth.registration');   
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'usertype'  => 'required',
+            'status'    => 'required'
+        ]);
+        if( $request->user_id == null){
+            Admin::create([
+                'name'           => $request->name,
+                'usertype'       => $request->usertype,
+                'status'         => $request->status,
+                'email'          => $request->email,
+                'password'       => Hash::make($request->password),
+                'role_permission'=> $request->role_permission ?? [],
+            ]);
+            return redirect()->back()->with('success', 'Admin registered successfully');
+        }else{
+            $admin = Admin::findOrFail($request->user_id);
+            if ($request->name) {
+                $admin->name          = $request->name;
+            }
+            if ($request->usertype) {
+                $admin->usertype      = $request->usertype;
+            }
+            if ($request->status) {
+                $admin->status        = $request->status;
+            }
+            // $admin->email         = $request->email;
+            if ($request->password) {
+                $admin->password = Hash::make($request->password);
+            }
+            $admin->role_permission = $request->role_permission ?? [];
+            $admin->save();
+            return redirect()->back()->with('success', 'Updated successfully');
+        }
+        
+    }
+
+    public function roleandpermission()
+    {
+        return view('admin.auth.rolepermission');   
+    }
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -60,6 +109,9 @@ class AdminController extends Controller
         $credentials = $request->only('email', 'password');
         $admin = Admin::where('email', $request->email)->first();
         if($admin){
+            if($admin->status != 1){
+                return redirect()->route('admin.index')->withError('Oppes! Your credentials have been deactivated.');
+            }
             if (Auth::guard('admin')->attempt($credentials)) {
                 if($admin->usertype == 1 || $admin->usertype == 2){
                     return redirect()->route('admin.dashboard')->withSuccess('You have Successfully loggedin');
@@ -115,31 +167,6 @@ class AdminController extends Controller
         ];
 
         return view('teacher.teacherDashboard.teacher_dashboard', compact('dashboardData'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    
-    public function destroy()
-    {
-        //
     }
     
     public function logout() 

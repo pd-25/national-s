@@ -18,8 +18,11 @@ class Admin extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'usertype',
+        'status',
         'email',
         'password',
+        'role_permission',
     ];
 
     /**
@@ -38,6 +41,7 @@ class Admin extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+         'role_permission' => 'array',
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];

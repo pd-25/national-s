@@ -1,20 +1,22 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NewsController;
-use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NoticeController;
-use App\Http\Controllers\AdmissionNoticeController;
-use App\Http\Controllers\CampusGalaryController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\RrportController;
+use App\Http\Controllers\DepositeController;
+use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\CampusGalaryController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\Admin\StudentController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\DepositeController;
 use App\Http\Controllers\PaymentSettingsController;
+use App\Http\Controllers\AdmissionNoticeController;
 use App\Http\Controllers\PayrollSettingsController;
 use App\Http\Controllers\StudentFeeSettingsController;
+
 
 Route::controller(AdminController::class)->group(function() {
     Route::get('admin/login', 'index')->name('admin.index');
@@ -22,11 +24,14 @@ Route::controller(AdminController::class)->group(function() {
 });
 
 Route::group(['prefix' => 'admin'], function () {
-    
     Route::group(['middleware' => 'adminauth', ], function () {
         Route::group(['middleware' => 'rolemanage', ], function () {
             Route::controller(AdminController::class)->group(function() {
-                Route::get('dashboard', 'create')->name('admin.dashboard')->middleware('admin');
+                Route::get('dashboard', 'create')->name('admin.dashboard');
+                Route::get('system-user', 'registerUser')->name('admin.registerUser');
+                Route::post('system-user-registration', 'store')->name('admin.register.post');
+                Route::post('system-user-registration-update', 'update')->name('admin.register.update');
+                Route::get('role-permission', 'roleandpermission')->name('admin.roleandpermission');
                 Route::get('logout', 'logout')->name('admin.logout');
             });
             // Attendance Management 
@@ -171,6 +176,14 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::post('store-events', 'store')->name('events.store');
                 Route::get('shows-events', 'show')->name('events.show');
                 Route::post('destroy-events', 'destroy')->name('events.destroy');
+            });
+            
+            Route::controller(RrportController::class)->group(function() {
+                Route::get('attendance-report', 'index')->name('report.index');
+                Route::post('class-attendance-report', 'classAttendanceReport')->name('report.classAttendance');
+                
+                Route::get('payment-report', 'feesindex')->name('report.feesindex');
+                Route::post('payment-collection-report', 'feesreportshow')->name('report.feesreportshow');
             });
         });
         

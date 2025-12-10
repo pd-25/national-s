@@ -136,4 +136,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
+$("#SaveButton").click(function (e) {
+    let isValid = true;
+    $("input, select").removeClass("is-invalid");
+    $("input[required], select[required], textarea[required]").each(
+        function () {
+            if ($(this).val().trim() === "") {
+                $(this).addClass("is-invalid");
+                isValid = false;
+            }
+        }
+    );
+    if (!isValid) {
+        e.preventDefault();
+        Notiflix.Notify.failure("Please select all required fields");
+    }
+});

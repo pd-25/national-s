@@ -1,97 +1,217 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <!-- Start Meta -->
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Mobile Suraksha">
-    <meta name="keywords" content="">
-    <meta name="author" content="Monjur Akhter">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Title of Site -->
-    <title>{{config('app.name')}}</title>
-
-    <!-- Favicons -->
-    <link rel="icon" type="image/png" href="">
-    <link rel="icon" type="image/png" href="assets/img/favicon-2.png">
-
-    <!-- Vendor CSS Files -->
-    <link href="{{asset('assets/admin/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('assets/admin/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-    <link href="{{asset('assets/admin/css/style.css')}}" rel="stylesheet">
-
-<body class="d-flex align-items-center py-4 bg-body-tertiary" style="height: 100vh;">
-    <main class="m-auto w-50">
-        <div class="cotainer">
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">Register</div>
-                        <div class="card-body">
-                            <div class="my-2">
-                                @if (session('success'))
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        {{ session('success') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                @elseif(session('error'))
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        {{ session('error') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
+@extends('admin.layout.admin_main')
+@section('content')
+    <div class="pagetitle" id="UserFormRegister">
+        <h1>System User's</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Manage System User's</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="card border-0">
+            <div class="card-body pt-4">
+                <form id="UserForm" action="{{ route('admin.register.post') }}" method="POST">
+                    @csrf
+                    @method('POST')
+                    <div class="row">
+                        <input type="hidden" name="user_id" id="user_id">
+                        <div class="col-md-4 mb-2">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" id="name" class="form-control" name="name" id="name" required
+                                autofocus>
+                            @if ($errors->has('name'))
+                                <span class="text-danger">{{ $errors->first('name') }}</span>
+                            @endif
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="usertype" class="form-label">User Type</label>
+                            <select name="usertype" class="form-select" id="usertype" required>
+                                <option value="">--Select User Type --</option>
+                                <option value="1">Admin</option>
+                                <option value="2">Staff</option>
+                            </select>
+                            @if ($errors->has('usertype'))
+                                <span class="text-danger">{{ $errors->first('usertype') }}</span>
+                            @endif
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="status" class="form-label">Status</label>
+                            <select name="status" class="form-select" id="status" required>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                            @if ($errors->has('status'))
+                                <span class="text-danger">{{ $errors->first('status') }}</span>
+                            @endif
+                        </div>
+                        <div class="col-12 mb-4">
+                            <label for="" class="from-label fw-bold">Role & Permission
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="check_all" id="check_all"> All
+                                    </label>
+                                </div>
+                            </label>
+                            <div class="row">
+                                @if (!@empty(MenuAccessList()))
+                                    @foreach (MenuAccessList() as $key => $item)
+                                        <div class="col-3">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="role_item" value="{{ $key }}"
+                                                        name="role_permission[]">
+                                                    {{ @$item }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 @endif
                             </div>
-                            <form action="{{ route('register.post') }}" method="POST">
-                                @csrf
-                                <div class="form-group row mb-3">
-                                    <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="name" class="form-control" name="name" required autofocus>
-                                        @if ($errors->has('name'))
-                                            <span class="text-danger">{{ $errors->first('name') }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row mb-3">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="email_address" class="form-control" name="email" required autofocus>
-                                        @if ($errors->has('email'))
-                                            <span class="text-danger">{{ $errors->first('email') }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row mb-3">
-                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                                    <div class="col-md-6">
-                                        <input type="password" id="password" class="form-control" name="password" required>
-                                        @if ($errors->has('password'))
-                                            <span class="text-danger">{{ $errors->first('password') }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row mb-3">
-                                    <div class="col-md-6 offset-md-4">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" name="remember"> Remember Me
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Register
-                                    </button>
-                                </div>
-                            </form>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="email_address" class="form-label">E-Mail
+                                Address</label>
+                            <input type="text" id="email_address" class="form-control" name="email" id="email"
+                                required autofocus>
+                            @if ($errors->has('email'))
+                                <span class="text-danger">{{ $errors->first('email') }}</span>
+                            @endif
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" class="form-control showPassword" name="password">
+                            @if ($errors->has('password'))
+                                <span class="text-danger">{{ $errors->first('password') }}</span>
+                            @endif
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="myShowPassword()" type="checkbox" value=""
+                                    id="defaultCheck1">
+                                <small class="form-check-label" for="defaultCheck1">
+                                    Show Password
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 text-end">
+                            <button type="submit" id="SaveButton" class="btn btn-primary">
+                                Register
+                            </button>
+                            <button type="reset" class="btn btn-secondary">
+                                Clear
+                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
-    </main>
-    <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
-</html>
+        <div class="card border-0">
+            <div class="card-body pt-4">
+                <table class="small w-100 table table-bordered table-striped">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>NO</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>User-Type</th>
+                            <th>Role & Permission</th>
+                            <th>Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $menu = MenuAccessList();
+                        @endphp
+                        @if (!@empty(GetAdmins()))
+                            @foreach (GetAdmins() as $key => $item)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $item->name }}</td>
+                                    <td>{{ $item->email }}</td>
+                                    <td>
+                                        @if (@$item->usertype == 1)
+                                            <span class="fw-bold">ADMIN</span>
+                                        @elseif(@$item->usertype == 2)
+                                            <span class="fw-bold">STAFF</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (!empty($item->role_permission))
+                                            @foreach ($item->role_permission as $key)
+                                                @if (array_key_exists($key, $menu))
+                                                    <span class="badge bg-primary me-1">{{ $menu[$key] }}</span>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (@$item->status == 1)
+                                            <i class="bi bi-check-lg fw-bold text-success"> Active </i>
+                                        @else
+                                            <i class="bi bi-x-lg fw-bold text-danger"> Deactive </i>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <a class="btn btn-primary btn-sm rounded-pill me-2" href="#UserFormRegister"
+                                                onclick='edit(@json($item))'>
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            {{-- <form action="" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="btn btn-danger btn-sm rounded-pill show_confirm"><i
+                                                        class="bi bi-trash"></i></button>
+                                            </form> --}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <script>
+        $(document).ready(function(e) {
+            $("#UpdateUser").hide();
+            $("#check_all").on("change", function() {
+                $(".role_item").prop("checked", $(this).prop("checked"));
+            });
+
+            $(".role_item").on("change", function() {
+                if ($(".role_item:checked").length === $(".role_item").length) {
+                    $("#check_all").prop("checked", true);
+                } else {
+                    $("#check_all").prop("checked", false);
+                }
+
+            });
+        });
+
+        function edit(item) {
+            $('#password').val('');
+            $("#user_id").val(item.id);
+            $('#name').val(item.name);
+            $('#email_address').val(item.email);
+            $('#email_address').prop('disabled', true);
+            $('#usertype').val(item.usertype);
+            $('#status').val(item.status);
+            $('.role_item').prop('checked', false);
+            if (item.role_permission && item.role_permission.length > 0) {
+                item.role_permission.forEach(function(role) {
+                    $('input.role_item[value="' + role + '"]').prop('checked', true);
+                });
+            }
+            if ($('.role_item:checked').length === $('.role_item').length) {
+                $('#check_all').prop('checked', true);
+            } else {
+                $('#check_all').prop('checked', false);
+            }
+        }
+    </script>
+@endsection
